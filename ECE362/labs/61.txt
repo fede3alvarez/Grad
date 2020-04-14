@@ -1,0 +1,31 @@
+		XDEF	Entry
+		XREF	__SEG_END_SSTACK
+	
+My_Code:	Section
+
+Entry:
+		LDS	#__SEG_END_SSTACK	 ; Initialize Stack Pointer
+		LDAA	#$11			 ; Load value on Acc. A
+		LDAB	#$22			 ; Load value on Acc. B
+		LDX	#$3333		 ; Load value on Idx X
+		LDY	#$4444		 ; Load value on Idx Y
+		JSR	My_SBR		 ; Jump to Subroutines
+		NOP
+
+My_SBR:	;				 ; Push Registers to Stack
+		PSHA				 ; Push Acc. A to Stack		
+		PSHB				 ; Push Acc. B to Stack
+		PSHX				 ; Push Idx. X to Stack
+		PSHY				 ; Push Idx. Y to Stack
+		;				
+		LDAA	#$00			 ; Clear Registers
+		LDAB	#$00			 ;
+		LDX	#$0000		 ;
+		LDY	#$0000		 ;
+		;				 ; Pull Registers from Stack
+		PULA				 ;
+		PULB				 ;
+		PULX				 ;
+		PULY				 ;
+		;				 ;
+		RTS

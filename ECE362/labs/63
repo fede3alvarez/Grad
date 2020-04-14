@@ -1,0 +1,44 @@
+XDEF Entry, _Startup				; 6.3
+
+XREF __SEG_END_SSTACK, display_string, init_LCD, read_pot, pot_value; symbol defined by the linker for the end of the stack
+                     
+
+
+
+; Variable/data section
+my_variable: SECTION
+disp:	ds.b 33
+Ones ds.w 1
+Tens ds.w 1
+Hund ds.w 1
+
+
+
+        jsr     init_LCD				
+        ldd     #disp
+		jsr     display_string
+					 
+Loop:	jsr     read_pot
+		ldd     pot_value
+		ldx     #100    	 ;Divide by 100 for 100's place
+		idiv 		 
+		stx     Hund	     ;This will store into hundreds place
+		ldx     #10	         ;Divide by 10 for 10's place
+		idiv			 
+		stx     Tens	     ;This will store into tens place
+		ldx     #1	         ;Divide by 1 for 1's place
+		idiv			 
+		stx     ones	     ;This will store into ones place	
+		ldd     #$30
+		addd    hund
+		stab    disp+24
+		ldd     #$30
+		addd    Tens
+		stab    disp+25
+		ldd     #$30
+		addd    Ones
+		stab    disp+26
+		ldd     #disp
+		jsr     display_string
+		bra     loop
+		nop

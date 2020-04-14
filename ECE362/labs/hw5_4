@@ -1,0 +1,17 @@
+	MY_CONSTANT_ROM: 	SECTION
+			    ORG		    $800
+	ARRAY:	    dc.w		$03, $02, $04, $05 	; x, y, z are values
+	sum:		ds.w		1					; Space for result
+
+	MY_CODE:         		SECTION
+	Entry:		LDX		    #array	        ; Load Array address on idx X
+	            LDD		    2, x+		    ; Load 1st Array value on Acc. D
+	Loop:       EORA        1,x+            ; EXOR MS Byte  
+                EORB        1,x+            ; EXOR LS Byte
+                CPX         #array+array    ; Check if this is the last value
+                BNE         Loop
+                COM         sum             ;
+                COM         sum+1
+                STD         sum
+End:		    NOP				            ; End of the operation
+			    End		

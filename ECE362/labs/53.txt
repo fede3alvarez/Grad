@@ -1,0 +1,90 @@
+;**************************************************************
+;* This stationery serves as the framework for a              *
+;* user application. For a more comprehensive program that    *
+;* demonstrates the more advanced functionality of this       *
+;* processor, please see the demonstration applications       *
+;* located in the examples subdirectory of the                *
+;* Freescale CodeWarrior for the HC12 Program directory       *
+;**************************************************************
+; Include derivative-specific definitions
+            INCLUDE 'derivative.inc'
+
+; export symbols
+            XDEF Entry, DelayCount
+            ;XDEF Entry, Delay, D_Loop
+            ;, _Startup, main
+            ; we use export 'Entry' as symbol. This allows us to
+            ; reference 'Entry' either in the linker .prm file
+            ; or from C/C++ later on
+
+            XREF __SEG_END_SSTACK, Delay      ; symbol defined by the linker for the end of the stack
+
+
+MY_CONSTANT_ROM: SECTION
+port_t:     equ  $240
+port_s:     equ  $248
+port_p:     equ  $258
+ddr_s:      equ  $24A
+ddr_p:      equ  $25A
+
+; Port u / Keypad Initialization
+port_u:     equ  $268
+ddr_u:      equ  $26A
+psr_u:      equ  $26D
+peru_u:      equ  $26C
+
+MY_VARIABLE_RAM: SECTION
+                ORG   $800
+STEP_SEQ:       dc.b  $0A, $12, $14, $0C
+STEP_Size:      dc.w  $03
+SCAN_Seq:       dc.b  $70, $B0, $D0, $E0
+Scan_Count:     ds.b  $01
+DelayCount:     dc.w  1000
+TAB:            dc.b  $eb, $77, $7b, $7d, $b7, $bb, $bd, $d7, $db, $dd, $e7, $ed, $7e, $be, $de, $ee
+val:            ds.b  1
+
+MY_CODE:         SECTION
+main:
+_Startup:
+
+; Sub-routines memory allocation
+Entry:      BSET    ddr_s, #$FF           ; port s / LED setup
+            BSET    ddr_p, #$3E           ; port p / Stepper motor setup
+            BSET    ddr_u, #$F0           ; port p / Stepper motor setup
+            BSET    psr_u, #$F0           ; port p / Stepper motor setup
+            BSET    peru_u, #$0F          ; port p / Stepper motor setup
+            MOVW    #$00, Scan_Count      ; initialize the counter
+            LDS     #__SEG_END_SSTACK     ; initialize the stack pointer
+
+Scan:       PSHX
+            LDX     Scan_Count
+            LDAA    SCAN_Seq, X
+            STAA    port_u
+            INX
+            CPX     $04
+            BNE     Scan_delay
+            MOVW    #$00, Scan_Count
+Scan_delay: STX     Scan_Count
+            JSR     Delay
+            LDAA    port_u
+            STAA    val
+            ANDA    #$0F
+            CMPA    #$0F
+            BEQ     Scan
+            JSR     F_TABLE
+            BRA     Scan
+
+F_TABLE:    PSHX
+            LDX     #0
+F_Loop:     CPX     $10           ; Check if table is done
+            BEQ     No_val        ; Check if table done, go to No_val and set idx to FF
+            LDAA    TAB,x         ; read from memory   
+            CMPA    val           ; Compare Acc A to table value
+            BEQ     E_Loop        ; If value found, go to E_Loop 
+            INX                   ; If no value, increase idx, and loop back
+            BRA     F_Loop        ;
+No_val:     LDX     #$FF          ; If x value is not found, set x to FF
+E_Loop:     TFR     X,A           ; Set index on Acc. A
+            STAA    port_s
+            PULX
+            RTS

@@ -1,0 +1,57 @@
+; Include derivative-specific definitions
+            INCLUDE 'derivative.inc'
+
+; export symbols
+            XDEF Entry, DelayCount
+            XREF __SEG_END_SSTACK, Delay     
+
+; variable/data section
+MY_EXTENDED_RAM: SECTION
+; Bunch of random data goes here
+            ORG     $800
+ScanSeq:    dc.b    $70, $B0, $D0, $E0
+TAB:        dc.b    $eb, $77, $7b, $7d, $b7, $bb, $bd, $d7, $db, $dd, $e7, $ed, $7e, $be, $de, $ee
+val:        ds.b    1
+t_on:       ds.b    1
+t_off:      ds.b    1
+DelayCount: ds.w    1
+
+MY_CONSTANT_ROM: SECTION
+; DC Motor
+port_t:     equ     $240
+ddr_t:      equ     $242
+
+; Keyboard Parameters
+port_u:     equ     $268
+ddr_u:      equ     $26A
+psr_u:      equ     $26D
+pder_u:     equ     $26C
+
+; code section
+MyCode:     SECTION
+Entry:
+            LDS     #__SEG_END_SSTACK   ; Initialize the stack pointer
+            MOVB    #$80, CRGINT        ; Enable Real Time Interrupt
+            MOVB    #$60, RTICTL        ; Set RTI to 4 ms
+            CLI
+
+RTI_ISR:    
+PWM_On:     LDAA    t_on                ; Load t_on (used as counter)
+            BEQ     PWM_Off             ; Branch if equal to zero
+            DECA                        ; Decrement Counter
+            BSET    port_t,#$80         ; Set Bit 3 of port_t
+            STAA    t_on                ; Update t_on / Counter
+            BRA     END_RTI             ; Exit Interrupt
+
+PWM_Off    
+            LDAA    t_off               ; Load t_on (used as counter)
+            BEQ     END_RTI             ; Exit Interrupt if equal to zero
+            BCLR    port_t,#$80         ; Set Bit 3 of port_t
+            DECA                        ; Decrement Counter
+            STAA    t_off               ; Update t_off / Counter
+
+END_RTI:    BCLR    CRGFLG,$80          ; Clear RTIF
+            RTI                         ; exit interrupt routine
+
+            nop
+            end

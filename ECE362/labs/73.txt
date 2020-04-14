@@ -1,0 +1,48 @@
+; Include derivative-specific definitions
+            INCLUDE 'derivative.inc'
+
+; export symbols
+            XDEF Entry, DelayCount
+            XREF __SEG_END_SSTACK, Delay     
+
+; variable/data section
+MY_EXTENDED_RAM:    SECTION
+Counter     ds.w    1
+time      ds.b    1
+
+MY_CONSTANT_ROM: SECTION
+port_s:     equ  $248
+ddr_s:      equ  $24A
+
+; Code section
+MyCode:             SECTION
+Entry:
+            LDS     #__SEG_END_SSTACK   ; Initialize stack
+            MOVB    #$80, CRGINT        ; Enable RTI
+            MOVB    #$40, RTICLR        ; Set RTI to 1 ms
+            MOVB    #$FF, ddr_s         ; port s / LED setup
+            MOVW    #0, Counter         ; Initialize Counter
+            CLR     time                ; Clr time
+            CLI
+
+Loop:       MOVB    time, port_s        ; Light LED for time
+            BRA     Loop                ; Loop Back
+
+RTI_ISR:    LDX     Counter             ; Load counter to Idx X
+            INX                         ; Increment Counter
+            STX     Counter             ; Store Counter
+            CPX     #1000               ; Has the counter reached value?
+            BNE     END_RTI             ; If not, exit RTI
+            MOVW    #0, Counter         ; Else, Initialize counter to 0
+            INC     time                ; Increase time
+            BRCLR   time, $0A, END_RTI  ; If time reach #10
+            BCLR    time, $0F           ;    clear unit of time
+            LDAA    time                ;    and add #10
+            ADDA    #$10                ;    the store back to time
+            STAA    time                ;   
+            CMPA    #$60                ; If time reach #60
+            BNE     END_RTI             ;
+            CLR     time                ; Clr time
+
+END_RTI:    BCLR    CRGFLG, #$80        ;
+            RTI

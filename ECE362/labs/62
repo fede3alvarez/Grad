@@ -1,0 +1,13 @@
+                    XDEF    SendMessageInfo
+                    XREF    __SEG_END_SSTACK, SendsChr
+            
+            
+SendMessageInfo:	LDX     5, SP       ; initialize idx x to top of stack
+ 	                LDY     3, SP       ; initialize max for counter
+Loop:               LDAA    1, X+       ; load data one by one
+ 	                PSHA                ; push data
+ 	                CALL    SendsChr    ; call function
+ 	                LEAS    -1, SP      ; reserve space in stack
+ 	                DEY                 ; decrement counter
+ 	                BNE     Loop        ; branch 	
+                    RTS                 ; return subroutine

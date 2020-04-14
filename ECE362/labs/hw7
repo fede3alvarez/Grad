@@ -1,0 +1,34 @@
+    ; Include derivative-specific definitions
+                INCLUDE 'derivative.inc'
+    
+    ; export symbols
+                XDEF Entry, COUNTER, IRQ_ISR
+                XREF __SEG_END_SSTACK,      
+    
+    ; variable/data section
+    MY_EXTENDED_RAM:    SECTION
+    COUNTER         ds.w    1
+    time_counter    ds.w    1
+    
+    ; Code section
+    MyCode:             SECTION
+    Entry:
+                LDS     #__SEG_END_SSTACK   ; Initialize stack
+                MOVB    #$80, CRGINT        ; Enable RTI
+                MOVB    #$40, RTICLR        ; Set RTI to 1 ms
+                MOVW    #0, COUNTER         ; Initialize COUNTER
+                MOVW    #0, time_counter    ; Initialize time_counter
+                CLI
+    
+    Loop:       BRA     Loop                ; Loop Back
+    
+    IRQ_ISR:    LDX     time_counter        ; Load time_counter to Idx X
+                INX                         ; Increment time_counter
+                STX     time_counter        ; Store time_counter
+                CPX     #20                 ; Has the time_counter reached 20 ms?
+                BNE     END_RTI             ; If not, exit RTI
+                MOVW    COUNTER, $D7        ; Store COUNTER in address $D7
+                MOVW    #0, time_counter    ; Else, reset time_counter to 0
+                
+    END_RTI:    BCLR    CRGFLG, #$80        ;
+                RTI
