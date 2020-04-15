@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry, DelayCount
+            XDEF Entry, 
             XREF __SEG_END_SSTACK, Delay     
 
 ; variable/data section
@@ -10,18 +10,20 @@ MY_EXTENDED_RAM:    SECTION
                 ORG   $800
 STEP_SEQ:       dc.b  $0A, $12, $14, $0C
 STEP_Size:      dc.w  $03
-SCAN_Seq:       dc.b  $70, $B0, $D0, $E0
-Scan_Count:     ds.w  $01
-DelayCount:     dc.w  1000
+
+; Keyboard Parameters / port_u
+; Table with key value
 TAB:            dc.b  $eb, $77, $7b, $7d, $b7, $bb, $bd, $d7, $db, $dd, $e7, $ed, $7e, $be, $de, $ee
-key_press:      ds.b  1
-key_val:        ds.b  1
+Scan_KeyRow:    dc.b  $70, $B0, $D0, $E0    ; Scan Sequence for Keyboard
+Scan_Count:     ds.w  $01                   ; Index when Scanning Keyboard
+key_press:      ds.b  1                     ; Indicator that a key has been recently pressed
+key_val:        ds.b  1                     ; Key Value
 
 MY_CONSTANT_ROM: SECTION
 
 ; Port u / Keypad Initialization
-port_u:         equ  $268
-ddr_u:          equ  $26A
+port_u:         equ  $268                  
+ddr_u:          equ  $26A                   
 psr_u:          equ  $26D
 peru_u:         equ  $26C
 
@@ -67,7 +69,7 @@ END_RTI:    BCLR    CRGFLG, #$80        ;
 ;    KEYBOARD IMPLEMENTATION
 ;--------------------------------
 Set_seq:    LDX     Scan_Count          ; Load Scan_Count 
-            LDAA    SCAN_Seq, X         ; Load keyboard sequence
+            LDAA    Scan_KeyRow, X         ; Load keyboard sequence
             STAA    port_u              ; Write to Keyboard
             INX                         ;     (Read will happen in 
             CPX     $04                 ;       next interrupts)
@@ -79,13 +81,12 @@ Exit_set:   STX     Scan_Count          ; Store Scan_Count
 Scan_seq:   BRCLR   port_u, $0F, Key_Tab; If Key is pressed, go to Key_tab
             RTS
 
-Key_Tab:    LDX     #$0                 ; Start Idx X to zero
-Key_Loop:   LDAA    TAB,x               ; Load key value and    
-            CMPA    port_u              ;  compare to port_u 
-            BEQ     Exit_key            ; If match move to exit
-            INX                         ; If no match, inc X
-            CPX     #$10                ; If x is not saturated
-            BNE     Key_Loop            ;    Loop back
-            LDAA    #$FF                ; If no match, key_val=$FF
-Exit_key:   STAA    key_val             ; Otherwise, store key in key_val
-            RTS
+Key_Tab:    MOVB    #$00, key_val       ; Set key_val to 0, & use as index
+Key_Lp:     LDAA    TAB+key_val         ; Load key value and    
+            CMPA    port_u              ;    compare to port_u 
+            BEQ     Exit_key            ; If match move to exit (key_val is set)
+            INC     key_val             ; If no match, increase
+            BRCLR   key_val,#$10,Key_Lp ;    key_val and try again
+            MOVB    #$FF, key_val       ; If no match, key_val=$FF
+Exit_key:   RTS
+
