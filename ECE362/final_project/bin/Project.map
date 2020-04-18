@@ -1,2 +1,134 @@
-This is a dummy entry for the map file.
-The correct input will be placed after the first link process.
+*** EVALUATION ***
+PROGRAM "C:\Users\fede3\Desktop\Repos\Grad\ECE362\final_project\bin\Project.abs"
+
+*********************************************************************************************
+TARGET SECTION
+---------------------------------------------------------------------------------------------
+Processor   : Freescale HC12
+Memory Model: SMALL
+File Format : ELF\DWARF 2.0
+Linker      : SmartLinker V-5.0.52 Build 15249, Sep  7 2015
+
+*********************************************************************************************
+FILE SECTION
+---------------------------------------------------------------------------------------------
+main.asm.o                              Model: SMALL,         Lang: Assembler,     Compiler Version: Assembler for HC12 V-5.0.32 Build 15249, Sep  7 2015
+
+*********************************************************************************************
+STARTUP SECTION
+---------------------------------------------------------------------------------------------
+Entry point: 0xC000 (Entry)
+
+*********************************************************************************************
+SECTION-ALLOCATION SECTION
+Section Name                    Size  Type     From       To       Segment
+---------------------------------------------------------------------------------------------
+.init                            186     R     0xC000     0xC0B9   ROM_C000
+.stack                           256   R/W      0x400      0x4FF   RAM
+main.asm__ORG00001                31     R      0x800      0x81E   .absSeg0
+.vectSeg1_vect                     4     R     0xFFF0     0xFFF3   .vectSeg1
+.vectSeg2_vect                     2     R     0xFFFE     0xFFFF   .vectSeg2
+
+Summary of section sizes per section type:
+READ_ONLY (R):          DF (dec:      223)
+READ_WRITE (R/W):      100 (dec:      256)
+
+*********************************************************************************************
+VECTOR-ALLOCATION SECTION
+    Address     InitValue   InitFunction
+---------------------------------------------------------------------------------------------
+     0xFFF0        0xC02B   RTI_ISR
+     0xFFF2        0xC041   IRQ_ISR
+     0xFFFE        0xC000   Entry
+
+*********************************************************************************************
+OBJECT-ALLOCATION SECTION
+     Name               Module                 Addr   hSize   dSize     Ref    Section   RLIB
+---------------------------------------------------------------------------------------------
+MODULE:                 -- main.asm.o --
+- PROCEDURES:
+     Entry                                     C000      2B      43       0   .init       
+     RTI_ISR                                   C02B      12      18       0   .init       
+     END_RTI                                   C03D       4       4       0   .init       
+     IRQ_ISR                                   C041      28      40       0   .init       
+     Exit_set                                  C069       A      10       0   .init       
+     Key_Tab                                   C073       5       5       0   .init       
+     Key_Lp                                    C078      15      21       0   .init       
+     Exit_key                                  C08D       D      13       0   .init       
+     CW_Lp                                     C09A      20      32       0   .init       
+- VARIABLES:
+     Counter                                    800       2       2       0   .text       
+     STEP_TAB                                   802       4       4       0   .text       
+     Step_Idx                                   806       1       1       0   .text       
+     KEY_TAB                                    807      10      16       0   .text       
+     Scan_KeyRow                                817       4       4       0   .text       
+     Scan_Count                                 81B       2       2       0   .text       
+     key_press                                  81D       1       1       0   .text       
+     key_val                                    81E       1       1       0   .text       
+- LABELS:
+     __SEG_END_SSTACK                           500       0       0       1               
+
+*********************************************************************************************
+MODULE STATISTIC
+  Name                                      Data   Code  Const
+---------------------------------------------------------------------------------------------
+  main.asm.o                                   0    186     31
+  other                                      256      6      0
+
+*********************************************************************************************
+SECTION USE IN OBJECT-ALLOCATION SECTION
+---------------------------------------------------------------------------------------------
+SECTION: ".text"
+  Counter STEP_TAB Step_Idx KEY_TAB Scan_KeyRow Scan_Count key_press key_val 
+SECTION: ".init"
+  Entry RTI_ISR END_RTI IRQ_ISR Exit_set Key_Tab Key_Lp Exit_key CW_Lp 
+
+*********************************************************************************************
+OBJECT LIST SORTED BY ADDRESS
+     Name                                      Addr   hSize   dSize     Ref    Section   RLIB
+---------------------------------------------------------------------------------------------
+     Counter                                    800       2       2       0   .text       
+     STEP_TAB                                   802       4       4       0   .text       
+     Step_Idx                                   806       1       1       0   .text       
+     KEY_TAB                                    807      10      16       0   .text       
+     Scan_KeyRow                                817       4       4       0   .text       
+     Scan_Count                                 81B       2       2       0   .text       
+     key_press                                  81D       1       1       0   .text       
+     key_val                                    81E       1       1       0   .text       
+     Entry                                     C000      2B      43       0   .init       
+     RTI_ISR                                   C02B      12      18       0   .init       
+     END_RTI                                   C03D       4       4       0   .init       
+     IRQ_ISR                                   C041      28      40       0   .init       
+     Exit_set                                  C069       A      10       0   .init       
+     Key_Tab                                   C073       5       5       0   .init       
+     Key_Lp                                    C078      15      21       0   .init       
+     Exit_key                                  C08D       D      13       0   .init       
+     CW_Lp                                     C09A      20      32       0   .init       
+
+*********************************************************************************************
+UNUSED-OBJECTS SECTION
+---------------------------------------------------------------------------------------------
+
+*********************************************************************************************
+COPYDOWN SECTION
+---------------------------------------------------------------------------------------------
+
+*********************************************************************************************
+OBJECT-DEPENDENCIES SECTION
+---------------------------------------------------------------------------------------------
+Entry                     USES __SEG_END_SSTACK 
+
+*********************************************************************************************
+DEPENDENCY TREE
+*********************************************************************************************
+ Entry               
+   
+*********************************************************************************************
+STATISTIC SECTION
+---------------------------------------------------------------------------------------------
+
+ExeFile:
+--------
+Number of blocks to be downloaded: 4
+Total size of all blocks to be downloaded: 223
+
