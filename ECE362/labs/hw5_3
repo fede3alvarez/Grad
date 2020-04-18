@@ -1,0 +1,15 @@
+			    ORG		$800
+	array:		dc.w		$1, $1, $2, $7, $AAAA	; x, y, z are values
+	sum:		ds.w		1					; Space for result
+
+	MY_CODE:    SECTION
+	Entry:		MOVW	#$00, sum	; Initialize sum variable to 0
+			    LDX		#array	    ; Load Array address on idx X
+	Loop:		LDD		2, x+		; Load Array value on Acc. D
+			    CPD		#$AAAA	    ; Compare to terminator
+			    BEQ		End		    ; If equal, exist
+			    ADDD	sum		    ; Add sum to Acc. D
+			    STD		sum		    ; Store value on sum
+			    BRA		Loop		; Loop Back
+	End:		NOP				    ; End of the operation
+			    End	

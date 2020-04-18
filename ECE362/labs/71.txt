@@ -1,0 +1,95 @@
+; Include derivative-specific definitions
+            INCLUDE 'derivative.inc'
+
+; export symbols
+            XDEF Entry, DelayCount
+            XREF __SEG_END_SSTACK, Delay     
+
+; variable/data section
+MY_EXTENDED_RAM: SECTION
+; Bunch of random data goes here
+            ORG     $800
+ScanSeq:    dc.b    $70, $B0, $D0, $E0
+TAB:        dc.b    $eb, $77, $7b, $7d, $b7, $bb, $bd, $d7, $db, $dd, $e7, $ed, $7e, $be, $de, $ee
+val:        ds.b    1
+t_on:       ds.b    1
+t_off:      ds.b    1
+DelayCount: ds.w    1
+
+MY_CONSTANT_ROM: SECTION
+; DC Motor
+port_t:     equ     $240
+ddr_t:      equ     $242
+
+; Keyboard Parameters
+port_u:     equ     $268
+ddr_u:      equ     $26A
+psr_u:      equ     $26D
+pder_u:     equ     $26C
+
+; code section
+MyCode:     SECTION
+Entry:
+            LDS     #__SEG_END_SSTACK      ; initialize the stack pointer
+
+            ; Initialize DC Motor / port_t
+            BSET    ddr_t, #$08            ; Set Bit 3 as output
+            
+            ; Initialize Keyboard / port_u
+            BSET    ddr_u, #$F0
+            BSET    psr_u, #$F0
+            BSET    pder_u, #$0F
+
+Scan_u:     LDX     #ScanSeq
+            MOVW    #$01, DelayCount; Update Delay for Debounding
+Load_u:     LDAA    1,x+            ; Load Scan seq to Acc. A
+            STAA    port_u          ; Write value to Keypad row
+            JSR     Delay           ; Debounce Delay
+            JSR     Read_u          ; Read Keypad value
+            CPX     #ScanSeq+4      ; At the end of scan seq?
+            BNE     Load_u          ; If not, keep go to next row
+            BRA     DC_Motor        ; Otherwise, move to DC_Motor
+            BRA     Scan_u          ; If done, re-start scanning
+
+Read_u:     LDAA    port_u          ; Load value from keypad
+            BITA    #$0F            ; Check if xF value is returned
+            BNE     Key_press       ; If not, then Key pressed  
+            JSR     Scan_u          ; If no Key, back to scan
+Key_press:  STAA    val             ; If key pressed, store on val 
+            JSR     Table           ; Check Table
+            RTS
+
+DC_Motor:   MOVW    #$04, DelayCount; Update Delay for PWM
+            LDAB    val             ; Set t_on to val
+            STAB    t_on            ;
+            LDAA    #$0F            ; Calculate t_off
+            SBA                     ;
+            STAA    t_off           ;
+PWM_ON:     LDAA    t_on            ; Load t_on on Acc. A
+            BEQ     PWM_OFF         ; If t_on == 0, then move to PWM_OFF
+            DECA                    ; Decrement loop (Using A / t_on as cnter)
+            STAA    t_on            ;    Update t_on
+            BSET    port_t, #80     ; Set Bit 3 of port_t
+            JSR     Delay           ;    for t_on times ( 4ms delay in each) 
+            BRA     PWM_ON          ; Loop-back
+PWM_OFF:    LDAA    t_off           ; Load t_off on Acc. A
+            BEQ     PWM_End         ; If t_off == 0, then back to scan keypad
+            DECA                    ; Decrement loop (Using A / t_off as cnter)
+            STAA    t_off           ;    Update t_off
+            BCLR    port_t, #80     ; Clear Bit 3 of port_t     
+            JSR     Delay           ;    for t_off times ( 4ms delay in each)
+            BRA     PWM_OFF         ; Loop - Back      
+PWM_End:    RTS
+
+Table:      PSHX
+            LDX     #TAB
+Tab_Loop:   LDAA    1, x+
+            CMPA    val
+            BEQ     Tab_ent
+            CPX     #TAB+$10
+            BNE     Tab_Loop
+            PULX
+            RTS    
+
+            nop
+            end

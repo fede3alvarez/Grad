@@ -1,0 +1,78 @@
+;**************************************************************
+;* This stationery serves as the framework for a              *
+;* user application. For a more comprehensive program that    *
+;* demonstrates the more advanced functionality of this       *
+;* processor, please see the demonstration applications       *
+;* located in the examples subdirectory of the                *
+;* Freescale CodeWarrior for the HC12 Program directory       *
+;**************************************************************
+; Include derivative-specific definitions
+            INCLUDE 'derivative.inc'
+
+; export symbols
+            XDEF Entry, CW_Step, CW_Loop, CCW_Step, CCW_Loop, DelayCount
+            ;XDEF Entry, Delay, D_Loop, CW_Step, CW_Loop, CCW_Step, CCW_Loop, 
+            ;, _Startup, main
+            ; we use export 'Entry' as symbol. This allows us to
+            ; reference 'Entry' either in the linker .prm file
+            ; or from C/C++ later on
+
+            XREF __SEG_END_SSTACK, Delay      ; symbol defined by the linker for the end of the stack
+
+
+MY_CONSTANT_ROM: SECTION
+port_t:     equ  $240
+port_b:     equ  $248
+port_p:     equ  $258
+ddr_s:      equ  $24A
+ddr_p:      equ  $25A
+
+MY_VARIABLE_RAM: SECTION
+STEP_SEQ:   dc.b  $0A, $12, $14, $0C
+STEP_Size:  dc.w  $04
+DelayCount:  dc.w  $7530
+
+MY_CODE:         SECTION
+main:
+_Startup:
+
+; Sub-routines memory allocation
+Entry:      movb    #$FF, ddr_s     ; port s / LED setup
+            movb    #$3E, ddr_p     ; port p / Stepper motor setup
+            LDS     #__SEG_END_SSTACK     ; initialize the stack pointer
+INF_LOOP:   JSR     CW_Step
+            LDD     #$FFFF
+            BRA     INF_LOOP
+            LDD     #$FFFF
+                
+
+CW_Step:    PSHX
+            LDX     #0
+CW_Loop:    LDAA    STEP_SEQ,x         ; read from memory
+            STAA    port_p          ; light LED
+            JSR     Delay
+            ;JSR     Delay
+            INX
+            CPX     STEP_Size
+            BNE     CW_Loop
+            PULX
+            RTS
+
+CCW_Step:   PSHX
+            LDX     STEP_Size
+            INX
+CCW_Loop:   DEX
+            LDAA    STEP_SEQ,x         ; read from memory
+            STAA    port_p          ; light LED
+            JSR     Delay
+            ;JSR     Delay
+            TBNE    X, CW_Loop
+            PULX
+            RTS
+
+;Delay:      PSHX                    ; Delay = 4N cc -> N microsec 
+;            LDX     DelayCount           ; For extra credit update N to 1000 = $3E8
+;D_Loop:     DEX
+;            BNE     D_Loop
+;            PULX
+;            RTS

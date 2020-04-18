@@ -1,0 +1,98 @@
+; Include derivative-specific definitions
+            INCLUDE 'derivative.inc'
+
+; export symbols
+            XDEF Entry, DelayCount
+            XREF __SEG_END_SSTACK, Delay     
+
+; variable/data section
+MY_EXTENDED_RAM:    SECTION
+            ORG     $800
+disp:	    ds.b 33
+Counter     ds.w    1
+min         ds.b    1
+sec         ds.b    1
+
+MY_CONSTANT_ROM: SECTION
+port_s:     equ  $248
+ddr_s:      equ  $24A
+
+; Code section
+MyCode:             SECTION
+Entry:
+;*********************string initializations*********************
+           ;intializing string "disp" to be:
+           ;"The value of the pot is:      ",0
+           movb #' ',disp
+           movb #'T',disp+1
+           movb #'i',disp+2
+           movb #'m',disp+3
+           movb #'e',disp+4
+           movb #':',disp+5
+           movb #' ',disp+6
+           movb #' ',disp+7
+           movb #' ',disp+8
+           movb #' ',disp+9
+           movb #' ',disp+10
+           movb #' ',disp+11
+           movb #' ',disp+12
+           movb #' ',disp+13
+           movb #' ',disp+14
+           movb #' ',disp+15
+           movb #' ',disp+16
+           movb #' ',disp+17
+           movb #' ',disp+18
+           movb #' ',disp+19
+           movb #' ',disp+20
+           movb #' ',disp+21
+           movb #' ',disp+22
+           movb #' ',disp+23
+           movb #' ',disp+24
+           movb #' ',disp+25
+           movb #' ',disp+26
+           movb #' ',disp+27
+           movb #' ',disp+28
+           movb #' ',disp+29
+           movb #' ',disp+30
+           movb #' ',disp+31
+           movb #0,disp+32    ;string terminator, acts like '\0'    
+;*********************string initialization*********************
+
+            ; Interrupt Initialization
+            LDS     #__SEG_END_SSTACK   ; Initialize stack
+            MOVB    #$80, CRGINT        ; Enable RTI
+            MOVB    #$40, RTICLR        ; Set RTI to 1 ms
+            MOVB    #$FF, ddr_s         ; port s / LED setup
+            MOVW    #0, Counter         ; Initialize Counter
+            CLR     tens_sec            ; Set to zero
+            CLR     unit_sec            ; Set to zero
+            CLI
+
+            ; Initialize LED Screen
+            JSR     init_LCD				
+            LDD     #disp
+	    	JSR     display_string
+
+Loop:       JSR     display_string        ; Light LED for time
+            BRA     Loop                ; Loop Back
+
+RTI_ISR:    LDX     Counter             ; Load counter to Idx X
+            INX                         ; Increment Counter
+            STX     Counter             ; Store Counter
+            CPX     #1000               ; Has the counter reached value?
+            BNE     END_RTI             ; If not, exit RTI
+            MOVW    #0, Counter         ; Else, reset counter to 0
+            INC     unit_sec            ; Increase time
+            BRCLR   unit_sec,$0A,END_RTI; If time reach #10
+            CLR     unit_sec            ;    clear unit of sec
+            LDAA    tens_sec            ;    and add #1
+            INCA                        ;    the store back to time
+            STAA    tens_sec            ;   
+            CMPA    #$6                 ; If tens_sec reach #6 or (60 sec)
+            BNE     END_RTI             ;
+            CLR     tens_sec            ; Clr time
+
+END_RTI:    MOVB    tens_sec, disp+6
+END_RTI:    MOVB    unit_sec, disp+7
+            BCLR    CRGFLG, #$80        ;
+            RTI
