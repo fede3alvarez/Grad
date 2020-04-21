@@ -84,7 +84,7 @@ END_IRQ:    BCLR    CRGFLG, #$80        ;
 ;--------------------------------
 ;    KEYBOARD IMPLEMENTATION
 ;--------------------------------
-
+;
 ; 1 ms delay for debouncing is needed
 Set_seq:    LDX     Scan_Count          ; Load Scan_Count 
             LDAA    Scan_KeyRow, X      ; Load keyboard sequence
