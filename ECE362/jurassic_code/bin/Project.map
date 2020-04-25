@@ -14,6 +14,7 @@ FILE SECTION
 ---------------------------------------------------------------------------------------------
 main.asm.o                              Model: SMALL,         Lang: Assembler,     Compiler Version: Assembler for HC12 V-5.0.32 Build 15249, Sep  7 2015
 mc9s12e128.c.o                          Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
+interrupt.asm.o                         Model: SMALL,         Lang: Assembler,     Compiler Version: Assembler for HC12 V-5.0.32 Build 15249, Sep  7 2015
 
 *********************************************************************************************
 STARTUP SECTION
@@ -24,7 +25,7 @@ Entry point: 0xC000 (Entry)
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                            186     R     0xC000     0xC0B9   ROM_C000
+.init                             46     R     0xC000     0xC02D   ROM_C000
 .stack                           256   R/W      0x400      0x4FF   RAM
 main.asm__ORG00001                31     R      0x800      0x81E   .absSeg0
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg1
@@ -300,11 +301,12 @@ main.asm__ORG00001                31     R      0x800      0x81E   .absSeg0
 .abs_section_27a                   2   N/I      0x27A      0x27B   .absSeg271
 .abs_section_27c                   2   N/I      0x27C      0x27D   .absSeg272
 .abs_section_27e                   2   N/I      0x27E      0x27F   .absSeg273
+interrupt.asm._SEC000000         155     R     0xC02E     0xC0C8   ROM_C000
 .vectSeg274_vect                   4     R     0xFFF0     0xFFF3   .vectSeg274
 .vectSeg275_vect                   2     R     0xFFFE     0xFFFF   .vectSeg275
 
 Summary of section sizes per section type:
-READ_ONLY (R):          DF (dec:      223)
+READ_ONLY (R):          EE (dec:      238)
 READ_WRITE (R/W):      100 (dec:      256)
 NO_INIT (N/I):         160 (dec:      352)
 
@@ -312,8 +314,8 @@ NO_INIT (N/I):         160 (dec:      352)
 VECTOR-ALLOCATION SECTION
     Address     InitValue   InitFunction
 ---------------------------------------------------------------------------------------------
-     0xFFF0        0xC02B   RTI_ISR
-     0xFFF2        0xC041   IRQ_ISR
+     0xFFF0        0xC02E   RTI_ISR
+     0xFFF2        0xC044   IRQ_ISR
      0xFFFE        0xC000   Entry
 
 *********************************************************************************************
@@ -323,25 +325,20 @@ OBJECT-ALLOCATION SECTION
 MODULE:                 -- main.asm.o --
 - PROCEDURES:
      Entry                                     C000      2B      43       0   .init       
-     RTI_ISR                                   C02B      12      18       0   .init       
-     END_RTI                                   C03D       4       4       0   .init       
-     IRQ_ISR                                   C041      28      40       0   .init       
-     Exit_set                                  C069       A      10       0   .init       
-     Key_Tab                                   C073       5       5       0   .init       
-     Key_Lp                                    C078      15      21       0   .init       
-     Exit_key                                  C08D       D      13       0   .init       
-     CW_Lp                                     C09A      20      32       0   .init       
+     Main_Loop                                 C02B       3       3       0   .init       
 - VARIABLES:
-     Counter                                    800       2       2       0   .text       
-     STEP_TAB                                   802       4       4       0   .text       
-     Step_Idx                                   806       1       1       0   .text       
-     KEY_TAB                                    807      10      16       0   .text       
-     Scan_KeyRow                                817       4       4       0   .text       
-     Scan_Count                                 81B       2       2       0   .text       
+     RTI_Cnter                                  800       2       2       6   .text       
+     STEP_TAB                                   802       4       4       2   .text       
+     Step_Idx                                   806       1       1       8   .text       
+     KEY_TAB                                    807      10      16       1   .text       
+     Scan_KeyRow                                817       4       4       1   .text       
+     Scan_Count                                 81B       2       2       2   .text       
      key_press                                  81D       1       1       0   .text       
-     key_val                                    81E       1       1       0   .text       
+     key_val                                    81E       1       1       5   .text       
 - LABELS:
      __SEG_END_SSTACK                           500       0       0       1               
+     port_p                                     258       0       0       2   .text       
+     port_u                                     268       0       0       3   .text       
 MODULE:                 -- mc9s12e128.c.o --
 - PROCEDURES:
 - VARIABLES:
@@ -618,22 +615,35 @@ MODULE:                 -- mc9s12e128.c.o --
      _PPSAD                                     27A       2       2       0   .abs_section_27a
      _PIEAD                                     27C       2       2       0   .abs_section_27c
      _PIFAD                                     27E       2       2       0   .abs_section_27e
+MODULE:                 -- interrupt.asm.o --
+- PROCEDURES:
+     RTI_ISR                                   C02E      12      18       0   interrupt.asm._SEC000000
+     END_RTI                                   C040       4       4       0   interrupt.asm._SEC000000
+     IRQ_ISR                                   C044      28      40       0   interrupt.asm._SEC000000
+     Exit_set                                  C06C       A      10       0   interrupt.asm._SEC000000
+     Key_Read                                  C076       5       5       0   interrupt.asm._SEC000000
+     Key_Lp                                    C07B      19      25       0   interrupt.asm._SEC000000
+     Exit_key                                  C094       D      13       0   interrupt.asm._SEC000000
+     CW_Lp                                     C0A1      28      40       0   interrupt.asm._SEC000000
+- VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.asm.o                                   0    186     31
+  main.asm.o                                   0     46     31
   mc9s12e128.c.o                             352      0      0
+  interrupt.asm.o                              0    155      0
   other                                      256      6      0
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  Counter STEP_TAB Step_Idx KEY_TAB Scan_KeyRow Scan_Count key_press key_val 
+  port_p port_u RTI_Cnter STEP_TAB Step_Idx KEY_TAB Scan_KeyRow Scan_Count 
+  key_press key_val 
 SECTION: ".init"
-  Entry RTI_ISR END_RTI IRQ_ISR Exit_set Key_Tab Key_Lp Exit_key CW_Lp 
+  Entry Main_Loop 
 SECTION: ".abs_section_8"
   _PORTE 
 SECTION: ".abs_section_9"
@@ -1180,6 +1190,8 @@ SECTION: ".abs_section_27c"
   _PIEAD 
 SECTION: ".abs_section_27e"
   _PIFAD 
+SECTION: "interrupt.asm._SEC000000"
+  RTI_ISR END_RTI IRQ_ISR Exit_set Key_Read Key_Lp Exit_key CW_Lp 
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
@@ -1432,6 +1444,7 @@ OBJECT LIST SORTED BY ADDRESS
      _PPSM                                      255       1       1       0   .abs_section_255
      _WOMM                                      256       1       1       0   .abs_section_256
      _PTP                                       258       1       1       0   .abs_section_258
+     port_p                                     258       0       0       2   .text       
      _PTIP                                      259       1       1       0   .abs_section_259
      _DDRP                                      25A       1       1       0   .abs_section_25a
      _RDRP                                      25B       1       1       0   .abs_section_25b
@@ -1444,6 +1457,7 @@ OBJECT LIST SORTED BY ADDRESS
      _PERQ                                      264       1       1       0   .abs_section_264
      _PPSQ                                      265       1       1       0   .abs_section_265
      _PTU                                       268       1       1       0   .abs_section_268
+     port_u                                     268       0       0       3   .text       
      _PTIU                                      269       1       1       0   .abs_section_269
      _DDRU                                      26A       1       1       0   .abs_section_26a
      _RDRU                                      26B       1       1       0   .abs_section_26b
@@ -1458,23 +1472,24 @@ OBJECT LIST SORTED BY ADDRESS
      _PPSAD                                     27A       2       2       0   .abs_section_27a
      _PIEAD                                     27C       2       2       0   .abs_section_27c
      _PIFAD                                     27E       2       2       0   .abs_section_27e
-     Counter                                    800       2       2       0   .text       
-     STEP_TAB                                   802       4       4       0   .text       
-     Step_Idx                                   806       1       1       0   .text       
-     KEY_TAB                                    807      10      16       0   .text       
-     Scan_KeyRow                                817       4       4       0   .text       
-     Scan_Count                                 81B       2       2       0   .text       
+     RTI_Cnter                                  800       2       2       6   .text       
+     STEP_TAB                                   802       4       4       2   .text       
+     Step_Idx                                   806       1       1       8   .text       
+     KEY_TAB                                    807      10      16       1   .text       
+     Scan_KeyRow                                817       4       4       1   .text       
+     Scan_Count                                 81B       2       2       2   .text       
      key_press                                  81D       1       1       0   .text       
-     key_val                                    81E       1       1       0   .text       
+     key_val                                    81E       1       1       5   .text       
      Entry                                     C000      2B      43       0   .init       
-     RTI_ISR                                   C02B      12      18       0   .init       
-     END_RTI                                   C03D       4       4       0   .init       
-     IRQ_ISR                                   C041      28      40       0   .init       
-     Exit_set                                  C069       A      10       0   .init       
-     Key_Tab                                   C073       5       5       0   .init       
-     Key_Lp                                    C078      15      21       0   .init       
-     Exit_key                                  C08D       D      13       0   .init       
-     CW_Lp                                     C09A      20      32       0   .init       
+     Main_Loop                                 C02B       3       3       0   .init       
+     RTI_ISR                                   C02E      12      18       0   interrupt.asm._SEC000000
+     END_RTI                                   C040       4       4       0   interrupt.asm._SEC000000
+     IRQ_ISR                                   C044      28      40       0   interrupt.asm._SEC000000
+     Exit_set                                  C06C       A      10       0   interrupt.asm._SEC000000
+     Key_Read                                  C076       5       5       0   interrupt.asm._SEC000000
+     Key_Lp                                    C07B      19      25       0   interrupt.asm._SEC000000
+     Exit_key                                  C094       D      13       0   interrupt.asm._SEC000000
+     CW_Lp                                     C0A1      28      40       0   interrupt.asm._SEC000000
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
@@ -1488,11 +1503,22 @@ COPYDOWN SECTION
 OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
 Entry                     USES __SEG_END_SSTACK 
+RTI_ISR                   USES RTI_Cnter 
+IRQ_ISR                   USES RTI_Cnter Scan_Count Scan_KeyRow port_u 
+Exit_set                  USES Scan_Count port_u 
+Key_Read                  USES key_val 
+Key_Lp                    USES key_val KEY_TAB port_u 
+Exit_key                  USES Step_Idx 
+CW_Lp                     USES Step_Idx STEP_TAB port_p 
 
 *********************************************************************************************
 DEPENDENCY TREE
 *********************************************************************************************
  Entry               
+   
+ IRQ_ISR             
+   
+ RTI_ISR             
    
 *********************************************************************************************
 STATISTIC SECTION
@@ -1500,6 +1526,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 4
-Total size of all blocks to be downloaded: 223
+Number of blocks to be downloaded: 5
+Total size of all blocks to be downloaded: 238
 

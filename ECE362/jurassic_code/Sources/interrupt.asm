@@ -4,19 +4,7 @@
 ; export symbols
             XDEF RTI_ISR, IRQ_ISR
 
-            XREF __SEG_END_SSTACK,
-            ;
-            ;----Interrupt--------------
-            RTI_Cnter,
-            ;
-            ;-----Keyboard ------------- 
-            port_u,                     
-            Scan_Count, Scan_KeyRow, 
-            key_val, KEY_TAB,
-            ;
-            ;-----STEPPER MOTOR---------
-            port_p,
-            Step_Idx, STEP_TAB
+            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB
 
 
 
@@ -67,7 +55,8 @@ Scan_seq:   BRCLR   port_u, $0F,Key_Read; If Key is pressed, go to Key_Read
             RTS
 
 Key_Read:   MOVB    #$00, key_val       ; Set key_val to 0, & use as index
-Key_Lp:     LDAA    KEY_TAB+key_val     ; Load key value and    
+Key_Lp:     LDX     key_val             ;
+            LDAA    KEY_TAB, x          ; Load key value and    
             CMPA    port_u              ;    compare to port_u 
             BEQ     Exit_key            ; If match move to exit (key_val is set)
             INC     key_val             ; If no match, increase
@@ -84,7 +73,8 @@ CW_Step:    LDAB    Step_Idx            ; If Step_Idx >= $04
             CMPB    $04                 ;    then set to zero
             BLO     CW_Lp               ; Otherwise, skip
             MOVB    #$00, Step_Idx      ; 
-CW_Lp:      LDAA    STEP_TAB+Step_Idx   ; Read Sequence and write 
+CW_Lp:      LDX     Step_Idx            ;
+            LDAA    STEP_TAB, x         ; Read Sequence and write 
             STAA    port_p              ;    it to Stepper Motor
             INC     Step_Idx            ; Update Index for next time
             RTS
@@ -93,7 +83,8 @@ CCW_Step:   LDAB    Step_Idx            ; If Step_Idx >= $04
             CMPB    $00                 ;    then set to zero
             BLO     CW_Lp               ; Otherwise, skip
             MOVB    #$04, Step_Idx      ; 
-CCW_Lp:     LDAA    STEP_TAB+Step_Idx   ; Read Sequence and write 
+CCW_Lp:     LDX     Step_Idx
+            LDAA    STEP_TAB, x         ; Read Sequence and write 
             STAA    port_p              ;    it to Stepper Motor
             DEC     Step_Idx            ; Update Index for next time
             RTS

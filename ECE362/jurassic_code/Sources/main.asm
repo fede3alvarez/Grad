@@ -2,19 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,
-            ;
-            ;----Interrupt--------------
-            RTI_Cnter,
-            ;
-            ;-----Keyboard ------------- 
-            port_u,                     
-            Scan_Count, Scan_KeyRow, 
-            key_val, KEY_TAB,
-            ;
-            ;-----STEPPER MOTOR---------
-            port_p,
-            Step_Idx, STEP_TAB
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB
 
             XREF __SEG_END_SSTACK,      
 
