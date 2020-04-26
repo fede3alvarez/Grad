@@ -4,7 +4,7 @@
 ; export symbols
             XDEF RTI_ISR, IRQ_ISR
 
-            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter
+            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on
 
 
 
@@ -107,7 +107,7 @@ DC_Setup:   BRA     Pot_SEL             ; Update pot_value
             XGDX                        ; Switch ACC. X & D
             STAB    t_on                ; Save t_on (now on Acc B)
             CMPB    $00                 ; If t_on is zero
-            BEQ     PWN_OFF              ;  go to PWM_OFF
+            BEQ     PWM_OFF              ;  go to PWM_OFF
 
 PWM_ON:     LDAA    DC_cnter            ; Load t_on DC_cnter
             CMPA    t_on                ;   if bigger than t_pn
@@ -119,7 +119,7 @@ PWM_ON:     LDAA    DC_cnter            ; Load t_on DC_cnter
 PWM_OFF:    LDAA    DC_cnter            ;
             CMPA    $0F                 ;
             BHS     PWN_CLR             ;
-            BCLR    port_t,#$80         ; Set Bit 3 of port_t
+            BCLR    port_t,#$80         ; Set Bit 3 of port_t
             INC     DC_cnter            ; Increase Counter
             RTS
 

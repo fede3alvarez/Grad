@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, disp_def, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, disp_def, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on
 
             XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD     
 
@@ -27,7 +27,7 @@ key_val:        ds.b    1                  ; Key Value
 
 ;-------------LCD Parameters---------------;
 disp:           ds.b    33
-disp_def:       dc.b    #' ', #'J', #'U', #'R', #'A', #'S', #'S', #'I', #'C', #' ', #' ', #'C', #'O', #'D', #'E', #' ', #' ', #'A', #' ', #'M', #'6', #'8', #'H', #'C', #'1', #'2', #' ', #'G', #'A', #'M', #'E', #' ', #'0'
+disp_def:       dc.b    $EB
 
 ;-------Potentiometer Parameters-----------;
 old_pot:        ds.b    1                  ; Previous pot_value
@@ -36,6 +36,7 @@ pot_shift:      ds.b    1                  ; Bit 0: 1=Stale, 0=Valid data
 
 ;--------------DC Motor--------------------;
 DC_cnter:       ds.b    1
+t_on:           ds.b    1
 
 ;---------User / Account Selection---------;
 user_sel:       ds.b    1    
@@ -81,8 +82,10 @@ Entry:
                                    
             ;-------LCD Display-------------;
             JSR     init_LCD                ; Initialize LCD
+            movb    #' ',disp_def
             LDD     #disp_def               ; Load default display
-	    	JSR     display_string          ; Call Subroutine
+	    	    JSR     display_string          ; Call Subroutine
+            
             
             ;-------Potentiometer-----------;
             MOVB    #$00, pot_shift         ; Initialize to no-shift
@@ -90,6 +93,7 @@ Entry:
 
             ;-------Potentiometer-----------;
             MOVB    #$00, DC_cnter          ; Initialize counter to zero
+            MOVB    #$00, t_on              ; Initialize counter to zero
 
             ;------User / Account Setup-----;
             MOVB    #$00, user_sel          ; Set Default to no user selected
