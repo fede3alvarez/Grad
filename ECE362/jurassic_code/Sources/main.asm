@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET
 
             XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp    
 
@@ -41,7 +41,8 @@ t_on:           ds.b    1
 user_sel:       ds.b    1    
 
 ;----------Logic & General-----------------;
-JEEP_MODE:       ds.b   1                  ; FALSE=MENU / TRUE=JEEP
+JEEP_MODE:      ds.b    1                  ; FALSE=MENU / TRUE=JEEP
+FAST_SET:       ds.b    1                  ; TRIGGER FAST LOOP on RTI
 
 MY_CONSTANT_ROM: SECTION
 ;---------------Port settings--------------;
@@ -83,7 +84,7 @@ Entry:
             JSR     init_LCD                ; Initialize LCD
             JSR     default_disp             ;
             LDD     #disp                   ; Load default display
-    	    	JSR     display_string          ; Call Subroutine
+    	    JSR     display_string          ; Call Subroutine
             
             
             ;-------Potentiometer-----------;
@@ -99,6 +100,7 @@ Entry:
 
             ;-----Logic & General-----------;
             MOVB    #$00, JEEP_MODE         ; Initialize to MENU Mode (JEEP=$FF)
+            MOVB    #$00, FAST_SET          ; Initialize FAST_SET to FALSE
             
             ;------CODE BEGINNING-----------;
 Loop:       BRA     Loop
