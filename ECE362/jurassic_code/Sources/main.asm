@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON
 
             XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp    
 
@@ -16,6 +16,7 @@ RTI_Cnter:      ds.w    1
 ;---Stepper Motor Parameters / port_p------;
 STEP_TAB:       dc.b    $0A, $12, $14, $0C
 Step_Idx:       ds.b    1
+Stepper_ON:     ds.b    1
 
 ;--------Keyboard Parameters / port_u------;
 ; Table with key value
@@ -68,6 +69,7 @@ Entry:
             ;-----Stepper Motor; Setup------;
             MOVB    #$3E, ddr_p             ; port p / Stepper motor setup
             MOVB    #$00, Step_Idx          ; Stepper motor Sequence Index
+            MOVB   #$FF, Stepper_ON        ; Stepper Motor set to ON
 
             ;-------Keyboard Setup----------;
             BSET    ddr_u, #$F0             ; port u (keyboard) / DDR, set as input
@@ -91,7 +93,7 @@ Entry:
             MOVB    #$00, pot_shift         ; Initialize to no-shift
             MOVB    #$00, old_pot           ; Initialize to zero
 
-            ;-------Potentiometer-----------;
+            ;-----------DC Motor------------;
             MOVB    #$00, DC_cnter          ; Initialize counter to zero
             MOVB    #$00, t_on              ; Initialize counter to zero
 
