@@ -7294,7 +7294,7 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON
 
             XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp    
 
@@ -7308,6 +7308,7 @@ RTI_Cnter:      ds.w    1
 ;---Stepper Motor Parameters / port_p------;
 STEP_TAB:       dc.b    $0A, $12, $14, $0C
 Step_Idx:       ds.b    1
+Stepper_ON:     ds.b    1
 
 ;--------Keyboard Parameters / port_u------;
 ; Table with key value
@@ -7333,7 +7334,8 @@ t_on:           ds.b    1
 user_sel:       ds.b    1    
 
 ;----------Logic & General-----------------;
-JEEP_MODE:       ds.b   1                  ; FALSE=MENU / TRUE=JEEP
+JEEP_MODE:      ds.b    1                  ; FALSE=MENU / TRUE=JEEP
+FAST_SET:       ds.b    1                  ; TRIGGER FAST LOOP on RTI
 
 MY_CONSTANT_ROM: SECTION
 ;---------------Port settings--------------;
@@ -7359,6 +7361,7 @@ Entry:
             ;-----Stepper Motor; Setup------;
             MOVB    #$3E, ddr_p             ; port p / Stepper motor setup
             MOVB    #$00, Step_Idx          ; Stepper motor Sequence Index
+            MOVB    #$FF, Stepper_ON        ; Stepper Motor set to ON
 
             ;-------Keyboard Setup----------;
             BSET    ddr_u, #$F0             ; port u (keyboard) / DDR, set as input
@@ -7375,14 +7378,14 @@ Entry:
             JSR     init_LCD                ; Initialize LCD
             JSR     default_disp             ;
             LDD     #disp                   ; Load default display
-    	    	JSR     display_string          ; Call Subroutine
+    	    JSR     display_string          ; Call Subroutine
             
             
             ;-------Potentiometer-----------;
             MOVB    #$00, pot_shift         ; Initialize to no-shift
             MOVB    #$00, old_pot           ; Initialize to zero
 
-            ;-------Potentiometer-----------;
+            ;-----------DC Motor------------;
             MOVB    #$00, DC_cnter          ; Initialize counter to zero
             MOVB    #$00, t_on              ; Initialize counter to zero
 
@@ -7391,6 +7394,7 @@ Entry:
 
             ;-----Logic & General-----------;
             MOVB    #$00, JEEP_MODE         ; Initialize to MENU Mode (JEEP=$FF)
+            MOVB    #$00, FAST_SET          ; Initialize FAST_SET to FALSE
             
             ;------CODE BEGINNING-----------;
 Loop:       BRA     Loop

@@ -69,7 +69,7 @@ Entry:
             ;-----Stepper Motor; Setup------;
             MOVB    #$3E, ddr_p             ; port p / Stepper motor setup
             MOVB    #$00, Step_Idx          ; Stepper motor Sequence Index
-            MOVB   #$FF, Stepper_ON        ; Stepper Motor set to ON
+            MOVB    #$FF, Stepper_ON        ; Stepper Motor set to ON
 
             ;-------Keyboard Setup----------;
             BSET    ddr_u, #$F0             ; port u (keyboard) / DDR, set as input

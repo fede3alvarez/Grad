@@ -3,7 +3,7 @@
 
 ; export symbols
             XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp
-            XREF disp    
+            XREF disp, display_string    
 
 default_disp:   MOVB #' ',disp
                 MOVB #' ',disp+1
@@ -69,7 +69,7 @@ newAcc_disp:    MOVB #'C',disp
                 MOVB #'A',disp+3
                 MOVB #'T',disp+4
                 MOVB #'E',disp+5
-                MOVB #'',disp+6
+                MOVB #' ',disp+6
                 MOVB #'N',disp+7
                 MOVB #'E',disp+8
                 MOVB #'W',disp+9
@@ -93,7 +93,7 @@ delAcc_disp:    MOVB #'D',disp
                 MOVB #'U',disp+7
                 MOVB #'S',disp+8
                 MOVB #'E',disp+9
-                MOVB #'R,disp+10
+                MOVB #'R',disp+10
                 MOVB #'?',disp+11
                 MOVB #' ',disp+12
                 MOVB #' ',disp+13
@@ -113,7 +113,7 @@ login_disp:     MOVB #'L',disp
                 MOVB #' ',disp+7
                 MOVB #' ',disp+8
                 MOVB #' ',disp+9
-                MOVB #' ,disp+10
+                MOVB #' ',disp+10
                 MOVB #' ',disp+11
                 MOVB #' ',disp+12
                 MOVB #' ',disp+13
@@ -193,7 +193,7 @@ safari_disp:    MOVB #' ',disp+16
                 MOVB #'A',disp+21
                 MOVB #'R',disp+22
                 MOVB #'I',disp+23
-                MOVB #''',disp+24
+                MOVB #' ',disp+24
                 MOVB #'T',disp+25
                 MOVB #'R',disp+26
                 MOVB #'I',disp+27

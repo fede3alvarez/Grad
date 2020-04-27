@@ -36,7 +36,7 @@ RTI_ISR:    LDD     RTI_Cnter               ; Load counter to Idx X
                                             ;
 Skip_Step:  LDX     $14                     ; RTI_Cnter still on Acc. D
             IDIV                            ;
-            BNQ     Chck_FAST               ; If 20 ms increment,  
+            BNE     Chck_FAST               ; If 20 ms increment,  
             MOVB    #$0F, FAST_SET          ;   Set FAST_SET to Write Keyboard 
 Chck_FAST:  BRSET   FAST_SET, $01, FAST_LP  ; If FAST_SET is non-zero
                                             ;   Go to FAST_LP
@@ -61,18 +61,22 @@ END_RTI:    INC     RTI_Cnter               ; If done, Increase
 
 FAST_LP:    LDAA    Stepper_ON              ; If Stepper_ON if FALSE ($00)
             BEQ     FAST_KEY                ;   Check Keyboard
-            LDAB    Step_Idx                ; If Step_Idx >= $04
-            CMPB    $04                     ;    then set to zero
-            BLO     CW_Lp                   ;    and clear Stepper_ON
-            MOVB    #$00, Stepper_ON        ; If here Step_Idx is zero
+            LDAA    Step_Idx                ; If Step_Idx >= $04
+            CMPA    #$04                    ;    then set to zero
+            LBLO    CW_Lp                   ;    and clear Stepper_ON
+            MOVB    #$00,Stepper_ON         ; If here Step_Idx is zero
             BRA     FAST_END                ; & Stepper Motor is completed        
 
-FAST_KEY:   BRSET   #$0F,FAST_SET, Set_seq  ; Branch to Write to Keyboard
-            BRSET   #$07,FAST_SET, Scan_seq ; Branch to Read to Keyboard
-            BRSET   #$05,FAST_SET, Pot_MENU ; Branch to Potentiometer
+FAST_KEY:   LDAA    FAST_SET                ; Check FAST_SET &
+            CMPA    #$0F                    ;       If == 0000 1111
+            LBEQ    Set_seq                 ; Branch to Write Keyboard
+            CMPA    #$07                    ;       If == 0000 0111
+            LBEQ    Scan_seq                ; Branch to Read Keyboard
+            CMPA    #$05                    ;       If == 0000 0101
+            LBEQ    Pot_MENU                ; Branch to Potentiometer
             MOVB    #$0B,FAST_SET           ; If neither of the above
                                             ;    This a wait to read Keyboard
-FAST_END:   END_RTI
+FAST_END:   BRA     END_RTI
 
             
 IRQ_ISR:    LDX     RTI_Cnter               ; Load counter to Idx X
@@ -80,7 +84,7 @@ IRQ_ISR:    LDX     RTI_Cnter               ; Load counter to Idx X
             STX     RTI_Cnter               ; Store Counter
             CPX     #1000                   ; Has the counter reached value?
             BNE     END_RTI                 ; If not, exit RTI
-            MOVW    #0, RTI_Cnter           ; Else, Initialize counter to 0
+            MOVW    #$0, RTI_Cnter          ; Else, Initialize counter to 0
             
 END_IRQ:    BCLR    CRGFLG, #$80            ;
             RTI
@@ -107,17 +111,17 @@ Scan_seq:   BRCLR   port_u, $0F, Key_Read   ; If Key is pressed, go to Key_Read
             BRA     END_RTI                 ;
 
 Scan_end:   MOVB    #$0F, FAST_SET          ; Oherwise, more rows to scan
-            BRA     END_RTI                 ;   set FAST_SET to Write 
+            LBRA    END_RTI                 ;   set FAST_SET to Write 
 
 Key_Read:   MOVB    #$00, key_val           ; Set key_val to 0, & use as index
 Key_Lp:     LDX     key_val                 ;
             LDAA    KEY_TAB, x              ; Load key value and    
             CMPA    port_u                  ;    compare to port_u 
-            BEQ     END_RTI                 ; If match move to exit (key_val is set)
+            LBEQ    END_RTI                 ; If match move to exit (key_val is set)
             INC     key_val                 ; If no match, increase
             BRCLR   key_val, #$10, Key_Lp   ;    key_val and try again
             MOVB    #$FF, key_val           ; If no match, key_val=$FF
-            BRA     END_RTI
+            LBRA    END_RTI
 
 ;--------------------------------------
 ;        STEPPER MOTOR 
@@ -142,9 +146,9 @@ CW_Lp:      LDX     Step_Idx                ;
             LDAA    STEP_TAB, x             ; Read Sequence and write 
             STAA    port_p                  ;    it to Stepper Motor
             INC     Step_Idx                ; Update Index for next time
-            MOVB    #$0F, FAST_SET          ; Set FAST_SET to Write Keyboard
-            MOVB    #$FF, Stepper_ON        ; Set Stepper_ON, to not check
-            BRA     END_RTI                 ; Stepper Motor until next FAST RTI
+            MOVB    #$0F,FAST_SET          ; Set FAST_SET to Write Keyboard
+            MOVB    #$FF,Stepper_ON        ; Set Stepper_ON, to not check
+            LBRA    END_RTI                 ; Stepper Motor until next FAST RTI
 
 ;--------------------------------------
 ;        DC MOTOR 
@@ -171,17 +175,17 @@ PWM_ON:     LDAA    DC_cnter                ; Load t_on DC_cnter
             BHS     PWM_OFF                 ;   branch to PWM_Off
             BSET    port_t,#$80             ; Set Bit 3 of port_t (HIGH)
             INC     DC_cnter                ; Increase Counter
-            BRA     END_RTI
+            LBRA    END_RTI
 
 PWM_OFF:    LDAA    DC_cnter                ;
             CMPA    $0F                     ;
             BHS     PWN_CLR                 ;
             BCLR    port_t,#$80             ; Set Bit 3 of port_t
             INC     DC_cnter                ; Increase Counter
-            BRA     END_RTI
+            LBRA    END_RTI
 
 PWN_CLR:    MOVB    #$00, DC_cnter          ;
-            BRA     END_RTI
+            LBRA    END_RTI
 
 ;--------------------------------------
 ;        LCD 
@@ -221,7 +225,7 @@ Pot_LEFT:   MOVB    $04, pot_shift          ;
             
 Pot_END:    MOVB    #$00, FAST_SET          ; Set FAST_LP to completed
             MOVB    #$FF, Stepper_ON        ; Set Stepper_ON to FALSE 
-            BRA     END_RTI                 ;   to check Stepper on 
+            LBRA    END_RTI                 ;   to check Stepper on 
                                             ;   next FAST RTI
 
 ;--------------------------------------
