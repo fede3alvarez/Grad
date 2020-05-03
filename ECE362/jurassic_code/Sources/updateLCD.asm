@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift
+            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done
             XREF disp, display_string    
 
 default_disp:   MOVB #' ',disp
@@ -309,7 +309,7 @@ ENTER_PASSWORD: MOVB #'E',disp
                 MOVB #'N',disp+1
                 MOVB #'T',disp+2
                 MOVB #'E',disp+3
-                MOVB #'R,disp+4
+                MOVB #'R',disp+4
                 MOVB #' ',disp+5
                 MOVB #'P',disp+6
                 MOVB #'A',disp+7
@@ -329,7 +329,7 @@ SUCC_PASSWORD:  MOVB #'P',disp
                 MOVB #'A',disp+1
                 MOVB #'S',disp+2
                 MOVB #'S',disp+3
-                MOVB #'W,disp+4
+                MOVB #'W',disp+4
                 MOVB #'O',disp+5
                 MOVB #'R',disp+6
                 MOVB #'D',disp+7
@@ -341,6 +341,150 @@ SUCC_PASSWORD:  MOVB #'P',disp
                 MOVB #'O',disp+13
                 MOVB #'V',disp+14
                 MOVB #'E',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+FAIL_PASSWORD:  MOVB #'W',disp
+                MOVB #'R',disp+1
+                MOVB #'O',disp+2
+                MOVB #'N',disp+3
+                MOVB #'G',disp+4
+                MOVB #' ',disp+5
+                MOVB #'P',disp+6
+                MOVB #'A',disp+7
+                MOVB #'S',disp+8
+                MOVB #'S',disp+9
+                MOVB #'W',disp+10
+                MOVB #'O',disp+11
+                MOVB #'R',disp+12
+                MOVB #'D',disp+13
+                MOVB #'!',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+ATTEMPT_PASS:   MOVB pass_temp,disp
+                MOVB #' ',disp+8
+                MOVB #' ',disp+9
+                MOVB #' ',disp+10
+                MOVB #' ',disp+11
+                MOVB #' ',disp+12
+                MOVB #' ',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+no_empty_disp:  MOVB #'T',disp
+                MOVB #'H',disp+1
+                MOVB #'E',disp+2
+                MOVB #'R',disp+3
+                MOVB #'E',disp+4
+                MOVB #' ',disp+5
+                MOVB #'A',disp+6
+                MOVB #'R',disp+7
+                MOVB #'E',disp+8
+                MOVB #'',disp+9
+                MOVB #'N',disp+10
+                MOVB #'O',disp+11
+                MOVB #' ',disp+12
+                MOVB #' ',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                MOVB #' ',disp+16
+                MOVB #'E',disp+17
+                MOVB #'M',disp+18
+                MOVB #'P',disp+19
+                MOVB #'T',disp+20
+                MOVB #'Y',disp+21
+                MOVB #' ',disp+22
+                MOVB #'A',disp+23
+                MOVB #'C',disp+24
+                MOVB #'C',disp+25
+                MOVB #'O',disp+26
+                MOVB #'N',disp+27
+                MOVB #'T',disp+28
+                MOVB #'S',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+newAcc_disp:    MOVB #'C',disp
+                MOVB #'R',disp+1
+                MOVB #'E',disp+2
+                MOVB #'A',disp+3
+                MOVB #'T',disp+4
+                MOVB #'E',disp+5
+                MOVB #' ',disp+6
+                MOVB #'N',disp+7
+                MOVB #'E',disp+8
+                MOVB #'W',disp+9
+                MOVB #' ',disp+10
+                MOVB #'U',disp+11
+                MOVB #'S',disp+12
+                MOVB #'E',disp+13
+                MOVB #'R',disp+14
+                MOVB #'?',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+newUsr_done:    MOVB #'K',disp
+                MOVB #'E',disp+1
+                MOVB #'Y',disp+2
+                MOVB #' ',disp+3
+                MOVB #'T',disp+4
+                MOVB #'W',disp+5
+                MOVB #'I',disp+6
+                MOVB #'C',disp+7
+                MOVB #'E',disp+8
+                MOVB #' ',disp+9
+                MOVB #'4',disp+10
+                MOVB #' ',disp+11
+                MOVB #'D',disp+12
+                MOVB #'O',disp+13
+                MOVB #'N',disp+14
+                MOVB #'E',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+newUsr_disp:    MOVB #'E',disp
+                MOVB #'N',disp+1
+                MOVB #'T',disp+2
+                MOVB #'E',disp+3
+                MOVB #'R',disp+4
+                MOVB #' ',disp+5
+                MOVB #'U',disp+6
+                MOVB #'S',disp+7
+                MOVB #'R',disp+8
+                MOVB #' ',disp+9
+                MOVB #'(',disp+10
+                MOVB #'8',disp+11
+                MOVB #'C',disp+12
+                MOVB #'H',disp+13
+                MOVB #'R',disp+14
+                MOVB #')',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+ATTEMPT_USR:    MOVB usr_temp,disp+16
+                MOVB #' ',disp+24
+                MOVB #' ',disp+25
+                MOVB #' ',disp+26
+                MOVB #' ',disp+27
+                MOVB #' ',disp+28
+                MOVB #' ',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0' 
                 LDD  #disp         
                 JSR  display_string
                 RTS

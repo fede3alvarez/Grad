@@ -11,6 +11,8 @@ Main_Logic:     LDAA    user_sel            ; Check if user has been selected
                 NOP
                 BRA 
 
+trip:           BRA     trip
+
 USR_MENU_INPUT: LDAA    key_val             ; Subrountine to check if
                 COMA                        ;    Keypad is pressed
                 ORAA    pot_shift           ;    or Pot shifts 

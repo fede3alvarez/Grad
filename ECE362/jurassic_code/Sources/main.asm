@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id
 
             XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults    
 
@@ -45,7 +45,12 @@ usr_menu_max:   ds.b    1                  ; Number of User Menu options
 usr_sel_acc:    ds.b    1                  ; Number of User Menu options
 usr_max:        ds.c    4                  ; Number of User Menu options
 usr_char        ds.b    1                  ; User character (Password)
+usr_empty       ds.b    1                  ; Keeps track of empty Accounts
+usr_temp        ds.b    1                  ; Temporary display when creating new acc
+usr_new_id      ds.w    1                  ; Temp Variable for creating a new acc
 pass_char       ds.b    1                  ; Password character (Password)
+pass_temp       ds.b    1                  ; Password entered
+key_twice       ds.b    1                  ; Password entered
 usr_0:          ds.b    #16                ; User Account Space
 usr_1:          ds.b    #16                ; User Account Space
 usr_2:          ds.b    #16                ; User Account Space
@@ -114,7 +119,9 @@ Entry:
             MOVB    #$01, usr_menu_shift    ; Set Default to zero
             MOVB    #$03, usr_menu_max      ; 0=Login / 1=Create / 2=Delete / 3=Visitor
             MOVB    #$00, usr_sel_acc       ; Max number of users
-            MOVB    #$03, usr_avail         ; 
+            MOVB    #$00, usr_empty         ; No empty users 
+            MOVB    #$00, usr_temp          ; Temporary storage of new acc 
+            MOVB    #$00, key_twice         ; Keeps track of # of keys pressed
             JSR     user_defaults           ; Setups up default users
 
             ;-----Logic & General-----------;

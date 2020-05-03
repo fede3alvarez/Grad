@@ -5,7 +5,7 @@
 ; export symbols
             XDEF user_defaults, usr_EMPTY
 
-            XREF __SEG_END_SSTACK, usr_0, usr_1, usr_2, usr_3, usr_4
+            XREF __SEG_END_SSTACK, usr_0, usr_1, usr_2, usr_3, usr_4, reset_TempPass, usr_empty
 
 ;-----------------------------------;
 ;           user_defaults           ;
@@ -15,16 +15,26 @@
 ;-----------------------------------;
 
 user_defaults:  
-                LDX     usr_0
-                JSR     usr_GRANT
-                LDX     usr_1
-                JSR     usr_SATTLER
-                LDX     usr_2
-                JSR     usr_MALCOLM
-                LDX     usr_3
-                JSR     usr_EMPTY
-                LDX     usr_4
-                JSR     usr_VISIT
+                LDX     #usr_0              ; Populate users with data
+                PSHX                        ;    and fill usr_empty 
+                JSR     usr_GRANT           ;
+                BCLR    usr_empty, $01      ;   
+                LDX     #usr_1              ; usr_empty is setup on a bit bases
+                PSHX                        ; 
+                JSR     usr_SATTLER         ;   Bit 0: usr 0
+                BCLR    usr_empty, $02      ;   Bit 1: usr 1
+                LDX     #usr_2              ;   Bit 2: usr 2
+                PSHX                        ;   Bit 3: usr 3 
+                JSR     usr_MALCOLM         ;
+                BCLR    usr_empty, $04      ;   Bit 4: Never empty (visitor)
+                LDX     #usr_3              ;
+                PSHX                        ; 
+                JSR     usr_EMPTY           ;
+                BSET    usr_empty, $08      ;   
+                LDX     #usr_4              ;
+                PSHX                        ; 
+                JSR     usr_VISIT           ;
+                BCLR    usr_empty, $0A      ;   
                 RTS
 
 
@@ -129,6 +139,18 @@ usr_VISIT:      LDX     2, SP               ; Load Stack on Indx X
                 MOVB    #' ', x+            ;
                 ;             x+            ; Password
                 MOVB    #'-', x+            ;    No password
+                MOVB    #' ', x+            ;
+                MOVB    #' ', x+            ;
+                MOVB    #' ', x+            ;
+                MOVB    #' ', x+            ;
+                MOVB    #' ', x+            ;
+                MOVB    #' ', x+            ;
+                MOVB    #' ', x+            ;
+                RTS
+
+reset_Temp:     LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                MOVB    #' ', x+            ;   
                 MOVB    #' ', x+            ;
                 MOVB    #' ', x+            ;
                 MOVB    #' ', x+            ;
