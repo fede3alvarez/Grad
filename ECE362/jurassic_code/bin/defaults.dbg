@@ -1,3 +1,4 @@
+
 ; Include derivative-specific definitions
             INCLUDE 'derivative.inc'
 
@@ -7294,132 +7295,159 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice
+            XDEF user_defaults, usr_EMPTY, reset_Temp
 
-            XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults    
+            XREF __SEG_END_SSTACK, usr_0, usr_1, usr_2, usr_3, usr_4, usr_empty
 
-; variable/data section
-MY_EXTENDED_RAM:    SECTION
-                ORG   $800
+;-----------------------------------;
+;           user_defaults           ;
+;-----------------------------------;
+; This file populates the user      ;
+; login information                 ;
+;-----------------------------------;
 
-;-------------ISR Parameters---------------;
-RTI_Cnter:      ds.w    1
+user_defaults:  
+                LDX     #usr_0              ; Populate users with data
+                PSHX                        ;    and fill usr_empty 
+                JSR     usr_GRANT           ;
+                BCLR    usr_empty, $01      ;   
+                LDX     #usr_1              ; usr_empty is setup on a bit bases
+                PSHX                        ; 
+                JSR     usr_SATTLER         ;   Bit 0: usr 0
+                BCLR    usr_empty, $02      ;   Bit 1: usr 1
+                LDX     #usr_2              ;   Bit 2: usr 2
+                PSHX                        ;   Bit 3: usr 3 
+                JSR     usr_MALCOLM         ;
+                BCLR    usr_empty, $04      ;   Bit 4: Never empty (visitor)
+                LDX     #usr_3              ;
+                PSHX                        ; 
+                JSR     usr_EMPTY           ;
+                BSET    usr_empty, $08      ;   
+                LDX     #usr_4              ;
+                PSHX                        ; 
+                JSR     usr_VISIT           ;
+                BCLR    usr_empty, $0A      ;   
+                RTS
 
-;---Stepper Motor Parameters / port_p------;
-STEP_TAB:       dc.b    $0A, $12, $14, $0C
-Step_Idx:       ds.b    1
-Stepper_ON:     ds.b    1
 
-;--------Keyboard Parameters / port_u------;
-; Table with key value
-KEY_TAB:        dc.b    $eb, $77, $7b, $7d, $b7, $bb, $bd, $d7, $db, $dd, $e7, $ed, $7e, $be, $de, $ee
-Scan_KeyRow:    dc.b    $70, $B0, $D0, $E0 ; Scan Sequence for Keyboard
-Scan_Count:     ds.w    1                  ; Index when Scanning Keyboard
-key_press:      ds.b    1                  ; Indicator that a key has been recently pressed
-key_val:        ds.b    1                  ; Key Value
+usr_GRANT:      LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                ;                           ; User Name
+                MOVB    #'D', 0, x          ;     Dr. Alan Grant
+                MOVB    #'R', 1, x          ;
+                MOVB    #' ', 2, x          ;
+                MOVB    #'G', 3, x          ;
+                MOVB    #'R', 4, x          ;
+                MOVB    #'A', 5, x          ;
+                MOVB    #'N', 6, x          ;
+                MOVB    #'T', 7, x          ;
+                ;                           ; Password
+                MOVB    #'H', 8, x          ;     HATS
+                MOVB    #'A', 9, x          ;
+                MOVB    #'T', 10, x         ;
+                MOVB    #'S', 11, x         ;
+                MOVB    #'-', 12, x         ;
+                MOVB    #' ', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
+                RTS
 
-;-------------LCD Parameters---------------;
-disp:           ds.b    33
+usr_SATTLER:    LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                ;                           ; User Name
+                MOVB    #'S', 0, x          ;     Dr. Ellie Sattler
+                MOVB    #'A', 1, x          ;
+                MOVB    #'T', 2, x          ;
+                MOVB    #'T', 3, x          ;
+                MOVB    #'L', 4, x          ;
+                MOVB    #'E', 5, x          ;
+                MOVB    #'R', 6, x          ;
+                MOVB    #' ', 7, x          ;
+                ;                           ; Password
+                MOVB    #'P', 8, x          ;     PLANTS
+                MOVB    #'L', 9, x          ;
+                MOVB    #'A', 10, x         ;
+                MOVB    #'N', 11, x         ;
+                MOVB    #'T', 12, x         ;
+                MOVB    #'S', 13, x         ;
+                MOVB    #'-', 14, x         ;
+                MOVB    #' ', 15, x         ;
+                RTS
 
-;-------Potentiometer Parameters-----------;
-old_pot:        ds.b    1                  ; Previous pot_value
-pot_shift:      ds.b    1                  ; Bit 0: 1=Stale, 0=Valid data
-;                                          ; $02=RIGHT, $04=LEFT
+usr_MALCOLM:    LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                ;                           ; User Name
+                MOVB    #'M', 0, x          ;     Dr. Ian Malcolm
+                MOVB    #'A', 1, x          ;
+                MOVB    #'L', 2, x          ;
+                MOVB    #'C', 3, x          ;
+                MOVB    #'O', 4, x          ;
+                MOVB    #'L', 5, x          ;
+                MOVB    #'M', 6, x          ;
+                MOVB    #' ', 7, x          ;
+                ;                           ; Password
+                MOVB    #'C', 8, x          ;     CHAOS
+                MOVB    #'H', 9, x          ;
+                MOVB    #'A', 10, x         ;
+                MOVB    #'O', 11, x         ;
+                MOVB    #'S', 12, x         ;
+                MOVB    #'-', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
+                RTS
 
-;--------------DC Motor--------------------;
-DC_cnter:       ds.b    1
-t_on:           ds.b    1
+usr_EMPTY:      LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                ;                           ; User Name
+                MOVB    #'E', 0, x          ;     EMPTY
+                MOVB    #'M', 1, x          ;
+                MOVB    #'P', 2, x          ;
+                MOVB    #'T', 3, x          ;
+                MOVB    #'Y', 4, x          ;
+                MOVB    #' ', 5, x          ;
+                MOVB    #' ', 6, x          ;
+                MOVB    #' ', 7, x          ;
+                ;                           ; Password
+                MOVB    #'-', 8, x          ;
+                MOVB    #' ', 9, x          ;
+                MOVB    #' ', 10, x         ;
+                MOVB    #' ', 11, x         ;
+                MOVB    #' ', 12, x         ;
+                MOVB    #' ', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
+                RTS
 
-;---------User / Account Selection---------;
-user_sel:       ds.b    1                  ;     
-usr_menu_shift: ds.b    1                  ; Shifts between user menu options    
-usr_menu_max:   ds.b    1                  ; Number of User Menu options
-usr_sel_acc:    ds.b    1                  ; Number of User Menu options
-usr_max:        ds.b    1                  ; Number of User Menu options
-usr_char        ds.b    1                  ; User character (Password)
-usr_empty       ds.b    1                  ; Keeps track of empty Accounts
-usr_temp        ds.b    1                  ; Temporary display when creating new acc
-usr_new_id      ds.w    1                  ; Temp Variable for creating a new acc
-pass_char       ds.b    1                  ; Password character (Password)
-pass_temp       ds.b    1                  ; Password entered
-key_twice       ds.b    1                  ; Password entered
-usr_0:          ds.b    $10                 ; User Account Space
-usr_1:          ds.b    $10                 ; User Account Space
-usr_2:          ds.b    $10                 ; User Account Space
-usr_3:          ds.b    $10                 ; User Account Space
-usr_4:          ds.b    $10                ; User Account Space
+usr_VISIT:      LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                ;                           ; User Name
+                MOVB    #'V', 0, x          ;     Visitor
+                MOVB    #'I', 1, x          ;
+                MOVB    #'S', 2, x          ;
+                MOVB    #'I', 3, x          ;
+                MOVB    #'T', 4, x          ;
+                MOVB    #'O', 5, x          ;
+                MOVB    #'R', 6, x          ;
+                MOVB    #' ', 7, x          ;
+                ;                           ; Password
+                MOVB    #'-', 8, x          ;    No password
+                MOVB    #' ', 9, x          ;
+                MOVB    #' ', 10, x         ;
+                MOVB    #' ', 11, x         ;
+                MOVB    #' ', 12, x         ;
+                MOVB    #' ', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
+                RTS
 
-;----------Logic & General-----------------;
-JEEP_MODE:      ds.b    1                  ; FALSE=MENU / TRUE=JEEP
-FAST_SET:       ds.b    1                  ; TRIGGER FAST LOOP on RTI
-
-MY_CONSTANT_ROM: SECTION
-;---------------Port settings--------------;
-; Keyboard Parameters / port_u
-port_u:         equ     $268                  
-ddr_u:          equ     $26A                   
-psr_u:          equ     $26D
-peru_u:         equ     $26C
-
-;--------Stepper Motor / port_p------------;
-port_p:         equ     $258
-ddr_p:          equ     $25A
-
-;--------------DC Motor--------------------;
-port_t:         equ     $240
-ddr_t:          equ     $242
-
-; Code section
-MyCode:             SECTION
-Entry:
-            LDS     #__SEG_END_SSTACK       ; Initialize stack
-            
-            ;-----Stepper Motor; Setup------;
-            MOVB    #$3E, ddr_p             ; port p / Stepper motor setup
-            MOVB    #$00, Step_Idx          ; Stepper motor Sequence Index
-            MOVB    #$FF, Stepper_ON        ; Stepper Motor set to ON
-
-            ;-------Keyboard Setup----------;
-            BSET    ddr_u, #$F0             ; port u (keyboard) / DDR, set as input
-            BSET    peru_u, #$0F            ; port u (keyboard) / PER, Set as pull-up/down
-            BSET    psr_u, #$F0             ; port u (keyboard) / PDR, set as pull-up
-            MOVW    #$00, Scan_Count        ; initialize the counter
-            
-            ;-------Interrupts Setup--------;
-            MOVB    #$80, CRGINT            ; Enable RTI
-            MOVB    #$40, RTICTL            ; Set RTI to 1 ms
-            CLI                             ; Initialize Interrupts
-                                   
-            ;-------LCD Display-------------;
-            JSR     init_LCD                ; Initialize LCD
-            JSR     default_disp             ;
-            LDD     #disp                   ; Load default display
-    	    JSR     display_string          ; Call Subroutine
-            
-            
-            ;-------Potentiometer-----------;
-            MOVB    #$00, pot_shift         ; Initialize to no-shift
-            MOVB    #$00, old_pot           ; Initialize to zero
-
-            ;-----------DC Motor------------;
-            MOVB    #$00, DC_cnter          ; Initialize counter to zero
-            MOVB    #$00, t_on              ; Initialize counter to zero
-
-            ;------User / Account Setup-----;
-            MOVB    #$00, user_sel          ; Set Default to no user selected
-            MOVB    #$01, usr_menu_shift    ; Set Default to zero
-            MOVB    #$03, usr_menu_max      ; 0=Login / 1=Create / 2=Delete / 3=Visitor
-            MOVB    #$00, usr_sel_acc       ; Max number of users
-            MOVB    #$00, usr_empty         ; No empty users 
-            MOVB    #$00, usr_temp          ; Temporary storage of new acc 
-            MOVB    #$04, usr_max           ; Max number of users 
-            MOVB    #$00, key_twice         ; Keeps track of # of keys pressed
-            JSR     user_defaults           ; Setups up default users
-
-            ;-----Logic & General-----------;
-            MOVB    #$00, JEEP_MODE         ; Initialize to MENU Mode (JEEP=$FF)
-            MOVB    #$00, FAST_SET          ; Initialize FAST_SET to FALSE
-            
-            ;------CODE BEGINNING-----------;
-Loop:       BRA     Loop
-            NOP
+reset_Temp:     LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                MOVB    #' ', 0, x            ;   
+                MOVB    #' ', 1, x            ;
+                MOVB    #' ', 2, x            ;
+                MOVB    #' ', 3, x            ;
+                MOVB    #' ', 4, x            ;
+                MOVB    #' ', 5, x            ;
+                MOVB    #' ', 6, x            ;
+                MOVB    #' ', 7, x            ;
+                RTS

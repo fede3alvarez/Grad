@@ -13,7 +13,12 @@ Linker      : SmartLinker V-5.0.52 Build 15249, Sep  7 2015
 FILE SECTION
 ---------------------------------------------------------------------------------------------
 main.asm.o                              Model: SMALL,         Lang: Assembler,     Compiler Version: Assembler for HC12 V-5.0.32 Build 15249, Sep  7 2015
+lcddisp.c.o                             Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
 mc9s12e128.c.o                          Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
+potentiometer.c.o                       Model: SMALL,         Lang: ANSI-C,        Compiler Version: ANSI-C/cC++ Compiler for HC12 V-5.0.46 Build 15249, Sep  7 2015
+interrupt.asm.o                         Model: SMALL,         Lang: Assembler,     Compiler Version: Assembler for HC12 V-5.0.32 Build 15249, Sep  7 2015
+updateLCD.asm.o                         Model: SMALL,         Lang: Assembler,     Compiler Version: Assembler for HC12 V-5.0.32 Build 15249, Sep  7 2015
+defaults.asm.o                          Model: SMALL,         Lang: Assembler,     Compiler Version: Assembler for HC12 V-5.0.32 Build 15249, Sep  7 2015
 
 *********************************************************************************************
 STARTUP SECTION
@@ -24,9 +29,10 @@ Entry point: 0xC000 (Entry)
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                            186     R     0xC000     0xC0B9   ROM_C000
+.init                            136     R     0xC000     0xC087   ROM_C000
+NON_BANKED                       267     R     0xC088     0xC192   ROM_C000
 .stack                           256   R/W      0x400      0x4FF   RAM
-main.asm__ORG00001                31     R      0x800      0x81E   .absSeg0
+main.asm__ORG00001               164     R      0x800      0x8A3   .absSeg0
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg1
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg2
 .abs_section_a                     1   N/I        0xA        0xA   .absSeg3
@@ -300,20 +306,25 @@ main.asm__ORG00001                31     R      0x800      0x81E   .absSeg0
 .abs_section_27a                   2   N/I      0x27A      0x27B   .absSeg271
 .abs_section_27c                   2   N/I      0x27C      0x27D   .absSeg272
 .abs_section_27e                   2   N/I      0x27E      0x27F   .absSeg273
+.bss                               2   R/W      0x500      0x501   RAM
+.common                            2   R/W      0x502      0x503   RAM
+interrupt.asm._SEC000000         367     R     0xC193     0xC301   ROM_C000
+updateLCD.asm._SEC000000        2551     R     0xC302     0xCCF8   ROM_C000
+defaults.asm._SEC000000          426     R     0xCCF9     0xCEA2   ROM_C000
 .vectSeg274_vect                   4     R     0xFFF0     0xFFF3   .vectSeg274
 .vectSeg275_vect                   2     R     0xFFFE     0xFFFF   .vectSeg275
 
 Summary of section sizes per section type:
-READ_ONLY (R):          DF (dec:      223)
-READ_WRITE (R/W):      100 (dec:      256)
+READ_ONLY (R):         F4D (dec:     3917)
+READ_WRITE (R/W):      104 (dec:      260)
 NO_INIT (N/I):         160 (dec:      352)
 
 *********************************************************************************************
 VECTOR-ALLOCATION SECTION
     Address     InitValue   InitFunction
 ---------------------------------------------------------------------------------------------
-     0xFFF0        0xC02B   RTI_ISR
-     0xFFF2        0xC041   IRQ_ISR
+     0xFFF0        0xC193   RTI_ISR
+     0xFFF2        0xC1E8   IRQ_ISR
      0xFFFE        0xC000   Entry
 
 *********************************************************************************************
@@ -322,26 +333,57 @@ OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 MODULE:                 -- main.asm.o --
 - PROCEDURES:
-     Entry                                     C000      2B      43       0   .init       
-     RTI_ISR                                   C02B      12      18       0   .init       
-     END_RTI                                   C03D       4       4       0   .init       
-     IRQ_ISR                                   C041      28      40       0   .init       
-     Exit_set                                  C069       A      10       0   .init       
-     Key_Tab                                   C073       5       5       0   .init       
-     Key_Lp                                    C078      15      21       0   .init       
-     Exit_key                                  C08D       D      13       0   .init       
-     CW_Lp                                     C09A      20      32       0   .init       
+     Entry                                     C000      85     133       0   .init       
+     Loop                                      C085       3       3       0   .init       
 - VARIABLES:
-     Counter                                    800       2       2       0   .text       
-     STEP_TAB                                   802       4       4       0   .text       
-     Step_Idx                                   806       1       1       0   .text       
-     KEY_TAB                                    807      10      16       0   .text       
-     Scan_KeyRow                                817       4       4       0   .text       
-     Scan_Count                                 81B       2       2       0   .text       
-     key_press                                  81D       1       1       0   .text       
-     key_val                                    81E       1       1       0   .text       
+     RTI_Cnter                                  800       2       2       5   .text       
+     STEP_TAB                                   802       4       4       1   .text       
+     Step_Idx                                   806       1       1       4   .text       
+     Stepper_ON                                 807       1       1       4   .text       
+     KEY_TAB                                    808      10      16       1   .text       
+     Scan_KeyRow                                818       4       4       1   .text       
+     Scan_Count                                 81C       2       2       4   .text       
+     key_press                                  81E       1       1       0   .text       
+     key_val                                    81F       1       1       5   .text       
+     disp                                       820      21      33     499   .text       
+     old_pot                                    841       1       1       2   .text       
+     pot_shift                                  842       1       1       3   .text       
+     DC_cnter                                   843       1       1       6   .text       
+     t_on                                       844       1       1       3   .text       
+     user_sel                                   845       1       1       0   .text       
+     usr_menu_shift                             846       1       1       0   .text       
+     usr_menu_max                               847       1       1       0   .text       
+     usr_sel_acc                                848       1       1       0   .text       
+     usr_max                                    849       1       1       0   .text       
+     usr_char                                   84A       1       1       0   .text       
+     usr_empty                                  84B       1       1       5   .text       
+     usr_temp                                   84C       1       1       1   .text       
+     usr_new_id                                 84D       2       2       0   .text       
+     pass_char                                  84F       1       1       0   .text       
+     pass_temp                                  850       1       1       1   .text       
+     key_twice                                  851       1       1       0   .text       
+     usr_0                                      852      10      16       1   .text       
+     usr_1                                      862      10      16       1   .text       
+     usr_2                                      872      10      16       1   .text       
+     usr_3                                      882      10      16       1   .text       
+     usr_4                                      892      10      16       1   .text       
+     JEEP_MODE                                  8A2       1       1       1   .text       
+     FAST_SET                                   8A3       1       1       9   .text       
 - LABELS:
      __SEG_END_SSTACK                           500       0       0       1               
+     port_t                                     240       0       0       2   .text       
+     port_p                                     258       0       0       1   .text       
+     port_u                                     268       0       0       3   .text       
+MODULE:                 -- lcddisp.c.o --
+- PROCEDURES:
+     delay_ms                                  C088      17      23       5   NON_BANKED  
+     init_LCD                                  C09F      52      82       1   NON_BANKED  
+     display_string                            C0F1      38      56      25   NON_BANKED  
+     Delay                                     C129      1F      31       1   NON_BANKED  
+     epulse                                    C148      24      36       3   NON_BANKED  
+     sendCommand                               C16C       F      15       7   NON_BANKED  
+- VARIABLES:
+     data                                       500       2       2       4   .bss        
 MODULE:                 -- mc9s12e128.c.o --
 - PROCEDURES:
 - VARIABLES:
@@ -396,7 +438,7 @@ MODULE:                 -- mc9s12e128.c.o --
      _TIM0_TFLG2                                 4F       1       1       0   .abs_section_4f
      _TIM0_PACTL                                 60       1       1       0   .abs_section_60
      _TIM0_PAFLG                                 61       1       1       0   .abs_section_61
-     _ATDSTAT0                                   86       1       1       0   .abs_section_86
+     _ATDSTAT0                                   86       1       1       1   .abs_section_86
      _ATDTEST1                                   89       1       1       0   .abs_section_89
      _ATDSTAT2                                   8A       1       1       0   .abs_section_8a
      _ATDSTAT1                                   8B       1       1       0   .abs_section_8b
@@ -513,9 +555,9 @@ MODULE:                 -- mc9s12e128.c.o --
      _PERS                                      24C       1       1       0   .abs_section_24c
      _PPSS                                      24D       1       1       0   .abs_section_24d
      _WOMS                                      24E       1       1       0   .abs_section_24e
-     _PTM                                       250       1       1       0   .abs_section_250
+     _PTM                                       250       1       1       5   .abs_section_250
      _PTIM                                      251       1       1       0   .abs_section_251
-     _DDRM                                      252       1       1       0   .abs_section_252
+     _DDRM                                      252       1       1       1   .abs_section_252
      _RDRM                                      253       1       1       0   .abs_section_253
      _PERM                                      254       1       1       0   .abs_section_254
      _PPSM                                      255       1       1       0   .abs_section_255
@@ -552,10 +594,10 @@ MODULE:                 -- mc9s12e128.c.o --
      _TIM0_TC6                                   5C       2       2       0   .abs_section_5c
      _TIM0_TC7                                   5E       2       2       0   .abs_section_5e
      _TIM0_PACNT                                 62       2       2       0   .abs_section_62
-     _ATDCTL23                                   82       2       2       0   .abs_section_82
-     _ATDCTL45                                   84       2       2       0   .abs_section_84
+     _ATDCTL23                                   82       2       2       1   .abs_section_82
+     _ATDCTL45                                   84       2       2       1   .abs_section_84
      _ATDDIEN                                    8C       2       2       0   .abs_section_8c
-     _ATDDR0                                     90       2       2       0   .abs_section_90
+     _ATDDR0                                     90       2       2       1   .abs_section_90
      _ATDDR1                                     92       2       2       0   .abs_section_92
      _ATDDR2                                     94       2       2       0   .abs_section_94
      _ATDDR3                                     96       2       2       0   .abs_section_96
@@ -610,30 +652,113 @@ MODULE:                 -- mc9s12e128.c.o --
      _PMFCNTC                                   232       2       2       0   .abs_section_232
      _PMFMODC                                   234       2       2       0   .abs_section_234
      _PMFDTMC                                   236       2       2       0   .abs_section_236
-     _PTAD                                      270       2       2       0   .abs_section_270
+     _PTAD                                      270       2       2       4   .abs_section_270
      _PTIAD                                     272       2       2       0   .abs_section_272
-     _DDRAD                                     274       2       2       0   .abs_section_274
+     _DDRAD                                     274       2       2       1   .abs_section_274
      _RDRAD                                     276       2       2       0   .abs_section_276
      _PERAD                                     278       2       2       0   .abs_section_278
      _PPSAD                                     27A       2       2       0   .abs_section_27a
      _PIEAD                                     27C       2       2       0   .abs_section_27c
      _PIFAD                                     27E       2       2       0   .abs_section_27e
+MODULE:                 -- potentiometer.c.o --
+- PROCEDURES:
+     read_pot                                  C17B      18      24       1   NON_BANKED  
+- VARIABLES:
+     pot_value                                  502       2       2       4   .common     
+MODULE:                 -- interrupt.asm.o --
+- PROCEDURES:
+     RTI_ISR                                   C193       D      13       0   interrupt.asm._SEC000000
+     Skip_Step                                 C1A0       B      11       0   interrupt.asm._SEC000000
+     Chck_FAST                                 C1AB       5       5       0   interrupt.asm._SEC000000
+     END_RTI                                   C1B0       7       7       0   interrupt.asm._SEC000000
+     FAST_LP                                   C1B7      15      21       0   interrupt.asm._SEC000000
+     FAST_KEY                                  C1CC      1A      26       0   interrupt.asm._SEC000000
+     FAST_END                                  C1E6       2       2       0   interrupt.asm._SEC000000
+     IRQ_ISR                                   C1E8      16      22       0   interrupt.asm._SEC000000
+     Set_seq                                   C1FE      15      21       0   interrupt.asm._SEC000000
+     Scan_seq                                  C213      19      25       0   interrupt.asm._SEC000000
+     Scan_end                                  C22C       9       9       0   interrupt.asm._SEC000000
+     Key_Read                                  C235       5       5       0   interrupt.asm._SEC000000
+     Key_Lp                                    C23A      1F      31       0   interrupt.asm._SEC000000
+     CW_Lp                                     C259      27      39       0   interrupt.asm._SEC000000
+     DC_Setup                                  C280      16      22       0   interrupt.asm._SEC000000
+     PWM_ON                                    C296      13      19       0   interrupt.asm._SEC000000
+     PWM_OFF                                   C2A9      12      18       0   interrupt.asm._SEC000000
+     PWN_CLR                                   C2BB       9       9       0   interrupt.asm._SEC000000
+     Pot_SEL                                   C2C4      10      16       0   interrupt.asm._SEC000000
+     Pot_MENU                                  C2D4      12      18       0   interrupt.asm._SEC000000
+     Pot_RIGHT                                 C2E6       8       8       0   interrupt.asm._SEC000000
+     Pot_LEFT                                  C2EE       6       6       0   interrupt.asm._SEC000000
+     Pot_END                                   C2F4       E      14       0   interrupt.asm._SEC000000
+- VARIABLES:
+MODULE:                 -- updateLCD.asm.o --
+- PROCEDURES:
+     default_disp                              C302      AC     172       1   updateLCD.asm._SEC000000
+     menu_tutorial                             C3AE      AC     172       0   updateLCD.asm._SEC000000
+     menu_disp                                 C45A      5C      92       0   updateLCD.asm._SEC000000
+     newAcc_disp                               C4B6      57      87       0   updateLCD.asm._SEC000000
+     delAcc_disp                               C50D      57      87       0   updateLCD.asm._SEC000000
+     login_disp                                C564      57      87       0   updateLCD.asm._SEC000000
+     visit_disp                                C5BB      57      87       0   updateLCD.asm._SEC000000
+     whereToGo_disp                            C612      57      87       0   updateLCD.asm._SEC000000
+     aqua_disp                                 C669      5C      92       0   updateLCD.asm._SEC000000
+     garden_disp                               C6C5      5C      92       0   updateLCD.asm._SEC000000
+     safari_disp                               C721      5C      92       0   updateLCD.asm._SEC000000
+     log_usr_sel                               C77D      57      87       0   updateLCD.asm._SEC000000
+     log_usr_shift                             C7D4      5E      94       0   updateLCD.asm._SEC000000
+     ENTER_PASSWORD                            C832      57      87       0   updateLCD.asm._SEC000000
+     SUCC_PASSWORD                             C889      57      87       0   updateLCD.asm._SEC000000
+     FAIL_PASSWORD                             C8E0      57      87       0   updateLCD.asm._SEC000000
+     ATTEMPT_PASS                              C937      5A      90       0   updateLCD.asm._SEC000000
+     no_empty_disp                             C991      AC     172       0   updateLCD.asm._SEC000000
+     newUsr_done                               CA3D      57      87       0   updateLCD.asm._SEC000000
+     newUsr_disp                               CA94      57      87       0   updateLCD.asm._SEC000000
+     ATTEMPT_USR                               CAEB      5F      95       0   updateLCD.asm._SEC000000
+     del_Menu_disp                             CB4A      57      87       0   updateLCD.asm._SEC000000
+     del_conf_disp                             CBA1      AC     172       0   updateLCD.asm._SEC000000
+     post_del_disp                             CC4D      AC     172       0   updateLCD.asm._SEC000000
+- VARIABLES:
+MODULE:                 -- defaults.asm.o --
+- PROCEDURES:
+     user_defaults                             CCF9      38      56       1   defaults.asm._SEC000000
+     usr_GRANT                                 CD31      43      67       1   defaults.asm._SEC000000
+     usr_SATTLER                               CD74      43      67       1   defaults.asm._SEC000000
+     usr_MALCOLM                               CDB7      43      67       1   defaults.asm._SEC000000
+     usr_EMPTY                                 CDFA      43      67       1   defaults.asm._SEC000000
+     usr_VISIT                                 CE3D      43      67       1   defaults.asm._SEC000000
+     reset_Temp                                CE80      23      35       0   defaults.asm._SEC000000
+- VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.asm.o                                   0    186     31
+  main.asm.o                                   0    136    164
+  lcddisp.c.o                                  2    243      0
   mc9s12e128.c.o                             352      0      0
+  potentiometer.c.o                            2     24      0
+  interrupt.asm.o                              0    367      0
+  updateLCD.asm.o                              0   2551      0
+  defaults.asm.o                               0    426      0
   other                                      256      6      0
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  Counter STEP_TAB Step_Idx KEY_TAB Scan_KeyRow Scan_Count key_press key_val 
+  port_t port_p port_u RTI_Cnter STEP_TAB Step_Idx Stepper_ON KEY_TAB 
+  Scan_KeyRow Scan_Count key_press key_val disp old_pot pot_shift DC_cnter t_on 
+  user_sel usr_menu_shift usr_menu_max usr_sel_acc usr_max usr_char usr_empty 
+  usr_temp usr_new_id pass_char pass_temp key_twice usr_0 usr_1 usr_2 usr_3 
+  usr_4 JEEP_MODE FAST_SET 
+SECTION: ".bss"
+  data 
 SECTION: ".init"
-  Entry RTI_ISR END_RTI IRQ_ISR Exit_set Key_Tab Key_Lp Exit_key CW_Lp 
+  Entry Loop 
+SECTION: "NON_BANKED"
+  delay_ms init_LCD display_string Delay epulse sendCommand read_pot 
+SECTION: ".common"
+  pot_value 
 SECTION: ".abs_section_8"
   _PORTE 
 SECTION: ".abs_section_9"
@@ -1180,6 +1305,19 @@ SECTION: ".abs_section_27c"
   _PIEAD 
 SECTION: ".abs_section_27e"
   _PIFAD 
+SECTION: "interrupt.asm._SEC000000"
+  RTI_ISR Skip_Step Chck_FAST END_RTI FAST_LP FAST_KEY FAST_END IRQ_ISR 
+  Set_seq Scan_seq Scan_end Key_Read Key_Lp CW_Lp DC_Setup PWM_ON PWM_OFF 
+  PWN_CLR Pot_SEL Pot_MENU Pot_RIGHT Pot_LEFT Pot_END 
+SECTION: "updateLCD.asm._SEC000000"
+  default_disp menu_tutorial menu_disp newAcc_disp delAcc_disp login_disp 
+  visit_disp whereToGo_disp aqua_disp garden_disp safari_disp log_usr_sel 
+  log_usr_shift ENTER_PASSWORD SUCC_PASSWORD FAIL_PASSWORD ATTEMPT_PASS 
+  no_empty_disp newUsr_done newUsr_disp ATTEMPT_USR del_Menu_disp del_conf_disp 
+  post_del_disp 
+SECTION: "defaults.asm._SEC000000"
+  user_defaults usr_GRANT usr_SATTLER usr_MALCOLM usr_EMPTY usr_VISIT 
+  reset_Temp 
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
@@ -1249,16 +1387,16 @@ OBJECT LIST SORTED BY ADDRESS
      _TIM0_PACTL                                 60       1       1       0   .abs_section_60
      _TIM0_PAFLG                                 61       1       1       0   .abs_section_61
      _TIM0_PACNT                                 62       2       2       0   .abs_section_62
-     _ATDCTL23                                   82       2       2       0   .abs_section_82
-     _ATDCTL45                                   84       2       2       0   .abs_section_84
-     _ATDSTAT0                                   86       1       1       0   .abs_section_86
+     _ATDCTL23                                   82       2       2       1   .abs_section_82
+     _ATDCTL45                                   84       2       2       1   .abs_section_84
+     _ATDSTAT0                                   86       1       1       1   .abs_section_86
      _ATDTEST1                                   89       1       1       0   .abs_section_89
      _ATDSTAT2                                   8A       1       1       0   .abs_section_8a
      _ATDSTAT1                                   8B       1       1       0   .abs_section_8b
      _ATDDIEN                                    8C       2       2       0   .abs_section_8c
      _PORTAD0                                    8E       1       1       0   .abs_section_8e
      _PORTAD1                                    8F       1       1       0   .abs_section_8f
-     _ATDDR0                                     90       2       2       0   .abs_section_90
+     _ATDDR0                                     90       2       2       1   .abs_section_90
      _ATDDR1                                     92       2       2       0   .abs_section_92
      _ATDDR2                                     94       2       2       0   .abs_section_94
      _ATDDR3                                     96       2       2       0   .abs_section_96
@@ -1412,6 +1550,7 @@ OBJECT LIST SORTED BY ADDRESS
      _PMFMODC                                   234       2       2       0   .abs_section_234
      _PMFDTMC                                   236       2       2       0   .abs_section_236
      _PTT                                       240       1       1       0   .abs_section_240
+     port_t                                     240       0       0       2   .text       
      _PTIT                                      241       1       1       0   .abs_section_241
      _DDRT                                      242       1       1       0   .abs_section_242
      _RDRT                                      243       1       1       0   .abs_section_243
@@ -1424,14 +1563,15 @@ OBJECT LIST SORTED BY ADDRESS
      _PERS                                      24C       1       1       0   .abs_section_24c
      _PPSS                                      24D       1       1       0   .abs_section_24d
      _WOMS                                      24E       1       1       0   .abs_section_24e
-     _PTM                                       250       1       1       0   .abs_section_250
+     _PTM                                       250       1       1       5   .abs_section_250
      _PTIM                                      251       1       1       0   .abs_section_251
-     _DDRM                                      252       1       1       0   .abs_section_252
+     _DDRM                                      252       1       1       1   .abs_section_252
      _RDRM                                      253       1       1       0   .abs_section_253
      _PERM                                      254       1       1       0   .abs_section_254
      _PPSM                                      255       1       1       0   .abs_section_255
      _WOMM                                      256       1       1       0   .abs_section_256
      _PTP                                       258       1       1       0   .abs_section_258
+     port_p                                     258       0       0       1   .text       
      _PTIP                                      259       1       1       0   .abs_section_259
      _DDRP                                      25A       1       1       0   .abs_section_25a
      _RDRP                                      25B       1       1       0   .abs_section_25b
@@ -1444,37 +1584,119 @@ OBJECT LIST SORTED BY ADDRESS
      _PERQ                                      264       1       1       0   .abs_section_264
      _PPSQ                                      265       1       1       0   .abs_section_265
      _PTU                                       268       1       1       0   .abs_section_268
+     port_u                                     268       0       0       3   .text       
      _PTIU                                      269       1       1       0   .abs_section_269
      _DDRU                                      26A       1       1       0   .abs_section_26a
      _RDRU                                      26B       1       1       0   .abs_section_26b
      _PERU                                      26C       1       1       0   .abs_section_26c
      _PPSU                                      26D       1       1       0   .abs_section_26d
      _MODRR                                     26E       1       1       0   .abs_section_26e
-     _PTAD                                      270       2       2       0   .abs_section_270
+     _PTAD                                      270       2       2       4   .abs_section_270
      _PTIAD                                     272       2       2       0   .abs_section_272
-     _DDRAD                                     274       2       2       0   .abs_section_274
+     _DDRAD                                     274       2       2       1   .abs_section_274
      _RDRAD                                     276       2       2       0   .abs_section_276
      _PERAD                                     278       2       2       0   .abs_section_278
      _PPSAD                                     27A       2       2       0   .abs_section_27a
      _PIEAD                                     27C       2       2       0   .abs_section_27c
      _PIFAD                                     27E       2       2       0   .abs_section_27e
-     Counter                                    800       2       2       0   .text       
-     STEP_TAB                                   802       4       4       0   .text       
-     Step_Idx                                   806       1       1       0   .text       
-     KEY_TAB                                    807      10      16       0   .text       
-     Scan_KeyRow                                817       4       4       0   .text       
-     Scan_Count                                 81B       2       2       0   .text       
-     key_press                                  81D       1       1       0   .text       
-     key_val                                    81E       1       1       0   .text       
-     Entry                                     C000      2B      43       0   .init       
-     RTI_ISR                                   C02B      12      18       0   .init       
-     END_RTI                                   C03D       4       4       0   .init       
-     IRQ_ISR                                   C041      28      40       0   .init       
-     Exit_set                                  C069       A      10       0   .init       
-     Key_Tab                                   C073       5       5       0   .init       
-     Key_Lp                                    C078      15      21       0   .init       
-     Exit_key                                  C08D       D      13       0   .init       
-     CW_Lp                                     C09A      20      32       0   .init       
+     data                                       500       2       2       4   .bss        
+     pot_value                                  502       2       2       4   .common     
+     RTI_Cnter                                  800       2       2       5   .text       
+     STEP_TAB                                   802       4       4       1   .text       
+     Step_Idx                                   806       1       1       4   .text       
+     Stepper_ON                                 807       1       1       4   .text       
+     KEY_TAB                                    808      10      16       1   .text       
+     Scan_KeyRow                                818       4       4       1   .text       
+     Scan_Count                                 81C       2       2       4   .text       
+     key_press                                  81E       1       1       0   .text       
+     key_val                                    81F       1       1       5   .text       
+     disp                                       820      21      33     499   .text       
+     old_pot                                    841       1       1       2   .text       
+     pot_shift                                  842       1       1       3   .text       
+     DC_cnter                                   843       1       1       6   .text       
+     t_on                                       844       1       1       3   .text       
+     user_sel                                   845       1       1       0   .text       
+     usr_menu_shift                             846       1       1       0   .text       
+     usr_menu_max                               847       1       1       0   .text       
+     usr_sel_acc                                848       1       1       0   .text       
+     usr_max                                    849       1       1       0   .text       
+     usr_char                                   84A       1       1       0   .text       
+     usr_empty                                  84B       1       1       5   .text       
+     usr_temp                                   84C       1       1       1   .text       
+     usr_new_id                                 84D       2       2       0   .text       
+     pass_char                                  84F       1       1       0   .text       
+     pass_temp                                  850       1       1       1   .text       
+     key_twice                                  851       1       1       0   .text       
+     usr_0                                      852      10      16       1   .text       
+     usr_1                                      862      10      16       1   .text       
+     usr_2                                      872      10      16       1   .text       
+     usr_3                                      882      10      16       1   .text       
+     usr_4                                      892      10      16       1   .text       
+     JEEP_MODE                                  8A2       1       1       1   .text       
+     FAST_SET                                   8A3       1       1       9   .text       
+     Entry                                     C000      85     133       0   .init       
+     Loop                                      C085       3       3       0   .init       
+     delay_ms                                  C088      17      23       5   NON_BANKED  
+     init_LCD                                  C09F      52      82       1   NON_BANKED  
+     display_string                            C0F1      38      56      25   NON_BANKED  
+     Delay                                     C129      1F      31       1   NON_BANKED  
+     epulse                                    C148      24      36       3   NON_BANKED  
+     sendCommand                               C16C       F      15       7   NON_BANKED  
+     read_pot                                  C17B      18      24       1   NON_BANKED  
+     RTI_ISR                                   C193       D      13       0   interrupt.asm._SEC000000
+     Skip_Step                                 C1A0       B      11       0   interrupt.asm._SEC000000
+     Chck_FAST                                 C1AB       5       5       0   interrupt.asm._SEC000000
+     END_RTI                                   C1B0       7       7       0   interrupt.asm._SEC000000
+     FAST_LP                                   C1B7      15      21       0   interrupt.asm._SEC000000
+     FAST_KEY                                  C1CC      1A      26       0   interrupt.asm._SEC000000
+     FAST_END                                  C1E6       2       2       0   interrupt.asm._SEC000000
+     IRQ_ISR                                   C1E8      16      22       0   interrupt.asm._SEC000000
+     Set_seq                                   C1FE      15      21       0   interrupt.asm._SEC000000
+     Scan_seq                                  C213      19      25       0   interrupt.asm._SEC000000
+     Scan_end                                  C22C       9       9       0   interrupt.asm._SEC000000
+     Key_Read                                  C235       5       5       0   interrupt.asm._SEC000000
+     Key_Lp                                    C23A      1F      31       0   interrupt.asm._SEC000000
+     CW_Lp                                     C259      27      39       0   interrupt.asm._SEC000000
+     DC_Setup                                  C280      16      22       0   interrupt.asm._SEC000000
+     PWM_ON                                    C296      13      19       0   interrupt.asm._SEC000000
+     PWM_OFF                                   C2A9      12      18       0   interrupt.asm._SEC000000
+     PWN_CLR                                   C2BB       9       9       0   interrupt.asm._SEC000000
+     Pot_SEL                                   C2C4      10      16       0   interrupt.asm._SEC000000
+     Pot_MENU                                  C2D4      12      18       0   interrupt.asm._SEC000000
+     Pot_RIGHT                                 C2E6       8       8       0   interrupt.asm._SEC000000
+     Pot_LEFT                                  C2EE       6       6       0   interrupt.asm._SEC000000
+     Pot_END                                   C2F4       E      14       0   interrupt.asm._SEC000000
+     default_disp                              C302      AC     172       1   updateLCD.asm._SEC000000
+     menu_tutorial                             C3AE      AC     172       0   updateLCD.asm._SEC000000
+     menu_disp                                 C45A      5C      92       0   updateLCD.asm._SEC000000
+     newAcc_disp                               C4B6      57      87       0   updateLCD.asm._SEC000000
+     delAcc_disp                               C50D      57      87       0   updateLCD.asm._SEC000000
+     login_disp                                C564      57      87       0   updateLCD.asm._SEC000000
+     visit_disp                                C5BB      57      87       0   updateLCD.asm._SEC000000
+     whereToGo_disp                            C612      57      87       0   updateLCD.asm._SEC000000
+     aqua_disp                                 C669      5C      92       0   updateLCD.asm._SEC000000
+     garden_disp                               C6C5      5C      92       0   updateLCD.asm._SEC000000
+     safari_disp                               C721      5C      92       0   updateLCD.asm._SEC000000
+     log_usr_sel                               C77D      57      87       0   updateLCD.asm._SEC000000
+     log_usr_shift                             C7D4      5E      94       0   updateLCD.asm._SEC000000
+     ENTER_PASSWORD                            C832      57      87       0   updateLCD.asm._SEC000000
+     SUCC_PASSWORD                             C889      57      87       0   updateLCD.asm._SEC000000
+     FAIL_PASSWORD                             C8E0      57      87       0   updateLCD.asm._SEC000000
+     ATTEMPT_PASS                              C937      5A      90       0   updateLCD.asm._SEC000000
+     no_empty_disp                             C991      AC     172       0   updateLCD.asm._SEC000000
+     newUsr_done                               CA3D      57      87       0   updateLCD.asm._SEC000000
+     newUsr_disp                               CA94      57      87       0   updateLCD.asm._SEC000000
+     ATTEMPT_USR                               CAEB      5F      95       0   updateLCD.asm._SEC000000
+     del_Menu_disp                             CB4A      57      87       0   updateLCD.asm._SEC000000
+     del_conf_disp                             CBA1      AC     172       0   updateLCD.asm._SEC000000
+     post_del_disp                             CC4D      AC     172       0   updateLCD.asm._SEC000000
+     user_defaults                             CCF9      38      56       1   defaults.asm._SEC000000
+     usr_GRANT                                 CD31      43      67       1   defaults.asm._SEC000000
+     usr_SATTLER                               CD74      43      67       1   defaults.asm._SEC000000
+     usr_MALCOLM                               CDB7      43      67       1   defaults.asm._SEC000000
+     usr_EMPTY                                 CDFA      43      67       1   defaults.asm._SEC000000
+     usr_VISIT                                 CE3D      43      67       1   defaults.asm._SEC000000
+     reset_Temp                                CE80      23      35       0   defaults.asm._SEC000000
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
@@ -1487,12 +1709,107 @@ COPYDOWN SECTION
 *********************************************************************************************
 OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
-Entry                     USES __SEG_END_SSTACK 
+Entry                     USES __SEG_END_SSTACK init_LCD default_disp 
+                                display_string user_defaults 
+init_LCD                  USES _DDRAD _PTAD _DDRM delay_ms _PTM data 
+                                sendCommand epulse 
+display_string            USES sendCommand data _PTAD epulse 
+epulse                    USES data _PTM delay_ms 
+sendCommand               USES data _PTAD epulse 
+read_pot                  USES _ATDCTL23 Delay _ATDCTL45 _ATDSTAT0 _ATDDR0 
+                                pot_value 
+RTI_ISR                   USES RTI_Cnter Step_Idx 
+Skip_Step                 USES FAST_SET 
+Chck_FAST                 USES FAST_SET 
+END_RTI                   USES RTI_Cnter 
+FAST_LP                   USES Stepper_ON Step_Idx 
+FAST_KEY                  USES FAST_SET 
+IRQ_ISR                   USES RTI_Cnter 
+Set_seq                   USES Scan_Count Scan_KeyRow port_u FAST_SET 
+Scan_seq                  USES port_u Scan_Count FAST_SET 
+Scan_end                  USES FAST_SET 
+Key_Read                  USES key_val 
+Key_Lp                    USES key_val KEY_TAB port_u 
+CW_Lp                     USES Step_Idx STEP_TAB port_p FAST_SET Stepper_ON 
+                                DC_cnter t_on 
+DC_Setup                  USES pot_value t_on 
+PWM_ON                    USES DC_cnter t_on port_t 
+PWM_OFF                   USES DC_cnter port_t 
+PWN_CLR                   USES DC_cnter 
+Pot_SEL                   USES pot_value old_pot read_pot JEEP_MODE 
+Pot_MENU                  USES pot_value old_pot pot_shift 
+Pot_RIGHT                 USES pot_shift 
+Pot_LEFT                  USES pot_shift 
+Pot_END                   USES FAST_SET Stepper_ON 
+default_disp              USES disp display_string 
+menu_tutorial             USES disp display_string 
+menu_disp                 USES disp display_string 
+newAcc_disp               USES disp display_string 
+delAcc_disp               USES disp display_string 
+login_disp                USES disp display_string 
+visit_disp                USES disp display_string 
+whereToGo_disp            USES disp display_string 
+aqua_disp                 USES disp display_string 
+garden_disp               USES disp display_string 
+safari_disp               USES disp display_string 
+log_usr_sel               USES disp display_string 
+log_usr_shift             USES disp display_string 
+ENTER_PASSWORD            USES disp display_string 
+SUCC_PASSWORD             USES disp display_string 
+FAIL_PASSWORD             USES disp display_string 
+ATTEMPT_PASS              USES pass_temp disp display_string 
+no_empty_disp             USES disp display_string 
+newUsr_done               USES disp display_string 
+newUsr_disp               USES disp display_string 
+ATTEMPT_USR               USES usr_temp disp display_string 
+del_Menu_disp             USES disp display_string 
+del_conf_disp             USES disp display_string 
+post_del_disp             USES disp display_string 
+user_defaults             USES usr_0 usr_GRANT usr_empty usr_1 usr_SATTLER 
+                                usr_2 usr_MALCOLM usr_3 usr_EMPTY usr_4 usr_VISIT 
 
 *********************************************************************************************
 DEPENDENCY TREE
 *********************************************************************************************
  Entry               
+ | 
+ +- init_LCD            
+ |  | 
+ |  +- delay_ms            
+ |  |    
+ |  +- sendCommand         
+ |  |  | 
+ |  |  +- epulse              
+ |  |     | 
+ |  |     +- delay_ms             (see above)
+ |  |        
+ |  +- epulse               (see above)
+ |     
+ +- default_disp        
+ |  | 
+ |  +- display_string      
+ |     | 
+ |     +- sendCommand          (see above)
+ |     |  
+ |     +- epulse               (see above)
+ |        
+ +- display_string       (see above)
+ |  
+ +- user_defaults       
+    | 
+    +- usr_GRANT           
+    |    
+    +- usr_SATTLER         
+    |    
+    +- usr_MALCOLM         
+    |    
+    +- usr_EMPTY           
+    |    
+    +- usr_VISIT           
+         
+ IRQ_ISR             
+   
+ RTI_ISR             
    
 *********************************************************************************************
 STATISTIC SECTION
@@ -1500,6 +1817,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 4
-Total size of all blocks to be downloaded: 223
+Number of blocks to be downloaded: 7
+Total size of all blocks to be downloaded: 3917
 

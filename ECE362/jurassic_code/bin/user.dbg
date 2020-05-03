@@ -7294,132 +7294,350 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice
+            XDEF user_main
 
-            XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults    
+            XREF __SEG_END_SSTACK, user_sel, menu_disp, menu_tutorial, key_val, usr_menu_shift, usr_menu_max, USR_MENU_INPUT, usr_input, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, usr_temp, usr_new_id, usr_empty, ATTEMPT_USR, no_empty_disp, newAcc_disp, usr_max, newUsr_disp, pass_temp, trip, ATTEMPT_PASS, newUsr_done, pass_char, delAcc_disp, SUCC_PASSWORD, usr_0, usr_1, usr_2, usr_3, usr_sel_acc, ENTER_PASSWORD, key_twice, pot_shift, reset_Temp, login_disp, del_Menu_disp, del_conf_disp, post_del_disp, usr_EMPTY
 
-; variable/data section
-MY_EXTENDED_RAM:    SECTION
-                ORG   $800
 
-;-------------ISR Parameters---------------;
-RTI_Cnter:      ds.w    1
+;---------------------------------------------------;
+;          USER SETUP (MAIN / OPTIONS MENU)
+;---------------------------------------------------;
+user_main:  JSR     menu_tutorial                   ; Load tutorial LCD instructions
+            MOVB    #$FF, key_val                   ; Reset Key values
+            MOVB    #$00, pot_shift                   ; Reset Pot_shift
+            MOVB    $00, usr_sel_acc                ; Reset Current User
 
-;---Stepper Motor Parameters / port_p------;
-STEP_TAB:       dc.b    $0A, $12, $14, $0C
-Step_Idx:       ds.b    1
-Stepper_ON:     ds.b    1
+                                                  
+tutorial:   JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,tutorial          ; Otherwise, stay in tutorial
 
-;--------Keyboard Parameters / port_u------;
-; Table with key value
-KEY_TAB:        dc.b    $eb, $77, $7b, $7d, $b7, $bb, $bd, $d7, $db, $dd, $e7, $ed, $7e, $be, $de, $ee
-Scan_KeyRow:    dc.b    $70, $B0, $D0, $E0 ; Scan Sequence for Keyboard
-Scan_Count:     ds.w    1                  ; Index when Scanning Keyboard
-key_press:      ds.b    1                  ; Indicator that a key has been recently pressed
-key_val:        ds.b    1                  ; Key Value
+usr_mnuSt   JSR     menu_disp                       ; Set bottom side of LCD
+            JSR     login_disp                      ; Display Login Quest
+            ;                                       ;  to instructions (stay that
+            ;                                       ;  wait until next step is choosen)
 
-;-------------LCD Parameters---------------;
-disp:           ds.b    33
+user_menu:  JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,user_menu         ; 
+            ;                                       ; If pot_shift is zero,
+            LDAA    pot_shift                       ;   key is pressed, and go to select menu
+            BEQ     usr_mnuSel                      ; Else pot_shift is not zero,  
+            MOVB    #$00, pot_shift                 ;   set pot_shift to zero (value now stale)
+            LDAA    usr_menu_shift                  ;
+            ;                                       ;
+            LBEQ    login_disp                      ; Based on the value of 
+            ;                                       ;
+            CMPA    $01                             ;   usr_menu_shift
+            LBEQ    newAcc_disp                     ;   Go to the appropriate Menu
+            ;                                       ;
+            CMPA    $02                             ;
+            LBEQ    delAcc_disp                     ;
+            ;                                       ;
+            CMPA    $03                             ;
+            LBEQ    visit_disp                      ;
+            ;                                       ;
+            INCA                                    ;
+            CMPA    $04                             ; Increase usr_menu_shift
+            LBLO    user_menu                       ;
+            MOVB    #$00, usr_menu_shift            ;
+            LBRA    user_menu                       ;
 
-;-------Potentiometer Parameters-----------;
-old_pot:        ds.b    1                  ; Previous pot_value
-pot_shift:      ds.b    1                  ; Bit 0: 1=Stale, 0=Valid data
-;                                          ; $02=RIGHT, $04=LEFT
+usr_mnuSel: LDAA    usr_menu_shift                  ;
+            LBEQ    usr_login                       ; Based on the value of 
+            CMPA    $01                             ;   usr_menu_shift
+            LBEQ    usr_newAcc                      ;   Go to the appropriate Menu
+            CMPA    $02                             ;
+            LBEQ    usr_delAcc                      ;
+            CMPA    $03                             ;
+            LBEQ    usr_visit                       ;
+;---------------------------------------------------;
+;                   LOGIN AREA
+;---------------------------------------------------;
+             ;                                       ;
+usr_login:  JSR     log_usr_sel                     ; Display login screen
+            LDAA    usr_sel_acc                     ;   for a particular user
+            LBNE    usr1_chk                        ; Based on the value of 
+            LDX     #usr_0                          ;   usr_sel_acc
+            PSHX                                    ;
+            LBRA    usr_chk_end                     ;
+            ;                                       ;
+usr1_chk:   CMPA    $01                             ;
+            LBNE    usr2_chk                        ;
+            LDX     #usr_1                          ;
+            PSHX                                    ;
+            LBRA    usr_chk_end                     ;
+            ;                                       ;
+usr2_chk:   CMPA    $02                             ;
+            LBNE    usr2_chk                        ;
+            LDX     #usr_2                          ;
+            PSHX                                    ;
+            LBRA    usr_chk_end                     ;
+            ;                                       ;
+usr3_chk:   LDX     #usr_3                          ;
+            PSHX                                    ;
+usr_chk_end:JSR     log_usr_shift                   ;
+            ;                                       ;
+usr_log_wt: JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,usr_log_wt        ;
+            ;                                       ; If pot_shift is zero,
+            LDAA    pot_shift                       ;   key is pressed, and go to enter password
+            LBEQ    usr_pass                        ; Else pot_shift is not zero,  
+            MOVB    #$00, pot_shift                 ;   set pot_shift to zero (value now stale)
+            ;                                       ;
+            LDAA    usr_sel_acc                     ; Update usr_sel_acc
+            INCA                                    ;   and loop back to usr_login
+            CMPA    usr_max                         ;
+            LBLO    usr_login                       ;
+            MOVB    #$00, usr_sel_acc               ;
+            LBRA    usr_login                       ;            
+;---------------------------------------------------;
+;                PASSWORD AREA
+;---------------------------------------------------;
 
-;--------------DC Motor--------------------;
-DC_cnter:       ds.b    1
-t_on:           ds.b    1
+usr_pass:   JSR     ENTER_PASSWORD                  ; Load Password address on Idx X
+            LDX     #pass_temp                      ;
+            PSHX                                    ;
+            JSR     reset_Temp                      ; Reset Temp String used to enter Password
+            JSR     ATTEMPT_PASS                    ; Load Temp String on LCD
+            LDAA    usr_sel_acc                     ; 
+            LBNE    pass1_chk                       ; Retrieve password for particular user 
+            LDX     #usr_0                          ;   based on usr_sel_acc
+            PSHX                                    ;
+            LBRA    passEndChk                    ;
+            ;                                       ;
+pass1_chk:  CMPA    $01                             ;
+            LBNE    usr2_chk                        ;
+            LDX     #usr_1                          ;
+            PSHX                                    ;
+            LBRA    passEndChk                    ;
+            ;                                       ;
+pass2_chk:  CMPA    $02                             ;
+            LBNE    usr2_chk                        ;
+            LDX     #usr_2                          ;
+            PSHX                                    ;
+            LBRA    passEndChk                    ;
+pass3_chk:  LDX     #usr_3                          ;
+            PSHX                                    ;
+            ;                                       ; Acc Idx X = Usr Password curr. Char
+            ;                                       ; Acc Idx Y = Password Attempt curr. Char
+            ;                                       ;
+            LDY     $00                             ; Load temporary password on idx Y 
+passEndChk: LDAA    8, x+                           ; Pull password character
+            STAA    pass_char                       ; Check if terminator "-"
+            CMPA    #'-'                            ;  is present, and if it is
+            LBEQ    pass_succ                       ;  exit with successfull message
+            ;                                       ;
+            LDAA    #'A'                            ;
+            STAA    pass_succ, Y                    ;
+Char_chck:  LDAB    pot_shift                       ;   set it to "A" and increase / decrease
+            MOVB    #$00, pot_shift                 ;   based on pot_shift changes
+            CMPB    $02                             ;
+            LBNE    Char_down                       ;
+            LDAA    pass_temp, Y                    ;
+            INCA                                    ;
+            STAA    pass_temp                       ;
+Char_down:  CMPB    $04                             ;
+            LBNE    Char_same                       ;
+            LDAA    pass_temp, Y                    ;
+            DECA                                    ;
+            STAA    pass_temp                       ;
+Char_same:  JSR     ATTEMPT_PASS                    ; Display Character
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
+pass_wt:    JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,pass_wt           ;
+            ;                                       ;
+            LDAB    pot_shift                       ; If pot changed, user changed
+            LBNE    Char_chck                       ;   character, and return to Char_chck
+            ;                                       ;
+            LDAA    pass_temp, Y                    ; Compare current character to 
+            INY                                     ;
+            CMPA    pass_char                       ;   password character (& Increase Y)
+            LBEQ    passEndChk                      ; If equal, check for next char
+            ;                                       ;
+            JSR     FAIL_PASSWORD                   ; If not equal, display fail message
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
+pass_wt_2:  JSR     USR_MENU_INPUT                  ; And wait for user input to start again
+            BRCLR   usr_input,$FF,pass_wt_2         ;
+            LBRA    usr_pass                        ;
+            ;                                       ;
+pass_succ:  JSR     log_usr_shift                   ; Display Password Success
+            JSR     SUCC_PASSWORD                   ;   Screen and wait for user
+            MOVB    #$FF, key_val                   ;   input to continue
+            MOVB    #$00, pot_shift                 ;
+            MOVB    #$FF, user_sel                  ; Go to next logic state
+            LBRA    trip                            ;
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
+pass_ext_wt:JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,pass_ext_wt       ;
+            ;                                       ;
+;---------------------------------------------------;
+;                NEW ACCOUNT CREATION
+;---------------------------------------------------;
+            ;                                       ; FIND EMPTY ACCOUNT
+usr_newAcc: LDAA    usr_empty                       ; Check each account
+            LBEQ    no_emptyAcc                     ;   To make sure it is not empty
+            CMPA    $01                             ;   Then load it on IDX X
+            LBNE    new_chck1                       ; and set bit on usr_empty to 
+            MOVW    #usr_0, usr_new_id              ;   1 (BUSY / USED)
+            MOVB    $01, usr_empty                  ;
+            LBRA    new_usr                         ;
+new_chck1:  CMPA    $02                             ;
+            LBNE    new_chck2                       ;
+            MOVW    #usr_1, usr_new_id              ;
+            MOVB    $02, usr_empty                  ;
+            LBRA    new_usr                         ;
+new_chck2:  CMPA    $04                             ;
+            LBNE    new_chck3                       ;
+            MOVW    #usr_2, usr_new_id              ;
+            MOVB    $04, usr_empty                  ;
+            LBRA    new_usr                         ;
+new_chck3:  CMPA    $08                             ;
+            LBNE    no_emptyAcc                     ;
+            MOVW    #usr_3, usr_new_id              ;
+            MOVB    $08, usr_empty                  ;
+            LBRA    new_usr                         ;
+            ;                                       ;  ENTER NEW ACCOUNT
+new_usr:    JSR     newUsr_disp                     ;
+            LDX     #usr_temp                       ;
+            PSHX                                    ;
+            JSR     reset_Temp                      ;
+            ;                                       ;
+            LDX     #usr_temp                       ;
+new_usr_chr:MOVB    #'A',X                          ;
+            JSR     ATTEMPT_USR                     ;
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
+new_usr_wt: JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,new_usr_wt        ;
+            JSR     newUsr_done                     ;
+            ;                                       ; If key press once, increase
+            LDAA    key_val                         ;   key_twice by one
+            CMPA    $FF                             ; Assuming that any pot shift change
+            LBEQ    usr_wt_agn                      ;   done by the user be long enought
+            INC     key_twice                       ;   to be detected twice
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
+usr_wt_agn: JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,usr_wt_agn        ;
+            ;                                       ;
+            LDAA    key_val                         ; If key press twice, go to save_nw_usr
+            CMPA    $FF                             ; If key only press once, move to next char
+            LBEQ    usr_chr_chg                     ; If no key, then potentiometer, go to usr_chr_chg
+            INC     key_twice                       ;        
+            LDAB    key_twice                       ;         
+            CMPB    $02                             ;
+            LBEQ    save_nw_usr                     ;
+            INX                                     ;
+            LBRA    new_usr_chr                     ;
+            ;                                       ;
+usr_chr_chg:MOVB    #$00, key_twice                 ;
+            LDAB    pot_shift                       ;   set it to "A" and increase / decrease
+            MOVB    #$00, pot_shift                 ;   based on pot_shift changes
+            CMPB    $02                             ;
+            LBNE    usr_chr_dwn                     ;
+            INC     0, X                            ;
+usr_chr_dwn:CMPB    $04                             ;
+            LBNE    new_usr_chr                     ;
+            DEC     0, X                            ;
+            LBRA    new_usr_chr                     ;
+            ;                                       ;
+            ;                                       ;
+save_nw_usr:MOVB    #$00, key_twice                 ;
+            ;                                       ;
+            STX     usr_temp                        ;
+            LBRA    usr_visit                       ;
 
-;---------User / Account Selection---------;
-user_sel:       ds.b    1                  ;     
-usr_menu_shift: ds.b    1                  ; Shifts between user menu options    
-usr_menu_max:   ds.b    1                  ; Number of User Menu options
-usr_sel_acc:    ds.b    1                  ; Number of User Menu options
-usr_max:        ds.b    1                  ; Number of User Menu options
-usr_char        ds.b    1                  ; User character (Password)
-usr_empty       ds.b    1                  ; Keeps track of empty Accounts
-usr_temp        ds.b    1                  ; Temporary display when creating new acc
-usr_new_id      ds.w    1                  ; Temp Variable for creating a new acc
-pass_char       ds.b    1                  ; Password character (Password)
-pass_temp       ds.b    1                  ; Password entered
-key_twice       ds.b    1                  ; Password entered
-usr_0:          ds.b    $10                 ; User Account Space
-usr_1:          ds.b    $10                 ; User Account Space
-usr_2:          ds.b    $10                 ; User Account Space
-usr_3:          ds.b    $10                 ; User Account Space
-usr_4:          ds.b    $10                ; User Account Space
+no_emptyAcc:JSR     no_empty_disp                   ; Display no empty acc message 
+            MOVB    #$00, pot_shift                 ;  
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$FF, user_sel                  ; Wait for user input
 
-;----------Logic & General-----------------;
-JEEP_MODE:      ds.b    1                  ; FALSE=MENU / TRUE=JEEP
-FAST_SET:       ds.b    1                  ; TRIGGER FAST LOOP on RTI
+no_empty_wt:JSR     USR_MENU_INPUT                  ; Before going back to the main menu
+            BRCLR   usr_input,$FF,no_empty_wt       ;
+            LBRA    usr_mnuSt                       ; 
+            ;                                       ;
+;---------------------------------------------------;
+;              DELETE ACCOUNT AREA
+;---------------------------------------------------;
+            ;                                       ;
+            MOVB    $00, usr_sel_acc                ; 
+usr_delAcc: JSR     del_Menu_disp                   ; Display deleted screen
+            LDAA    usr_sel_acc                     ;   for a particular user
+            LBNE    usr1_del                        ; Based on the value of 
+            LDY     #usr_0                          ;
+            PSHY                                    ; Load on Idx X to trigger display
+            LBRA    usr_del_end                     ;   and delete if needed
+            ;                                       ;
+usr1_del:   CMPA    $01                             ;
+            LBNE    usr2_del                        ;
+            LDY     #usr_1                          ;
+            PSHY                                    ;
+            LBRA    usr_del_end                     ;
+            ;                                       ;
+usr2_del:   CMPA    $02                             ;
+            LBNE    usr2_del                        ;
+            LDY     #usr_2                          ;
+            PSHY                                    ;
+            LBRA    usr_del_end                     ;
+            ;                                       ;
+usr3_del:   LDY     #usr_3                          ;
+            PSHY                                    ;
+usr_del_end:JSR     log_usr_shift                   ;
+            ;                                       ;
+            MOVB    #$00, pot_shift                 ;  
+            MOVB    #$FF, key_val                   ;
+            ;                                       ;
+del_log_wt: JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,del_log_wt        ;
+            ;                                       ; If pot_shift is zero,
+            LDAA    pot_shift                       ;   key is pressed, and go to enter password
+            LBEQ    del_con                         ; Else pot_shift is not zero,  
+            MOVB    #$00, pot_shift                 ;   set pot_shift to zero (value now stale)
+            ;                                       ;
+            LDAA    usr_sel_acc                     ; Update usr_sel_acc
+            INCA                                    ;   and loop back to usr_login
+            CMPA    usr_max                         ;
+            LBLO    usr_login                       ;
+            MOVB    #$00, usr_sel_acc               ;
+            LBRA    usr_login                       ; 
+            ;                                       ;
+            MOVB    #$00, pot_shift                 ;  
+            MOVB    #$FF, key_val                   ;
+            ;                                       ;
+del_con:    JSR     del_conf_disp                   ;
+            JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,del_log_wt        ;
+            ;                                       ;
+            LDAA    pot_shift                       ; If pot is shift, do not delete
+            LBEQ    usr_mnuSt                       ;   and go back to the main menu
+            ;                                       ;
+            PSHY                                    ;
+            JSR     usr_EMPTY                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;  
+            ;                                       ;
+            JSR     post_del_disp                   ;
+            JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,del_log_wt        ;
+            ;                                       ;
+            LBRA    usr_mnuSt                       ;
+;---------------------------------------------------;
+;              VISITOR AREA (NO PASSWORD)
+;---------------------------------------------------;
+usr_visit:  MOVB    #$FF, key_val                   ;  Go to next logic state
+            MOVB    #$00, pot_shift                 ;
+            MOVB    #$FF, user_sel                  ;
+            LBRA    trip                            ;
 
-MY_CONSTANT_ROM: SECTION
-;---------------Port settings--------------;
-; Keyboard Parameters / port_u
-port_u:         equ     $268                  
-ddr_u:          equ     $26A                   
-psr_u:          equ     $26D
-peru_u:         equ     $26C
-
-;--------Stepper Motor / port_p------------;
-port_p:         equ     $258
-ddr_p:          equ     $25A
-
-;--------------DC Motor--------------------;
-port_t:         equ     $240
-ddr_t:          equ     $242
-
-; Code section
-MyCode:             SECTION
-Entry:
-            LDS     #__SEG_END_SSTACK       ; Initialize stack
-            
-            ;-----Stepper Motor; Setup------;
-            MOVB    #$3E, ddr_p             ; port p / Stepper motor setup
-            MOVB    #$00, Step_Idx          ; Stepper motor Sequence Index
-            MOVB    #$FF, Stepper_ON        ; Stepper Motor set to ON
-
-            ;-------Keyboard Setup----------;
-            BSET    ddr_u, #$F0             ; port u (keyboard) / DDR, set as input
-            BSET    peru_u, #$0F            ; port u (keyboard) / PER, Set as pull-up/down
-            BSET    psr_u, #$F0             ; port u (keyboard) / PDR, set as pull-up
-            MOVW    #$00, Scan_Count        ; initialize the counter
-            
-            ;-------Interrupts Setup--------;
-            MOVB    #$80, CRGINT            ; Enable RTI
-            MOVB    #$40, RTICTL            ; Set RTI to 1 ms
-            CLI                             ; Initialize Interrupts
-                                   
-            ;-------LCD Display-------------;
-            JSR     init_LCD                ; Initialize LCD
-            JSR     default_disp             ;
-            LDD     #disp                   ; Load default display
-    	    JSR     display_string          ; Call Subroutine
-            
-            
-            ;-------Potentiometer-----------;
-            MOVB    #$00, pot_shift         ; Initialize to no-shift
-            MOVB    #$00, old_pot           ; Initialize to zero
-
-            ;-----------DC Motor------------;
-            MOVB    #$00, DC_cnter          ; Initialize counter to zero
-            MOVB    #$00, t_on              ; Initialize counter to zero
-
-            ;------User / Account Setup-----;
-            MOVB    #$00, user_sel          ; Set Default to no user selected
-            MOVB    #$01, usr_menu_shift    ; Set Default to zero
-            MOVB    #$03, usr_menu_max      ; 0=Login / 1=Create / 2=Delete / 3=Visitor
-            MOVB    #$00, usr_sel_acc       ; Max number of users
-            MOVB    #$00, usr_empty         ; No empty users 
-            MOVB    #$00, usr_temp          ; Temporary storage of new acc 
-            MOVB    #$04, usr_max           ; Max number of users 
-            MOVB    #$00, key_twice         ; Keeps track of # of keys pressed
-            JSR     user_defaults           ; Setups up default users
-
-            ;-----Logic & General-----------;
-            MOVB    #$00, JEEP_MODE         ; Initialize to MENU Mode (JEEP=$FF)
-            MOVB    #$00, FAST_SET          ; Initialize FAST_SET to FALSE
-            
-            ;------CODE BEGINNING-----------;
-Loop:       BRA     Loop
-            NOP

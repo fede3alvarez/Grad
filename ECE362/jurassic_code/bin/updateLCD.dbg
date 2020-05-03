@@ -7294,132 +7294,583 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice
+            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD, del_Menu_disp, del_conf_disp, post_del_disp
+            XREF disp, display_string, pass_temp, usr_temp, 
 
-            XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults    
+default_disp:   MOVB #' ',disp
+                MOVB #' ',disp+1
+                MOVB #' ',disp+2
+                MOVB #' ',disp+3
+                MOVB #'W',disp+4
+                MOVB #'E',disp+5
+                MOVB #'L',disp+6
+                MOVB #'C',disp+7
+                MOVB #'O',disp+8
+                MOVB #'M',disp+9
+                MOVB #'E',disp+10
+                MOVB #' ',disp+11
+                MOVB #'T',disp+12
+                MOVB #'O',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                MOVB #' ',disp+16
+                MOVB #' ',disp+17
+                MOVB #'J',disp+18
+                MOVB #'U',disp+19
+                MOVB #'R',disp+20
+                MOVB #'A',disp+21
+                MOVB #'S',disp+22
+                MOVB #'S',disp+23
+                MOVB #'I',disp+24
+                MOVB #'C',disp+25
+                MOVB #' ',disp+26
+                MOVB #'P',disp+27
+                MOVB #'A',disp+28
+                MOVB #'R',disp+29
+                MOVB #'K',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-; variable/data section
-MY_EXTENDED_RAM:    SECTION
-                ORG   $800
+menu_tutorial:  MOVB #'N',disp
+                MOVB #'A',disp+1
+                MOVB #'V',disp+2
+                MOVB #'I',disp+3
+                MOVB #'G',disp+4
+                MOVB #'A',disp+5
+                MOVB #'T',disp+6
+                MOVB #'E',disp+7
+                MOVB #':',disp+8
+                MOVB #'P',disp+9
+                MOVB #'O',disp+10
+                MOVB #'T',disp+11
+                MOVB #'M',disp+12
+                MOVB #'E',disp+13
+                MOVB #'T',disp+14
+                MOVB #'R',disp+15
+                MOVB #'E',disp+16
+                MOVB #'N',disp+17
+                MOVB #'T',disp+18
+                MOVB #'E',disp+19
+                MOVB #'R',disp+20
+                MOVB #':',disp+21
+                MOVB #'P',disp+22
+                MOVB #'R',disp+23
+                MOVB #'E',disp+24
+                MOVB #'S',disp+25
+                MOVB #'S',disp+26
+                MOVB #' ',disp+27
+                MOVB #'K',disp+28
+                MOVB #'E',disp+29
+                MOVB #'Y',disp+30
+                MOVB #'P',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-;-------------ISR Parameters---------------;
-RTI_Cnter:      ds.w    1
+menu_disp:      MOVB #'R',disp+16
+                MOVB #'/',disp+17
+                MOVB #'L',disp+18
+                MOVB #':',disp+19
+                MOVB #'P',disp+20
+                MOVB #'O',disp+21
+                MOVB #'T',disp+22
+                MOVB #' ',disp+23
+                MOVB #'S',disp+24
+                MOVB #'E',disp+25
+                MOVB #'L',disp+26
+                MOVB #':',disp+27
+                MOVB #'K',disp+28
+                MOVB #'E',disp+29
+                MOVB #'Y',disp+30
+                MOVB #'P',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-;---Stepper Motor Parameters / port_p------;
-STEP_TAB:       dc.b    $0A, $12, $14, $0C
-Step_Idx:       ds.b    1
-Stepper_ON:     ds.b    1
+newAcc_disp:    MOVB #'C',disp
+                MOVB #'R',disp+1
+                MOVB #'E',disp+2
+                MOVB #'A',disp+3
+                MOVB #'T',disp+4
+                MOVB #'E',disp+5
+                MOVB #' ',disp+6
+                MOVB #'N',disp+7
+                MOVB #'E',disp+8
+                MOVB #'W',disp+9
+                MOVB #' ',disp+10
+                MOVB #'U',disp+11
+                MOVB #'S',disp+12
+                MOVB #'E',disp+13
+                MOVB #'R',disp+14
+                MOVB #'?',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-;--------Keyboard Parameters / port_u------;
-; Table with key value
-KEY_TAB:        dc.b    $eb, $77, $7b, $7d, $b7, $bb, $bd, $d7, $db, $dd, $e7, $ed, $7e, $be, $de, $ee
-Scan_KeyRow:    dc.b    $70, $B0, $D0, $E0 ; Scan Sequence for Keyboard
-Scan_Count:     ds.w    1                  ; Index when Scanning Keyboard
-key_press:      ds.b    1                  ; Indicator that a key has been recently pressed
-key_val:        ds.b    1                  ; Key Value
+delAcc_disp:    MOVB #'D',disp
+                MOVB #'E',disp+1
+                MOVB #'L',disp+2
+                MOVB #'E',disp+3
+                MOVB #'T',disp+4
+                MOVB #'E',disp+5
+                MOVB #' ',disp+6
+                MOVB #'U',disp+7
+                MOVB #'S',disp+8
+                MOVB #'E',disp+9
+                MOVB #'R',disp+10
+                MOVB #'?',disp+11
+                MOVB #' ',disp+12
+                MOVB #' ',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-;-------------LCD Parameters---------------;
-disp:           ds.b    33
+login_disp:     MOVB #'L',disp
+                MOVB #'O',disp+1
+                MOVB #'G',disp+2
+                MOVB #'I',disp+3
+                MOVB #'N',disp+4
+                MOVB #'?',disp+5
+                MOVB #' ',disp+6
+                MOVB #' ',disp+7
+                MOVB #' ',disp+8
+                MOVB #' ',disp+9
+                MOVB #' ',disp+10
+                MOVB #' ',disp+11
+                MOVB #' ',disp+12
+                MOVB #' ',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-;-------Potentiometer Parameters-----------;
-old_pot:        ds.b    1                  ; Previous pot_value
-pot_shift:      ds.b    1                  ; Bit 0: 1=Stale, 0=Valid data
-;                                          ; $02=RIGHT, $04=LEFT
+visit_disp:     MOVB #'V',disp
+                MOVB #'I',disp+1
+                MOVB #'S',disp+2
+                MOVB #'I',disp+3
+                MOVB #'T',disp+4
+                MOVB #'O',disp+5
+                MOVB #'R',disp+6
+                MOVB #'?',disp+7
+                MOVB #'(',disp+8
+                MOVB #'N',disp+9
+                MOVB #'O',disp+10
+                MOVB #' ',disp+11
+                MOVB #'U',disp+12
+                MOVB #'S',disp+13
+                MOVB #'R',disp+14
+                MOVB #')',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-;--------------DC Motor--------------------;
-DC_cnter:       ds.b    1
-t_on:           ds.b    1
+whereToGo_disp: MOVB #' ',disp
+                MOVB #' ',disp+1
+                MOVB #'W',disp+2
+                MOVB #'H',disp+3
+                MOVB #'E',disp+4
+                MOVB #'R',disp+5
+                MOVB #'E',disp+6
+                MOVB #' ',disp+7
+                MOVB #'T',disp+8
+                MOVB #'O',disp+9
+                MOVB #' ',disp+10
+                MOVB #'G',disp+11
+                MOVB #'O',disp+12
+                MOVB #'?',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-;---------User / Account Selection---------;
-user_sel:       ds.b    1                  ;     
-usr_menu_shift: ds.b    1                  ; Shifts between user menu options    
-usr_menu_max:   ds.b    1                  ; Number of User Menu options
-usr_sel_acc:    ds.b    1                  ; Number of User Menu options
-usr_max:        ds.b    1                  ; Number of User Menu options
-usr_char        ds.b    1                  ; User character (Password)
-usr_empty       ds.b    1                  ; Keeps track of empty Accounts
-usr_temp        ds.b    1                  ; Temporary display when creating new acc
-usr_new_id      ds.w    1                  ; Temp Variable for creating a new acc
-pass_char       ds.b    1                  ; Password character (Password)
-pass_temp       ds.b    1                  ; Password entered
-key_twice       ds.b    1                  ; Password entered
-usr_0:          ds.b    $10                 ; User Account Space
-usr_1:          ds.b    $10                 ; User Account Space
-usr_2:          ds.b    $10                 ; User Account Space
-usr_3:          ds.b    $10                 ; User Account Space
-usr_4:          ds.b    $10                ; User Account Space
+aqua_disp:      MOVB #' ',disp+16
+                MOVB #' ',disp+17
+                MOVB #' ',disp+18
+                MOVB #'A',disp+19
+                MOVB #'Q',disp+20
+                MOVB #'U',disp+21
+                MOVB #'A',disp+22
+                MOVB #'R',disp+23
+                MOVB #'I',disp+24
+                MOVB #'U',disp+25
+                MOVB #'M',disp+26
+                MOVB #'?',disp+27
+                MOVB #' ',disp+28
+                MOVB #' ',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-;----------Logic & General-----------------;
-JEEP_MODE:      ds.b    1                  ; FALSE=MENU / TRUE=JEEP
-FAST_SET:       ds.b    1                  ; TRIGGER FAST LOOP on RTI
+garden_disp:    MOVB #'B',disp+16
+                MOVB #'O',disp+17
+                MOVB #'T',disp+18
+                MOVB #'A',disp+19
+                MOVB #'N',disp+20
+                MOVB #'I',disp+21
+                MOVB #'C',disp+22
+                MOVB #'.',disp+23
+                MOVB #' ',disp+24
+                MOVB #'G',disp+25
+                MOVB #'A',disp+26
+                MOVB #'R',disp+27
+                MOVB #'D',disp+28
+                MOVB #'E',disp+29
+                MOVB #'N',disp+30
+                MOVB #'?',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-MY_CONSTANT_ROM: SECTION
-;---------------Port settings--------------;
-; Keyboard Parameters / port_u
-port_u:         equ     $268                  
-ddr_u:          equ     $26A                   
-psr_u:          equ     $26D
-peru_u:         equ     $26C
+safari_disp:    MOVB #' ',disp+16
+                MOVB #' ',disp+17
+                MOVB #'S',disp+18
+                MOVB #'A',disp+19
+                MOVB #'F',disp+20
+                MOVB #'A',disp+21
+                MOVB #'R',disp+22
+                MOVB #'I',disp+23
+                MOVB #' ',disp+24
+                MOVB #'T',disp+25
+                MOVB #'R',disp+26
+                MOVB #'I',disp+27
+                MOVB #'P',disp+28
+                MOVB #'?',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-;--------Stepper Motor / port_p------------;
-port_p:         equ     $258
-ddr_p:          equ     $25A
+log_usr_sel:    MOVB #'S',disp
+                MOVB #'E',disp+1
+                MOVB #'L',disp+2
+                MOVB #'E',disp+3
+                MOVB #'C',disp+4
+                MOVB #'T',disp+5
+                MOVB #' ',disp+6
+                MOVB #'U',disp+7
+                MOVB #'S',disp+8
+                MOVB #'E',disp+9
+                MOVB #'R',disp+10
+                MOVB #' ',disp+11
+                MOVB #' ',disp+12
+                MOVB #' ',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-;--------------DC Motor--------------------;
-port_t:         equ     $240
-ddr_t:          equ     $242
+log_usr_shift:  LDX  2, SP          ; Load Stack on Indx X
+                MOVB 0,x,disp+16
+                MOVB 1,x,disp+17
+                MOVB 2,x,disp+18
+                MOVB 3,x,disp+19
+                MOVB 4,x,disp+20
+                MOVB 5,x,disp+21
+                MOVB 6,x,disp+22
+                MOVB 7,x,disp+23
+                
+                MOVB #' ',disp+24
+                MOVB #' ',disp+25
+                MOVB #' ',disp+26
+                MOVB #' ',disp+27
+                MOVB #' ',disp+28
+                MOVB #' ',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-; Code section
-MyCode:             SECTION
-Entry:
-            LDS     #__SEG_END_SSTACK       ; Initialize stack
-            
-            ;-----Stepper Motor; Setup------;
-            MOVB    #$3E, ddr_p             ; port p / Stepper motor setup
-            MOVB    #$00, Step_Idx          ; Stepper motor Sequence Index
-            MOVB    #$FF, Stepper_ON        ; Stepper Motor set to ON
+ENTER_PASSWORD: MOVB #'E',disp
+                MOVB #'N',disp+1
+                MOVB #'T',disp+2
+                MOVB #'E',disp+3
+                MOVB #'R',disp+4
+                MOVB #' ',disp+5
+                MOVB #'P',disp+6
+                MOVB #'A',disp+7
+                MOVB #'S',disp+8
+                MOVB #'S',disp+9
+                MOVB #'W',disp+10
+                MOVB #'O',disp+11
+                MOVB #'R',disp+12
+                MOVB #'D',disp+13
+                MOVB #':',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-            ;-------Keyboard Setup----------;
-            BSET    ddr_u, #$F0             ; port u (keyboard) / DDR, set as input
-            BSET    peru_u, #$0F            ; port u (keyboard) / PER, Set as pull-up/down
-            BSET    psr_u, #$F0             ; port u (keyboard) / PDR, set as pull-up
-            MOVW    #$00, Scan_Count        ; initialize the counter
-            
-            ;-------Interrupts Setup--------;
-            MOVB    #$80, CRGINT            ; Enable RTI
-            MOVB    #$40, RTICTL            ; Set RTI to 1 ms
-            CLI                             ; Initialize Interrupts
-                                   
-            ;-------LCD Display-------------;
-            JSR     init_LCD                ; Initialize LCD
-            JSR     default_disp             ;
-            LDD     #disp                   ; Load default display
-    	    JSR     display_string          ; Call Subroutine
-            
-            
-            ;-------Potentiometer-----------;
-            MOVB    #$00, pot_shift         ; Initialize to no-shift
-            MOVB    #$00, old_pot           ; Initialize to zero
+SUCC_PASSWORD:  MOVB #'P',disp
+                MOVB #'A',disp+1
+                MOVB #'S',disp+2
+                MOVB #'S',disp+3
+                MOVB #'W',disp+4
+                MOVB #'O',disp+5
+                MOVB #'R',disp+6
+                MOVB #'D',disp+7
+                MOVB #' ',disp+8
+                MOVB #'A',disp+9
+                MOVB #'P',disp+10
+                MOVB #'P',disp+11
+                MOVB #'R',disp+12
+                MOVB #'O',disp+13
+                MOVB #'V',disp+14
+                MOVB #'E',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-            ;-----------DC Motor------------;
-            MOVB    #$00, DC_cnter          ; Initialize counter to zero
-            MOVB    #$00, t_on              ; Initialize counter to zero
+FAIL_PASSWORD:  MOVB #'W',disp
+                MOVB #'R',disp+1
+                MOVB #'O',disp+2
+                MOVB #'N',disp+3
+                MOVB #'G',disp+4
+                MOVB #' ',disp+5
+                MOVB #'P',disp+6
+                MOVB #'A',disp+7
+                MOVB #'S',disp+8
+                MOVB #'S',disp+9
+                MOVB #'W',disp+10
+                MOVB #'O',disp+11
+                MOVB #'R',disp+12
+                MOVB #'D',disp+13
+                MOVB #'!',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-            ;------User / Account Setup-----;
-            MOVB    #$00, user_sel          ; Set Default to no user selected
-            MOVB    #$01, usr_menu_shift    ; Set Default to zero
-            MOVB    #$03, usr_menu_max      ; 0=Login / 1=Create / 2=Delete / 3=Visitor
-            MOVB    #$00, usr_sel_acc       ; Max number of users
-            MOVB    #$00, usr_empty         ; No empty users 
-            MOVB    #$00, usr_temp          ; Temporary storage of new acc 
-            MOVB    #$04, usr_max           ; Max number of users 
-            MOVB    #$00, key_twice         ; Keeps track of # of keys pressed
-            JSR     user_defaults           ; Setups up default users
+ATTEMPT_PASS:   LDX  #pass_temp          ; Load Stack on Indx X
+                MOVB 0,x,disp
+                MOVB 1,x,disp+1
+                MOVB 2,x,disp+2
+                MOVB 3,x,disp+3
+                MOVB 4,x,disp+4
+                MOVB 5,x,disp+5
+                MOVB 6,x,disp+6
+                MOVB 7,x,disp+7
+                
+                MOVB #' ',disp+8
+                MOVB #' ',disp+9
+                MOVB #' ',disp+10
+                MOVB #' ',disp+11
+                MOVB #' ',disp+12
+                MOVB #' ',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
 
-            ;-----Logic & General-----------;
-            MOVB    #$00, JEEP_MODE         ; Initialize to MENU Mode (JEEP=$FF)
-            MOVB    #$00, FAST_SET          ; Initialize FAST_SET to FALSE
-            
-            ;------CODE BEGINNING-----------;
-Loop:       BRA     Loop
-            NOP
+no_empty_disp:  MOVB #'T',disp
+                MOVB #'H',disp+1
+                MOVB #'E',disp+2
+                MOVB #'R',disp+3
+                MOVB #'E',disp+4
+                MOVB #' ',disp+5
+                MOVB #'A',disp+6
+                MOVB #'R',disp+7
+                MOVB #'E',disp+8
+                MOVB #' ',disp+9
+                MOVB #'N',disp+10
+                MOVB #'O',disp+11
+                MOVB #' ',disp+12
+                MOVB #' ',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                MOVB #' ',disp+16
+                MOVB #'E',disp+17
+                MOVB #'M',disp+18
+                MOVB #'P',disp+19
+                MOVB #'T',disp+20
+                MOVB #'Y',disp+21
+                MOVB #' ',disp+22
+                MOVB #'A',disp+23
+                MOVB #'C',disp+24
+                MOVB #'C',disp+25
+                MOVB #'O',disp+26
+                MOVB #'N',disp+27
+                MOVB #'T',disp+28
+                MOVB #'S',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+newUsr_done:    MOVB #'K',disp
+                MOVB #'E',disp+1
+                MOVB #'Y',disp+2
+                MOVB #' ',disp+3
+                MOVB #'T',disp+4
+                MOVB #'W',disp+5
+                MOVB #'I',disp+6
+                MOVB #'C',disp+7
+                MOVB #'E',disp+8
+                MOVB #' ',disp+9
+                MOVB #'4',disp+10
+                MOVB #' ',disp+11
+                MOVB #'D',disp+12
+                MOVB #'O',disp+13
+                MOVB #'N',disp+14
+                MOVB #'E',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+newUsr_disp:    MOVB #'E',disp
+                MOVB #'N',disp+1
+                MOVB #'T',disp+2
+                MOVB #'E',disp+3
+                MOVB #'R',disp+4
+                MOVB #' ',disp+5
+                MOVB #'U',disp+6
+                MOVB #'S',disp+7
+                MOVB #'R',disp+8
+                MOVB #' ',disp+9
+                MOVB #'(',disp+10
+                MOVB #'8',disp+11
+                MOVB #'C',disp+12
+                MOVB #'H',disp+13
+                MOVB #'R',disp+14
+                MOVB #')',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+ATTEMPT_USR:    LDX  #usr_temp                ; Load Stack on Indx X
+                MOVB 0,x,disp+16
+                MOVB 1,x,disp+17
+                MOVB 2,x,disp+18
+                MOVB 3,x,disp+18
+                MOVB 4,x,disp+20
+                MOVB 5,x,disp+21
+                MOVB 6,x,disp+22
+                MOVB 7,x,disp+23
+                
+                MOVB #' ',disp+24
+                MOVB #' ',disp+25
+                MOVB #' ',disp+26
+                MOVB #' ',disp+27
+                MOVB #' ',disp+28
+                MOVB #' ',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0' 
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+del_Menu_disp:  MOVB #'D',disp
+                MOVB #'E',disp+1
+                MOVB #'L',disp+2
+                MOVB #'E',disp+3
+                MOVB #'T',disp+4
+                MOVB #'E',disp+5
+                MOVB #' ',disp+6
+                MOVB #'A',disp+7
+                MOVB #'C',disp+8
+                MOVB #'C',disp+9
+                MOVB #'O',disp+10
+                MOVB #'U',disp+11
+                MOVB #'N',disp+12
+                MOVB #'T',disp+13
+                MOVB #':',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+del_conf_disp:  MOVB #'C',disp
+                MOVB #'O',disp+1
+                MOVB #'N',disp+2
+                MOVB #'F',disp+3
+                MOVB #'I',disp+4
+                MOVB #'R',disp+5
+                MOVB #'M',disp+6
+                MOVB #' ',disp+7
+                MOVB #'D',disp+8
+                MOVB #'E',disp+9
+                MOVB #'L',disp+10
+                MOVB #'E',disp+11
+                MOVB #'T',disp+12
+                MOVB #'E',disp+13
+                MOVB #'?',disp+14
+                MOVB #' ',disp+15
+                MOVB #'K',disp+16
+                MOVB #'E',disp+17
+                MOVB #'Y',disp+18
+                MOVB #':',disp+19
+                MOVB #'Y',disp+20
+                MOVB #'E',disp+21
+                MOVB #'S',disp+22
+                MOVB #' ',disp+23
+                MOVB #'P',disp+24
+                MOVB #'O',disp+25
+                MOVB #'T',disp+26
+                MOVB #':',disp+27
+                MOVB #'N',disp+28
+                MOVB #'O',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+post_del_disp:  MOVB #'A',disp
+                MOVB #'C',disp+1
+                MOVB #'C',disp+2
+                MOVB #'O',disp+3
+                MOVB #'U',disp+4
+                MOVB #'N',disp+5
+                MOVB #'T',disp+6
+                MOVB #' ',disp+7
+                MOVB #'D',disp+8
+                MOVB #'E',disp+9
+                MOVB #'L',disp+10
+                MOVB #'E',disp+11
+                MOVB #'T',disp+12
+                MOVB #'E',disp+13
+                MOVB #'D',disp+14
+                MOVB #' ',disp+15
+                MOVB #'P',disp+16
+                MOVB #'R',disp+17
+                MOVB #'E',disp+18
+                MOVB #'S',disp+19
+                MOVB #'S',disp+20
+                MOVB #' ',disp+21
+                MOVB #'K',disp+22
+                MOVB #'E',disp+23
+                MOVB #'Y',disp+24
+                MOVB #' ',disp+25
+                MOVB #'O',disp+26
+                MOVB #'R',disp+27
+                MOVB #' ',disp+28
+                MOVB #'P',disp+29
+                MOVB #'O',disp+30
+                MOVB #'T',disp+31
+                MOVB #0,  disp+32
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
