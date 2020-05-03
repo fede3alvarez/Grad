@@ -2,8 +2,8 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD
-            XREF disp, display_string, pass_temp, usr_temp    
+            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD, del_Menu_disp, del_conf_disp, post_del_disp
+            XREF disp, display_string, pass_temp, usr_temp, 
 
 default_disp:   MOVB #' ',disp
                 MOVB #' ',disp+1
@@ -487,3 +487,98 @@ ATTEMPT_USR:    LDX  #usr_temp                ; Load Stack on Indx X
                 LDD  #disp         
                 JSR  display_string
                 RTS
+
+del_Menu_disp:  MOVB #'D',disp
+                MOVB #'E',disp+1
+                MOVB #'L',disp+2
+                MOVB #'E',disp+3
+                MOVB #'T',disp+4
+                MOVB #'E',disp+5
+                MOVB #' ',disp+6
+                MOVB #'A',disp+7
+                MOVB #'C',disp+8
+                MOVB #'C',disp+9
+                MOVB #'O',disp+10
+                MOVB #'U',disp+11
+                MOVB #'N',disp+12
+                MOVB #'T',disp+13
+                MOVB #':',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+del_conf_disp:  MOVB #'C',disp
+                MOVB #'O',disp+1
+                MOVB #'N',disp+2
+                MOVB #'F',disp+3
+                MOVB #'I',disp+4
+                MOVB #'R',disp+5
+                MOVB #'M',disp+6
+                MOVB #' ',disp+7
+                MOVB #'D',disp+8
+                MOVB #'E',disp+9
+                MOVB #'L',disp+10
+                MOVB #'E',disp+11
+                MOVB #'T',disp+12
+                MOVB #'E',disp+13
+                MOVB #'?',disp+14
+                MOVB #' ',disp+15
+                MOVB #'K',disp+16
+                MOVB #'E',disp+17
+                MOVB #'Y',disp+18
+                MOVB #':',disp+19
+                MOVB #'Y',disp+20
+                MOVB #'E',disp+21
+                MOVB #'S',disp+22
+                MOVB #' ',disp+23
+                MOVB #'P',disp+24
+                MOVB #'O',disp+25
+                MOVB #'T',disp+26
+                MOVB #':',disp+27
+                MOVB #'N',disp+28
+                MOVB #'O',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+post_del_disp:  MOVB #'A',disp
+                MOVB #'C',disp+1
+                MOVB #'C',disp+2
+                MOVB #'O',disp+3
+                MOVB #'U',disp+4
+                MOVB #'N',disp+5
+                MOVB #'T',disp+6
+                MOVB #' ',disp+7
+                MOVB #'D',disp+8
+                MOVB #'E',disp+9
+                MOVB #'L',disp+10
+                MOVB #'E',disp+11
+                MOVB #'T',disp+12
+                MOVB #'E',disp+13
+                MOVB #'D',disp+14
+                MOVB #' ',disp+15
+                MOVB #'P',disp+16
+                MOVB #'R',disp+17
+                MOVB #'E',disp+18
+                MOVB #'S',disp+19
+                MOVB #'S',disp+20
+                MOVB #' ',disp+21
+                MOVB #'K',disp+22
+                MOVB #'E',disp+23
+                MOVB #'Y',disp+24
+                MOVB #' ',disp+25
+                MOVB #'O',disp+26
+                MOVB #'R',disp+27
+                MOVB #' ',disp+28
+                MOVB #'P',disp+29
+                MOVB #'O',disp+30
+                MOVB #'T',disp+31
+                MOVB #0,  disp+32
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
