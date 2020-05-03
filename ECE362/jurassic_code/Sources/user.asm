@@ -4,7 +4,7 @@
 ; export symbols
             XDEF user_main
 
-            XREF __SEG_END_SSTACK, user_sel, menu_disp, menu_tutorial, key_val, usr_menu_shift, usr_menu_max, USR_MENU_INPUT, usr_input, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, usr_temp, usr_new_id, usr_empty, ATTEMPT_USR, no_empty_disp, newAcc_disp, usr_max, newUsr_disp, pass_temp, trip, ATTEMPT_PASS, newUsr_done, pass_char, delAcc_disp, SUCC_PASSWORD, usr_0, usr_1, usr_2, usr_3, usr_sel_acc, ENTER_PASSWORD, key_twice, pot_shift, reset_Temp, login_disp, del_Menu_disp, del_conf_disp, post_del_disp
+            XREF __SEG_END_SSTACK, user_sel, menu_disp, menu_tutorial, key_val, usr_menu_shift, usr_menu_max, USR_MENU_INPUT, usr_input, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, usr_temp, usr_new_id, usr_empty, ATTEMPT_USR, no_empty_disp, newAcc_disp, usr_max, newUsr_disp, pass_temp, trip, ATTEMPT_PASS, newUsr_done, pass_char, delAcc_disp, SUCC_PASSWORD, usr_0, usr_1, usr_2, usr_3, usr_sel_acc, ENTER_PASSWORD, key_twice, pot_shift, reset_Temp, login_disp, del_Menu_disp, del_conf_disp, post_del_disp, usr_EMPTY
 
 
 ;---------------------------------------------------;
@@ -12,7 +12,7 @@
 ;---------------------------------------------------;
 user_main:  JSR     menu_tutorial                   ; Load tutorial LCD instructions
             MOVB    #$FF, key_val                   ; Reset Key values
-            MOVB    #$, pot_shift                   ; Reset Pot_shift
+            MOVB    #$00, pot_shift                   ; Reset Pot_shift
             MOVB    $00, usr_sel_acc                ; Reset Current User
 
                                                   
@@ -336,7 +336,7 @@ del_con:    JSR     del_conf_disp                   ;
             MOVB    #$FF, key_val                   ;
             MOVB    #$00, pot_shift                 ;  
             ;                                       ;
-del_con:    JSR     post_del_disp                   ;
+            JSR     post_del_disp                   ;
             JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
             BRCLR   usr_input,$FF,del_log_wt        ;
             ;                                       ;

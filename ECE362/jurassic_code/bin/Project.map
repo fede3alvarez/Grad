@@ -309,13 +309,13 @@ main.asm__ORG00001               164     R      0x800      0x8A3   .absSeg0
 .bss                               2   R/W      0x500      0x501   RAM
 .common                            2   R/W      0x502      0x503   RAM
 interrupt.asm._SEC000000         367     R     0xC193     0xC301   ROM_C000
-updateLCD.asm._SEC000000        2120     R     0xC302     0xCB49   ROM_C000
-defaults.asm._SEC000000          426     R     0xCB4A     0xCCF3   ROM_C000
+updateLCD.asm._SEC000000        2551     R     0xC302     0xCCF8   ROM_C000
+defaults.asm._SEC000000          426     R     0xCCF9     0xCEA2   ROM_C000
 .vectSeg274_vect                   4     R     0xFFF0     0xFFF3   .vectSeg274
 .vectSeg275_vect                   2     R     0xFFFE     0xFFFF   .vectSeg275
 
 Summary of section sizes per section type:
-READ_ONLY (R):         D9E (dec:     3486)
+READ_ONLY (R):         F4D (dec:     3917)
 READ_WRITE (R/W):      104 (dec:      260)
 NO_INIT (N/I):         160 (dec:      352)
 
@@ -345,7 +345,7 @@ MODULE:                 -- main.asm.o --
      Scan_Count                                 81C       2       2       4   .text       
      key_press                                  81E       1       1       0   .text       
      key_val                                    81F       1       1       5   .text       
-     disp                                       820      21      33     414   .text       
+     disp                                       820      21      33     499   .text       
      old_pot                                    841       1       1       2   .text       
      pot_shift                                  842       1       1       3   .text       
      DC_cnter                                   843       1       1       6   .text       
@@ -378,7 +378,7 @@ MODULE:                 -- lcddisp.c.o --
 - PROCEDURES:
      delay_ms                                  C088      17      23       5   NON_BANKED  
      init_LCD                                  C09F      52      82       1   NON_BANKED  
-     display_string                            C0F1      38      56      22   NON_BANKED  
+     display_string                            C0F1      38      56      25   NON_BANKED  
      Delay                                     C129      1F      31       1   NON_BANKED  
      epulse                                    C148      24      36       3   NON_BANKED  
      sendCommand                               C16C       F      15       7   NON_BANKED  
@@ -714,16 +714,19 @@ MODULE:                 -- updateLCD.asm.o --
      newUsr_done                               CA3D      57      87       0   updateLCD.asm._SEC000000
      newUsr_disp                               CA94      57      87       0   updateLCD.asm._SEC000000
      ATTEMPT_USR                               CAEB      5F      95       0   updateLCD.asm._SEC000000
+     del_Menu_disp                             CB4A      57      87       0   updateLCD.asm._SEC000000
+     del_conf_disp                             CBA1      AC     172       0   updateLCD.asm._SEC000000
+     post_del_disp                             CC4D      AC     172       0   updateLCD.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- defaults.asm.o --
 - PROCEDURES:
-     user_defaults                             CB4A      38      56       1   defaults.asm._SEC000000
-     usr_GRANT                                 CB82      43      67       1   defaults.asm._SEC000000
-     usr_SATTLER                               CBC5      43      67       1   defaults.asm._SEC000000
-     usr_MALCOLM                               CC08      43      67       1   defaults.asm._SEC000000
-     usr_EMPTY                                 CC4B      43      67       1   defaults.asm._SEC000000
-     usr_VISIT                                 CC8E      43      67       1   defaults.asm._SEC000000
-     reset_Temp                                CCD1      23      35       0   defaults.asm._SEC000000
+     user_defaults                             CCF9      38      56       1   defaults.asm._SEC000000
+     usr_GRANT                                 CD31      43      67       1   defaults.asm._SEC000000
+     usr_SATTLER                               CD74      43      67       1   defaults.asm._SEC000000
+     usr_MALCOLM                               CDB7      43      67       1   defaults.asm._SEC000000
+     usr_EMPTY                                 CDFA      43      67       1   defaults.asm._SEC000000
+     usr_VISIT                                 CE3D      43      67       1   defaults.asm._SEC000000
+     reset_Temp                                CE80      23      35       0   defaults.asm._SEC000000
 - VARIABLES:
 
 *********************************************************************************************
@@ -735,7 +738,7 @@ MODULE STATISTIC
   mc9s12e128.c.o                             352      0      0
   potentiometer.c.o                            2     24      0
   interrupt.asm.o                              0    367      0
-  updateLCD.asm.o                              0   2120      0
+  updateLCD.asm.o                              0   2551      0
   defaults.asm.o                               0    426      0
   other                                      256      6      0
 
@@ -1310,7 +1313,8 @@ SECTION: "updateLCD.asm._SEC000000"
   default_disp menu_tutorial menu_disp newAcc_disp delAcc_disp login_disp 
   visit_disp whereToGo_disp aqua_disp garden_disp safari_disp log_usr_sel 
   log_usr_shift ENTER_PASSWORD SUCC_PASSWORD FAIL_PASSWORD ATTEMPT_PASS 
-  no_empty_disp newUsr_done newUsr_disp ATTEMPT_USR 
+  no_empty_disp newUsr_done newUsr_disp ATTEMPT_USR del_Menu_disp del_conf_disp 
+  post_del_disp 
 SECTION: "defaults.asm._SEC000000"
   user_defaults usr_GRANT usr_SATTLER usr_MALCOLM usr_EMPTY usr_VISIT 
   reset_Temp 
@@ -1606,7 +1610,7 @@ OBJECT LIST SORTED BY ADDRESS
      Scan_Count                                 81C       2       2       4   .text       
      key_press                                  81E       1       1       0   .text       
      key_val                                    81F       1       1       5   .text       
-     disp                                       820      21      33     414   .text       
+     disp                                       820      21      33     499   .text       
      old_pot                                    841       1       1       2   .text       
      pot_shift                                  842       1       1       3   .text       
      DC_cnter                                   843       1       1       6   .text       
@@ -1634,7 +1638,7 @@ OBJECT LIST SORTED BY ADDRESS
      Loop                                      C085       3       3       0   .init       
      delay_ms                                  C088      17      23       5   NON_BANKED  
      init_LCD                                  C09F      52      82       1   NON_BANKED  
-     display_string                            C0F1      38      56      22   NON_BANKED  
+     display_string                            C0F1      38      56      25   NON_BANKED  
      Delay                                     C129      1F      31       1   NON_BANKED  
      epulse                                    C148      24      36       3   NON_BANKED  
      sendCommand                               C16C       F      15       7   NON_BANKED  
@@ -1683,13 +1687,16 @@ OBJECT LIST SORTED BY ADDRESS
      newUsr_done                               CA3D      57      87       0   updateLCD.asm._SEC000000
      newUsr_disp                               CA94      57      87       0   updateLCD.asm._SEC000000
      ATTEMPT_USR                               CAEB      5F      95       0   updateLCD.asm._SEC000000
-     user_defaults                             CB4A      38      56       1   defaults.asm._SEC000000
-     usr_GRANT                                 CB82      43      67       1   defaults.asm._SEC000000
-     usr_SATTLER                               CBC5      43      67       1   defaults.asm._SEC000000
-     usr_MALCOLM                               CC08      43      67       1   defaults.asm._SEC000000
-     usr_EMPTY                                 CC4B      43      67       1   defaults.asm._SEC000000
-     usr_VISIT                                 CC8E      43      67       1   defaults.asm._SEC000000
-     reset_Temp                                CCD1      23      35       0   defaults.asm._SEC000000
+     del_Menu_disp                             CB4A      57      87       0   updateLCD.asm._SEC000000
+     del_conf_disp                             CBA1      AC     172       0   updateLCD.asm._SEC000000
+     post_del_disp                             CC4D      AC     172       0   updateLCD.asm._SEC000000
+     user_defaults                             CCF9      38      56       1   defaults.asm._SEC000000
+     usr_GRANT                                 CD31      43      67       1   defaults.asm._SEC000000
+     usr_SATTLER                               CD74      43      67       1   defaults.asm._SEC000000
+     usr_MALCOLM                               CDB7      43      67       1   defaults.asm._SEC000000
+     usr_EMPTY                                 CDFA      43      67       1   defaults.asm._SEC000000
+     usr_VISIT                                 CE3D      43      67       1   defaults.asm._SEC000000
+     reset_Temp                                CE80      23      35       0   defaults.asm._SEC000000
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
@@ -1755,6 +1762,9 @@ no_empty_disp             USES disp display_string
 newUsr_done               USES disp display_string 
 newUsr_disp               USES disp display_string 
 ATTEMPT_USR               USES usr_temp disp display_string 
+del_Menu_disp             USES disp display_string 
+del_conf_disp             USES disp display_string 
+post_del_disp             USES disp display_string 
 user_defaults             USES usr_0 usr_GRANT usr_empty usr_1 usr_SATTLER 
                                 usr_2 usr_MALCOLM usr_3 usr_EMPTY usr_4 usr_VISIT 
 
@@ -1807,6 +1817,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 6
-Total size of all blocks to be downloaded: 3486
+Number of blocks to be downloaded: 7
+Total size of all blocks to be downloaded: 3917
 
