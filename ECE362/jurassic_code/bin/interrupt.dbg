@@ -7296,7 +7296,7 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 ; export symbols
             XDEF RTI_ISR, IRQ_ISR
 
-            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON
+            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, JEEP_Cnter
 
 
 
@@ -7310,7 +7310,7 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 ; STEPPER_MOTOR
 ; Runs every second unless in EMERGENCY mode
 ;
-; JEEP_MODE Lasts for 15 sec
+; JEEP_MODE Lasts for 30 sec
 ; During JEEP Mode, only the DC Motor works
 ; Every 4 ms the DC Motor is called (total 20 ms)
 ;
@@ -7321,7 +7321,10 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 ;
 
 
-RTI_ISR:    LDD     RTI_Cnter               ; Load counter to Idx X
+RTI_ISR:    LDAA    JEEP_MODE               ; Check if we are in Jeep Mode
+            LBNE    JEEP_LOGIC              ;
+            ;                               ;
+            LDD     RTI_Cnter               ; Load counter to Idx X
             CPD     #$03E0                  ; If 1 sec increment
             BNE     Skip_Step               ;   Set Stepper_ON 
             MOVB    #$00, Step_Idx          ;   and go to Chck_FAST
@@ -7331,10 +7334,21 @@ Skip_Step:  LDX     $14                     ; RTI_Cnter still on Acc. D
             BNE     Chck_FAST               ; If 20 ms increment,  
             MOVB    #$0F, FAST_SET          ;   Set FAST_SET to Write Keyboard 
 Chck_FAST:  BRSET   FAST_SET, $01, FAST_LP  ; If FAST_SET is non-zero
-                                            ;   Go to FAST_LP
+
 END_RTI:    INC     RTI_Cnter               ; If done, Increase
             BCLR    CRGFLG, #$80            ;    RTI_Cnter & Wrap-up
             RTI
+
+JEEP_LOGIC: LDD     JEEP_Cnter              ; Check if Jeep Mode time is up,
+            CPD     #$7530                  ;   if so, reset all paremeters
+            LBNE    DC_Motor                ; Otherwise, branch
+            MOVB    $00, JEEP_MODE          ;
+            MOVW    $00, JEEP_Cnter         ;
+            MOVW    $00, RTI_Cnter          ;
+            LBRA    END_RTI                 ;
+
+
+
 
 ;-------------------------------------------;
 ;           FAST_SET & RTI LOGIC   
@@ -7392,7 +7406,7 @@ Set_seq:    LDX     Scan_Count              ; Load Scan_Count
             INX                             ;   in next interrupts)
             STX     Scan_Count              ; Store Scan_Count
             MOVB    #$0B, FAST_SET          ; Set FAST_SET to Post Write Wait
-            BRA     END_RTI
+            LBRA    END_RTI
 
 Scan_seq:   BRCLR   port_u, $0F, Key_Read   ; If Key is pressed, go to Key_Read
             LDX     Scan_Count              ; Check if scan maxed out
@@ -7400,7 +7414,7 @@ Scan_seq:   BRCLR   port_u, $0F, Key_Read   ; If Key is pressed, go to Key_Read
             BLO     Scan_end                ;   and FAST_SET to read pot 
             MOVW    #$00, Scan_Count        ;
             MOVB    #$05, FAST_SET          ;
-            BRA     END_RTI                 ;
+            LBRA    END_RTI                 ;
 
 Scan_end:   MOVB    #$0F, FAST_SET          ; Oherwise, more rows to scan
             LBRA    END_RTI                 ;   set FAST_SET to Write 
@@ -7446,12 +7460,12 @@ CW_Lp:      LDX     Step_Idx                ;
 ;        DC MOTOR 
 ;--------------------------------------
 DC_Motor:   LDAA    DC_cnter                ;
-            BEQ     DC_Setup                ; If first PWM loop, go to setup
+            LBEQ    DC_Setup                ; If first PWM loop, go to setup
             CMPA    t_on                    ; Otherwise, check if all PWN High
-            BLO     PWM_ON                  ;   are completed
-            BRA     PWM_OFF                 ;
+            LBLO    PWM_ON                  ;   are completed
+            LBRA    PWM_OFF                 ;
 
-DC_Setup:   BRA     Pot_SEL                 ; Update pot_value
+DC_Setup:   LBRA    Pot_SEL                 ; Update pot_value
             LDAA    pot_value               ;   pot_value [0;255]  
             LDAB    $0F                     ;   time_on   [0;15]
             MUL                             ; then:
@@ -7460,7 +7474,7 @@ DC_Setup:   BRA     Pot_SEL                 ; Update pot_value
             XGDX                            ; Switch ACC. X & D
             STAB    t_on                    ; Save t_on (now on Acc B)
             CMPB    $00                     ; If t_on is zero
-            BEQ     PWM_OFF                 ;  go to PWM_OFF
+            LBEQ    PWM_OFF                 ;  go to PWM_OFF
 
 PWM_ON:     LDAA    DC_cnter                ; Load t_on DC_cnter
             CMPA    t_on                    ;   if bigger than t_pn

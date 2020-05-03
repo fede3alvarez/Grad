@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK, usr_input, usr_menu_shift
 
             XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults    
 
@@ -43,6 +43,7 @@ user_sel:       ds.b    1                  ;
 usr_menu_shift: ds.b    1                  ; Shifts between user menu options    
 usr_menu_max:   ds.b    1                  ; Number of User Menu options
 usr_sel_acc:    ds.b    1                  ; Number of User Menu options
+usr_input:      ds.b    1                  ; Number of User Menu options
 usr_max:        ds.b    1                  ; Number of User Menu options
 usr_char        ds.b    1                  ; User character (Password)
 usr_empty       ds.b    1                  ; Keeps track of empty Accounts
@@ -120,6 +121,7 @@ Entry:
             MOVB    #$00, user_sel          ; Set Default to no user selected
             MOVB    #$01, usr_menu_shift    ; Set Default to zero
             MOVB    #$03, usr_menu_max      ; 0=Login / 1=Create / 2=Delete / 3=Visitor
+            MOVB    #$00, usr_input         ; Tracks whether user press Key or Pot
             MOVB    #$00, usr_sel_acc       ; Max number of users
             MOVB    #$00, usr_empty         ; No empty users 
             MOVB    #$00, usr_temp          ; Temporary storage of new acc 

@@ -114,7 +114,7 @@ Set_seq:    LDX     Scan_Count              ; Load Scan_Count
             INX                             ;   in next interrupts)
             STX     Scan_Count              ; Store Scan_Count
             MOVB    #$0B, FAST_SET          ; Set FAST_SET to Post Write Wait
-            BRA     END_RTI
+            LBRA    END_RTI
 
 Scan_seq:   BRCLR   port_u, $0F, Key_Read   ; If Key is pressed, go to Key_Read
             LDX     Scan_Count              ; Check if scan maxed out
@@ -122,7 +122,7 @@ Scan_seq:   BRCLR   port_u, $0F, Key_Read   ; If Key is pressed, go to Key_Read
             BLO     Scan_end                ;   and FAST_SET to read pot 
             MOVW    #$00, Scan_Count        ;
             MOVB    #$05, FAST_SET          ;
-            BRA     END_RTI                 ;
+            LBRA    END_RTI                 ;
 
 Scan_end:   MOVB    #$0F, FAST_SET          ; Oherwise, more rows to scan
             LBRA    END_RTI                 ;   set FAST_SET to Write 

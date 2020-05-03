@@ -4,11 +4,11 @@
 ; export symbols
             XDEF Main_Logic, USR_MENU_INPUT, trip
 
-            XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input, user_main, JEEP_TUTORIAL, whereToGo_disp, aqua_disp, garden_disp, safari_disp, LOC_TRACK
+            XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input, user_main, JEEP_TUTORIAL, whereToGo_disp, aqua_disp, garden_disp, safari_disp, LOC_TRACK, JEEP_MODE
 
 Main_Logic:     LDAA    user_sel                ; Check if user has been selected
-                BEQ     user_main               ; If not, go user user_setup
-                LBRA     trip
+                LBEQ    user_main               ; If not, go user user_setup
+                LBRA    trip
 
 trip:           JSR     whereToGo_disp          ;whereToGo_disp, aqua_disp, garden_disp, safari_disp
                 JSR     aqua_disp               ;
@@ -48,7 +48,7 @@ Reset_LOC:      MOVB    $00, LOC_TRACK          ;
                 
 trp_jeep_tut:   JSR     JEEP_TUTORIAL           ; Display JEEP Tutorial screen
                 MOVB    #$FF, JEEP_MODE         ;   Set JEEP_MODE to True
-trip_jeep:      BRSET   #$FF,JEEP_MODE,trip_jeep; Wait until Jeep Mode is FALSE
+trip_jeep:      BRSET   JEEP_MODE,#$FF,trip_jeep; Wait until Jeep Mode is FALSE
                 LBRA    jurassic_park           ;   to Load Park
 
 jurassic_park:  BRA     jurassic_park

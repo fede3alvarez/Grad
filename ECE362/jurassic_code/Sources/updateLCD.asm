@@ -597,7 +597,7 @@ JEEP_TUTORIAL:  MOVB #'D',disp
                 MOVB #'E',disp+12
                 MOVB #'P',disp+13
                 MOVB #'!',disp+14
-                MOVB #'',disp+15
+                MOVB #' ',disp+15
                 MOVB #'W',disp+16
                 MOVB #'/',disp+17
                 MOVB #' ',disp+18
