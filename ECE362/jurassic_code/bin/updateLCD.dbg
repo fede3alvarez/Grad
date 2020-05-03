@@ -7294,7 +7294,7 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 
 
 ; export symbols
-            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD, del_Menu_disp, del_conf_disp, post_del_disp
+            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD, del_Menu_disp, del_conf_disp, post_del_disp, JEEP_TUTORIAL
             XREF disp, display_string, pass_temp, usr_temp, 
 
 default_disp:   MOVB #' ',disp
@@ -7874,3 +7874,39 @@ post_del_disp:  MOVB #'A',disp
                 JSR  display_string
                 RTS
 
+JEEP_TUTORIAL:  MOVB #'D',disp
+                MOVB #'R',disp+1
+                MOVB #'I',disp+2
+                MOVB #'V',disp+3
+                MOVB #'E',disp+4
+                MOVB #' ',disp+5
+                MOVB #'T',disp+6
+                MOVB #'H',disp+7
+                MOVB #'E',disp+8
+                MOVB #' ',disp+9
+                MOVB #'J',disp+10
+                MOVB #'E',disp+11
+                MOVB #'E',disp+12
+                MOVB #'P',disp+13
+                MOVB #'!',disp+14
+                MOVB #' ',disp+15
+                MOVB #'W',disp+16
+                MOVB #'/',disp+17
+                MOVB #' ',disp+18
+                MOVB #'P',disp+19
+                MOVB #'O',disp+20
+                MOVB #'T',disp+21
+                MOVB #'E',disp+22
+                MOVB #'N',disp+23
+                MOVB #'T',disp+24
+                MOVB #'I',disp+25
+                MOVB #'O',disp+26
+                MOVB #'M',disp+27
+                MOVB #'E',disp+28
+                MOVB #'T',disp+29
+                MOVB #'E',disp+30
+                MOVB #'R',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
