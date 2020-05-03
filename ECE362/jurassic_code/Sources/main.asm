@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK
 
             XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults    
 
@@ -51,15 +51,18 @@ usr_new_id      ds.w    1                  ; Temp Variable for creating a new ac
 pass_char       ds.b    1                  ; Password character (Password)
 pass_temp       ds.b    1                  ; Password entered
 key_twice       ds.b    1                  ; Password entered
-usr_0:          ds.b    $10                 ; User Account Space
-usr_1:          ds.b    $10                 ; User Account Space
-usr_2:          ds.b    $10                 ; User Account Space
-usr_3:          ds.b    $10                 ; User Account Space
+usr_0:          ds.b    $10                ; User Account Space
+usr_1:          ds.b    $10                ; User Account Space
+usr_2:          ds.b    $10                ; User Account Space
+usr_3:          ds.b    $10                ; User Account Space
 usr_4:          ds.b    $10                ; User Account Space
 
 ;----------Logic & General-----------------;
 JEEP_MODE:      ds.b    1                  ; FALSE=MENU / TRUE=JEEP
+JEEP_Cnter:     ds.w    1                  ; Counts ms in JEEP_MODE
 FAST_SET:       ds.b    1                  ; TRIGGER FAST LOOP on RTI
+LOC_TRACK:      ds.b    1                  ; Keeps Track of location in Park
+;                                          ; 0=AQUARIUM, 1=GARDEN, 2= SAFARI, 
 
 MY_CONSTANT_ROM: SECTION
 ;---------------Port settings--------------;
@@ -126,9 +129,11 @@ Entry:
 
             ;-----Logic & General-----------;
             MOVB    #$00, JEEP_MODE         ; Initialize to MENU Mode (JEEP=$FF)
+            MOVW    #$00, JEEP_Cnter        ; Initialize to MENU Mode (JEEP=$FF)
             MOVB    #$00, FAST_SET          ; Initialize FAST_SET to FALSE
+            MOVB    #$00, LOC_TRACK         ; Initialize to AQUARIUM
             
             ;------CODE BEGINNING-----------;
-Loop:       BRA     Loop
+            LBRA     Main_Logic
             NOP
             END
