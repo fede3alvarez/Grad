@@ -4,7 +4,7 @@
 ; export symbols
             XDEF user_main
 
-            XREF __SEG_END_SSTACK, user_sel, menu_disp, menu_tutorial, key_val, usr_menu_shift, usr_menu_max, USR_MENU_INPUT, usr_input, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, usr_temp, usr_new_id
+            XREF __SEG_END_SSTACK, user_sel, menu_disp, menu_tutorial, key_val, usr_menu_shift, usr_menu_max, USR_MENU_INPUT, usr_input, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, usr_temp, usr_new_id, usr_empty, ATTEMPT_USR, no_empty_disp, newAcc_disp, usr_max, newUsr_disp, pass_temp, trip, ATTEMPT_PASS, newUsr_done, pass_char, delAcc_disp, SUCC_PASSWORD, usr_0, usr_1, usr_2, usr_3, usr_sel_acc, ENTER_PASSWORD, key_twice, pot_shift, reset_Temp, login_disp
 
 
 ;---------------------------------------------------;
@@ -41,8 +41,9 @@ user_menu:  JSR     USR_MENU_INPUT                  ; Check if user pressed somt
             CMPA    $03                             ;
             LBEQ    visit_disp                      ;
             ;                                       ;
-            INCA                                    ; Increase usr_menu_shift
-            LBLO     $04, user_menu                 ;
+            INCA                                    ;
+            CMPA    $04                             ; Increase usr_menu_shift
+            LBLO    user_menu                       ;
             MOVB    #$00, usr_menu_shift            ;
             LBRA    user_menu                       ;
             ;                                       ;
@@ -62,19 +63,23 @@ usr_login:  JSR     log_usr_sel                     ; Display login screen
             LDAA    usr_sel_acc                     ;   for a particular user
             LBNE    usr1_chk                        ; Based on the value of 
             LDX     #usr_0                          ;   usr_sel_acc
+            PSHX                                    ;
             LBRA    usr_chk_end                     ;
             ;                                       ;
 usr1_chk:   CMPA    $01                             ;
             LBNE    usr2_chk                        ;
             LDX     #usr_1                          ;
+            PSHX                                    ;
             LBRA    usr_chk_end                     ;
             ;                                       ;
 usr2_chk:   CMPA    $02                             ;
             LBNE    usr2_chk                        ;
             LDX     #usr_2                          ;
+            PSHX                                    ;
             LBRA    usr_chk_end                     ;
             ;                                       ;
 usr3_chk:   LDX     #usr_3                          ;
+            PSHX                                    ;
 usr_chk_end:JSR     log_usr_shift                   ;
             ;                                       ;
 usr_log_wt: JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
@@ -102,49 +107,66 @@ usr_pass:   JSR     ENTER_PASSWORD                  ; Load Password address on I
             LDAA    usr_sel_acc                     ; 
             LBNE    pass1_chk                       ; Retrieve password for particular user 
             LDX     #usr_0                          ;   based on usr_sel_acc
-            LBRA    pass_chk_end                    ;
+            PSHX                                    ;
+            LBRA    passEndChk                    ;
             ;                                       ;
 pass1_chk:  CMPA    $01                             ;
             LBNE    usr2_chk                        ;
             LDX     #usr_1                          ;
-            LBRA    pass_chk_end                    ;
+            PSHX                                    ;
+            LBRA    passEndChk                    ;
             ;                                       ;
 pass2_chk:  CMPA    $02                             ;
             LBNE    usr2_chk                        ;
             LDX     #usr_2                          ;
-            LBRA    pass_chk_end                    ;
+            PSHX                                    ;
+            LBRA    passEndChk                    ;
 pass3_chk:  LDX     #usr_3                          ;
+            PSHX                                    ;
             ;                                       ; Acc Idx X = Usr Password curr. Char
             ;                                       ; Acc Idx Y = Password Attempt curr. Char
             ;                                       ;
-            LDY     #pass_temp                      ; Load temporary password on idx Y 
+            LDY     $00                             ; Load temporary password on idx Y 
 passEndChk: LDAA    8, x+                           ; Pull password character
             STAA    pass_char                       ; Check if terminator "-"
-            CMPA    #'-',                           ;  is present, and if it is
+            CMPA    #'-'                            ;  is present, and if it is
             LBEQ    pass_succ                       ;  exit with successfull message
             ;                                       ;
-            MOVB    #'A',Y                          ; If 1st time displaying new char,   
+            LDAA    #'A'                            ;
+            STAA    pass_succ, Y                    ;
 Char_chck:  LDAB    pot_shift                       ;   set it to "A" and increase / decrease
             MOVB    #$00, pot_shift                 ;   based on pot_shift changes
             CMPB    $02                             ;
             LBNE    Char_down                       ;
-            INC     0, Y                            ;
+            LDAA    pass_temp, Y                    ;
+            INCA                                    ;
+            STAA    pass_temp                       ;
 Char_down:  CMPB    $04                             ;
             LBNE    Char_same                       ;
-            DEC     0, Y                            ;
+            LDAA    pass_temp, Y                    ;
+            DECA                                    ;
+            STAA    pass_temp                       ;
 Char_same:  JSR     ATTEMPT_PASS                    ; Display Character
-            ;
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
 pass_wt:    JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
             BRCLR   usr_input,$FF,pass_wt           ;
             ;                                       ;
             LDAB    pot_shift                       ; If pot changed, user changed
             LBNE    Char_chck                       ;   character, and return to Char_chck
             ;                                       ;
-            LDAA    0, Y+                           ; Compare current character to 
+            LDAA    pass_temp, Y                    ; Compare current character to 
+            INY                                     ;
             CMPA    pass_char                       ;   password character (& Increase Y)
             LBEQ    passEndChk                      ; If equal, check for next char
             ;                                       ;
             JSR     FAIL_PASSWORD                   ; If not equal, display fail message
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
 pass_wt_2:  JSR     USR_MENU_INPUT                  ; And wait for user input to start again
             BRCLR   usr_input,$FF,pass_wt_2         ;
             LBRA    usr_pass                        ;
@@ -156,6 +178,9 @@ pass_succ:  JSR     log_usr_shift                   ; Display Password Success
             MOVB    #$FF, user_sel                  ; Go to next logic state
             LBRA    trip                            ;
             ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
 pass_ext_wt:JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
             BRCLR   usr_input,$FF,pass_ext_wt       ;
             ;                                       ;
@@ -164,7 +189,7 @@ pass_ext_wt:JSR     USR_MENU_INPUT                  ; Check if user pressed somt
 ;---------------------------------------------------;
             ;                                       ; FIND EMPTY ACCOUNT
 usr_newAcc: LDAA    usr_empty                       ; Check each account
-            LBEQ    no_empty_Acc                    ;   To make sure it is not empty
+            LBEQ    no_emptyAcc                     ;   To make sure it is not empty
             CMPA    $01                             ;   Then load it on IDX X
             LBNE    new_chck1                       ; and set bit on usr_empty to 
             MOVW    #usr_0, usr_new_id              ;   1 (BUSY / USED)
@@ -256,10 +281,3 @@ usr_visit:  MOVB    #$FF, key_val                   ;  Go to next logic state
             MOVB    #$FF, user_sel                  ;
             LBRA    trip                            ;
 
-
-
-    
-
-
-            NOP
-            BRA 

@@ -2,14 +2,14 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Main_Logic, user_main, USR_MENU_INPUT
+            XDEF Main_Logic, USR_MENU_INPUT, trip
 
-            XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input
+            XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input, user_main
 
 Main_Logic:     LDAA    user_sel            ; Check if user has been selected
                 BEQ     user_main           ; If not, go user user_setup
                 NOP
-                BRA 
+                BRA     trip
 
 trip:           BRA     trip
 

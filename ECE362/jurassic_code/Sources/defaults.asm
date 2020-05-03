@@ -3,9 +3,9 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF user_defaults, usr_EMPTY
+            XDEF user_defaults, usr_EMPTY, reset_Temp
 
-            XREF __SEG_END_SSTACK, usr_0, usr_1, usr_2, usr_3, usr_4, reset_TempPass, usr_empty
+            XREF __SEG_END_SSTACK, usr_0, usr_1, usr_2, usr_3, usr_4, usr_empty
 
 ;-----------------------------------;
 ;           user_defaults           ;
@@ -41,121 +41,121 @@ user_defaults:
 usr_GRANT:      LDX     2, SP               ; Load Stack on Indx X
                 ;                           ;
                 ;                           ; User Name
-                MOVB    #'D', x+            ;     Dr. Alan Grant
-                MOVB    #'R', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #'G', x+            ;
-                MOVB    #'R', x+            ;
-                MOVB    #'A', x+            ;
-                MOVB    #'N', x+            ;
-                MOVB    #'T', x+            ;
+                MOVB    #'D', 0, x          ;     Dr. Alan Grant
+                MOVB    #'R', 1, x          ;
+                MOVB    #' ', 2, x          ;
+                MOVB    #'G', 3, x          ;
+                MOVB    #'R', 4, x          ;
+                MOVB    #'A', 5, x          ;
+                MOVB    #'N', 6, x          ;
+                MOVB    #'T', 7, x          ;
                 ;                           ; Password
-                MOVB    #'H', x+            ;     HATS
-                MOVB    #'A', x+            ;
-                MOVB    #'T', x+            ;
-                MOVB    #'S', x+            ;
-                MOVB    #'-', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
+                MOVB    #'H', 8, x          ;     HATS
+                MOVB    #'A', 9, x          ;
+                MOVB    #'T', 10, x         ;
+                MOVB    #'S', 11, x         ;
+                MOVB    #'-', 12, x         ;
+                MOVB    #' ', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
                 RTS
 
 usr_SATTLER:    LDX     2, SP               ; Load Stack on Indx X
                 ;                           ;
                 ;                           ; User Name
-                MOVB    #'S', x+            ;     Dr. Ellie Sattler
-                MOVB    #'A', x+            ;
-                MOVB    #'T', x+            ;
-                MOVB    #'T', x+            ;
-                MOVB    #'L', x+            ;
-                MOVB    #'E', x+            ;
-                MOVB    #'R', x+            ;
-                MOVB    #' ', x+            ;
+                MOVB    #'S', 0, x          ;     Dr. Ellie Sattler
+                MOVB    #'A', 1, x          ;
+                MOVB    #'T', 2, x          ;
+                MOVB    #'T', 3, x          ;
+                MOVB    #'L', 4, x          ;
+                MOVB    #'E', 5, x          ;
+                MOVB    #'R', 6, x          ;
+                MOVB    #' ', 7, x          ;
                 ;                           ; Password
-                MOVB    #'P', x+            ;     PLANTS
-                MOVB    #'L', x+            ;
-                MOVB    #'A', x+            ;
-                MOVB    #'N', x+            ;
-                MOVB    #'T', x+            ;
-                MOVB    #'S', x+            ;
-                MOVB    #'-', x+            ;
-                MOVB    #' ', x+            ;
+                MOVB    #'P', 8, x          ;     PLANTS
+                MOVB    #'L', 9, x          ;
+                MOVB    #'A', 10, x         ;
+                MOVB    #'N', 11, x         ;
+                MOVB    #'T', 12, x         ;
+                MOVB    #'S', 13, x         ;
+                MOVB    #'-', 14, x         ;
+                MOVB    #' ', 15, x         ;
                 RTS
 
 usr_MALCOLM:    LDX     2, SP               ; Load Stack on Indx X
                 ;                           ;
                 ;                           ; User Name
-                MOVB    #'M', x+            ;     Dr. Ian Malcolm
-                MOVB    #'A', x+            ;
-                MOVB    #'L', x+            ;
-                MOVB    #'C', x+            ;
-                MOVB    #'O', x+            ;
-                MOVB    #'L', x+            ;
-                MOVB    #'M', x+            ;
-                MOVB    #' ', x+            ;
+                MOVB    #'M', 0, x          ;     Dr. Ian Malcolm
+                MOVB    #'A', 1, x          ;
+                MOVB    #'L', 2, x          ;
+                MOVB    #'C', 3, x          ;
+                MOVB    #'O', 4, x          ;
+                MOVB    #'L', 5, x          ;
+                MOVB    #'M', 6, x          ;
+                MOVB    #' ', 7, x          ;
                 ;                           ; Password
-                MOVB    #'C', x+            ;     CHAOS
-                MOVB    #'H', x+            ;
-                MOVB    #'A', x+            ;
-                MOVB    #'O', x+            ;
-                MOVB    #'S', x+            ;
-                MOVB    #'-', x+            ;
-                MOVB    #'', ux+            ;
-                MOVB    #'', ux+            ;
+                MOVB    #'C', 8, x          ;     CHAOS
+                MOVB    #'H', 9, x          ;
+                MOVB    #'A', 10, x         ;
+                MOVB    #'O', 11, x         ;
+                MOVB    #'S', 12, x         ;
+                MOVB    #'-', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
                 RTS
 
 usr_EMPTY:      LDX     2, SP               ; Load Stack on Indx X
                 ;                           ;
                 ;                           ; User Name
-                MOVB    #'E', x+            ;     EMPTY
-                MOVB    #'M', x+            ;
-                MOVB    #'P', x+            ;
-                MOVB    #'T', x+            ;
-                MOVB    #'Y', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
+                MOVB    #'E', 0, x          ;     EMPTY
+                MOVB    #'M', 1, x          ;
+                MOVB    #'P', 2, x          ;
+                MOVB    #'T', 3, x          ;
+                MOVB    #'Y', 4, x          ;
+                MOVB    #' ', 5, x          ;
+                MOVB    #' ', 6, x          ;
+                MOVB    #' ', 7, x          ;
                 ;                           ; Password
-                MOVB    #'-', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
+                MOVB    #'-', 8, x          ;
+                MOVB    #' ', 9, x          ;
+                MOVB    #' ', 10, x         ;
+                MOVB    #' ', 11, x         ;
+                MOVB    #' ', 12, x         ;
+                MOVB    #' ', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
                 RTS
 
 usr_VISIT:      LDX     2, SP               ; Load Stack on Indx X
                 ;                           ;
                 ;                           ; User Name
-                MOVB    #'V', x+            ;     Visitor
-                MOVB    #'I', x+            ;
-                MOVB    #'S', x+            ;
-                MOVB    #'I', x+            ;
-                MOVB    #'T', x+            ;
-                MOVB    #'O', x+            ;
-                MOVB    #'R', x+            ;
-                MOVB    #' ', x+            ;
-                ;             x+            ; Password
-                MOVB    #'-', x+            ;    No password
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
+                MOVB    #'V', 0, x          ;     Visitor
+                MOVB    #'I', 1, x          ;
+                MOVB    #'S', 2, x          ;
+                MOVB    #'I', 3, x          ;
+                MOVB    #'T', 4, x          ;
+                MOVB    #'O', 5, x          ;
+                MOVB    #'R', 6, x          ;
+                MOVB    #' ', 7, x          ;
+                ;                           ; Password
+                MOVB    #'-', 8, x          ;    No password
+                MOVB    #' ', 9, x          ;
+                MOVB    #' ', 10, x         ;
+                MOVB    #' ', 11, x         ;
+                MOVB    #' ', 12, x         ;
+                MOVB    #' ', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
                 RTS
 
 reset_Temp:     LDX     2, SP               ; Load Stack on Indx X
                 ;                           ;
-                MOVB    #' ', x+            ;   
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
-                MOVB    #' ', x+            ;
+                MOVB    #' ', 0, x            ;   
+                MOVB    #' ', 1, x            ;
+                MOVB    #' ', 2, x            ;
+                MOVB    #' ', 3, x            ;
+                MOVB    #' ', 4, x            ;
+                MOVB    #' ', 5, x            ;
+                MOVB    #' ', 6, x            ;
+                MOVB    #' ', 7, x            ;
                 RTS

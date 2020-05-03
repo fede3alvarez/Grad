@@ -1,3 +1,4 @@
+
 ; Include derivative-specific definitions
             INCLUDE 'derivative.inc'
 
@@ -7294,488 +7295,159 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 
 
 ; export symbols
-            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD
-            XREF disp, display_string, pass_temp, usr_temp    
+            XDEF user_defaults, usr_EMPTY, reset_Temp
 
-default_disp:   MOVB #' ',disp
-                MOVB #' ',disp+1
-                MOVB #' ',disp+2
-                MOVB #' ',disp+3
-                MOVB #'W',disp+4
-                MOVB #'E',disp+5
-                MOVB #'L',disp+6
-                MOVB #'C',disp+7
-                MOVB #'O',disp+8
-                MOVB #'M',disp+9
-                MOVB #'E',disp+10
-                MOVB #' ',disp+11
-                MOVB #'T',disp+12
-                MOVB #'O',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                MOVB #' ',disp+16
-                MOVB #' ',disp+17
-                MOVB #'J',disp+18
-                MOVB #'U',disp+19
-                MOVB #'R',disp+20
-                MOVB #'A',disp+21
-                MOVB #'S',disp+22
-                MOVB #'S',disp+23
-                MOVB #'I',disp+24
-                MOVB #'C',disp+25
-                MOVB #' ',disp+26
-                MOVB #'P',disp+27
-                MOVB #'A',disp+28
-                MOVB #'R',disp+29
-                MOVB #'K',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
+            XREF __SEG_END_SSTACK, usr_0, usr_1, usr_2, usr_3, usr_4, usr_empty
+
+;-----------------------------------;
+;           user_defaults           ;
+;-----------------------------------;
+; This file populates the user      ;
+; login information                 ;
+;-----------------------------------;
+
+user_defaults:  
+                LDX     #usr_0              ; Populate users with data
+                PSHX                        ;    and fill usr_empty 
+                JSR     usr_GRANT           ;
+                BCLR    usr_empty, $01      ;   
+                LDX     #usr_1              ; usr_empty is setup on a bit bases
+                PSHX                        ; 
+                JSR     usr_SATTLER         ;   Bit 0: usr 0
+                BCLR    usr_empty, $02      ;   Bit 1: usr 1
+                LDX     #usr_2              ;   Bit 2: usr 2
+                PSHX                        ;   Bit 3: usr 3 
+                JSR     usr_MALCOLM         ;
+                BCLR    usr_empty, $04      ;   Bit 4: Never empty (visitor)
+                LDX     #usr_3              ;
+                PSHX                        ; 
+                JSR     usr_EMPTY           ;
+                BSET    usr_empty, $08      ;   
+                LDX     #usr_4              ;
+                PSHX                        ; 
+                JSR     usr_VISIT           ;
+                BCLR    usr_empty, $0A      ;   
                 RTS
 
-menu_tutorial:  MOVB #'N',disp
-                MOVB #'A',disp+1
-                MOVB #'V',disp+2
-                MOVB #'I',disp+3
-                MOVB #'G',disp+4
-                MOVB #'A',disp+5
-                MOVB #'T',disp+6
-                MOVB #'E',disp+7
-                MOVB #':',disp+8
-                MOVB #'P',disp+9
-                MOVB #'O',disp+10
-                MOVB #'T',disp+11
-                MOVB #'M',disp+12
-                MOVB #'E',disp+13
-                MOVB #'T',disp+14
-                MOVB #'R',disp+15
-                MOVB #'E',disp+16
-                MOVB #'N',disp+17
-                MOVB #'T',disp+18
-                MOVB #'E',disp+19
-                MOVB #'R',disp+20
-                MOVB #':',disp+21
-                MOVB #'P',disp+22
-                MOVB #'R',disp+23
-                MOVB #'E',disp+24
-                MOVB #'S',disp+25
-                MOVB #'S',disp+26
-                MOVB #' ',disp+27
-                MOVB #'K',disp+28
-                MOVB #'E',disp+29
-                MOVB #'Y',disp+30
-                MOVB #'P',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
+
+usr_GRANT:      LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                ;                           ; User Name
+                MOVB    #'D', 0, x          ;     Dr. Alan Grant
+                MOVB    #'R', 1, x          ;
+                MOVB    #' ', 2, x          ;
+                MOVB    #'G', 3, x          ;
+                MOVB    #'R', 4, x          ;
+                MOVB    #'A', 5, x          ;
+                MOVB    #'N', 6, x          ;
+                MOVB    #'T', 7, x          ;
+                ;                           ; Password
+                MOVB    #'H', 8, x          ;     HATS
+                MOVB    #'A', 9, x          ;
+                MOVB    #'T', 10, x         ;
+                MOVB    #'S', 11, x         ;
+                MOVB    #'-', 12, x         ;
+                MOVB    #' ', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
                 RTS
 
-menu_disp:      MOVB #'R',disp+16
-                MOVB #'/',disp+17
-                MOVB #'L',disp+18
-                MOVB #':',disp+19
-                MOVB #'P',disp+20
-                MOVB #'O',disp+21
-                MOVB #'T',disp+22
-                MOVB #' ',disp+23
-                MOVB #'S',disp+24
-                MOVB #'E',disp+25
-                MOVB #'L',disp+26
-                MOVB #':',disp+27
-                MOVB #'K',disp+28
-                MOVB #'E',disp+29
-                MOVB #'Y',disp+30
-                MOVB #'P',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
+usr_SATTLER:    LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                ;                           ; User Name
+                MOVB    #'S', 0, x          ;     Dr. Ellie Sattler
+                MOVB    #'A', 1, x          ;
+                MOVB    #'T', 2, x          ;
+                MOVB    #'T', 3, x          ;
+                MOVB    #'L', 4, x          ;
+                MOVB    #'E', 5, x          ;
+                MOVB    #'R', 6, x          ;
+                MOVB    #' ', 7, x          ;
+                ;                           ; Password
+                MOVB    #'P', 8, x          ;     PLANTS
+                MOVB    #'L', 9, x          ;
+                MOVB    #'A', 10, x         ;
+                MOVB    #'N', 11, x         ;
+                MOVB    #'T', 12, x         ;
+                MOVB    #'S', 13, x         ;
+                MOVB    #'-', 14, x         ;
+                MOVB    #' ', 15, x         ;
                 RTS
 
-newAcc_disp:    MOVB #'C',disp
-                MOVB #'R',disp+1
-                MOVB #'E',disp+2
-                MOVB #'A',disp+3
-                MOVB #'T',disp+4
-                MOVB #'E',disp+5
-                MOVB #' ',disp+6
-                MOVB #'N',disp+7
-                MOVB #'E',disp+8
-                MOVB #'W',disp+9
-                MOVB #' ',disp+10
-                MOVB #'U',disp+11
-                MOVB #'S',disp+12
-                MOVB #'E',disp+13
-                MOVB #'R',disp+14
-                MOVB #'?',disp+15
-                LDD  #disp         
-                JSR  display_string
+usr_MALCOLM:    LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                ;                           ; User Name
+                MOVB    #'M', 0, x          ;     Dr. Ian Malcolm
+                MOVB    #'A', 1, x          ;
+                MOVB    #'L', 2, x          ;
+                MOVB    #'C', 3, x          ;
+                MOVB    #'O', 4, x          ;
+                MOVB    #'L', 5, x          ;
+                MOVB    #'M', 6, x          ;
+                MOVB    #' ', 7, x          ;
+                ;                           ; Password
+                MOVB    #'C', 8, x          ;     CHAOS
+                MOVB    #'H', 9, x          ;
+                MOVB    #'A', 10, x         ;
+                MOVB    #'O', 11, x         ;
+                MOVB    #'S', 12, x         ;
+                MOVB    #'-', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
                 RTS
 
-delAcc_disp:    MOVB #'D',disp
-                MOVB #'E',disp+1
-                MOVB #'L',disp+2
-                MOVB #'E',disp+3
-                MOVB #'T',disp+4
-                MOVB #'E',disp+5
-                MOVB #' ',disp+6
-                MOVB #'U',disp+7
-                MOVB #'S',disp+8
-                MOVB #'E',disp+9
-                MOVB #'R',disp+10
-                MOVB #'?',disp+11
-                MOVB #' ',disp+12
-                MOVB #' ',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
+usr_EMPTY:      LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                ;                           ; User Name
+                MOVB    #'E', 0, x          ;     EMPTY
+                MOVB    #'M', 1, x          ;
+                MOVB    #'P', 2, x          ;
+                MOVB    #'T', 3, x          ;
+                MOVB    #'Y', 4, x          ;
+                MOVB    #' ', 5, x          ;
+                MOVB    #' ', 6, x          ;
+                MOVB    #' ', 7, x          ;
+                ;                           ; Password
+                MOVB    #'-', 8, x          ;
+                MOVB    #' ', 9, x          ;
+                MOVB    #' ', 10, x         ;
+                MOVB    #' ', 11, x         ;
+                MOVB    #' ', 12, x         ;
+                MOVB    #' ', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
                 RTS
 
-login_disp:     MOVB #'L',disp
-                MOVB #'O',disp+1
-                MOVB #'G',disp+2
-                MOVB #'I',disp+3
-                MOVB #'N',disp+4
-                MOVB #'?',disp+5
-                MOVB #' ',disp+6
-                MOVB #' ',disp+7
-                MOVB #' ',disp+8
-                MOVB #' ',disp+9
-                MOVB #' ',disp+10
-                MOVB #' ',disp+11
-                MOVB #' ',disp+12
-                MOVB #' ',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
+usr_VISIT:      LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                ;                           ; User Name
+                MOVB    #'V', 0, x          ;     Visitor
+                MOVB    #'I', 1, x          ;
+                MOVB    #'S', 2, x          ;
+                MOVB    #'I', 3, x          ;
+                MOVB    #'T', 4, x          ;
+                MOVB    #'O', 5, x          ;
+                MOVB    #'R', 6, x          ;
+                MOVB    #' ', 7, x          ;
+                ;                           ; Password
+                MOVB    #'-', 8, x          ;    No password
+                MOVB    #' ', 9, x          ;
+                MOVB    #' ', 10, x         ;
+                MOVB    #' ', 11, x         ;
+                MOVB    #' ', 12, x         ;
+                MOVB    #' ', 13, x         ;
+                MOVB    #' ', 14, x         ;
+                MOVB    #' ', 15, x         ;
                 RTS
 
-visit_disp:     MOVB #'V',disp
-                MOVB #'I',disp+1
-                MOVB #'S',disp+2
-                MOVB #'I',disp+3
-                MOVB #'T',disp+4
-                MOVB #'O',disp+5
-                MOVB #'R',disp+6
-                MOVB #'?',disp+7
-                MOVB #'(',disp+8
-                MOVB #'N',disp+9
-                MOVB #'O',disp+10
-                MOVB #' ',disp+11
-                MOVB #'U',disp+12
-                MOVB #'S',disp+13
-                MOVB #'R',disp+14
-                MOVB #')',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-whereToGo_disp: MOVB #' ',disp
-                MOVB #' ',disp+1
-                MOVB #'W',disp+2
-                MOVB #'H',disp+3
-                MOVB #'E',disp+4
-                MOVB #'R',disp+5
-                MOVB #'E',disp+6
-                MOVB #' ',disp+7
-                MOVB #'T',disp+8
-                MOVB #'O',disp+9
-                MOVB #' ',disp+10
-                MOVB #'G',disp+11
-                MOVB #'O',disp+12
-                MOVB #'?',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-aqua_disp:      MOVB #' ',disp+16
-                MOVB #' ',disp+17
-                MOVB #' ',disp+18
-                MOVB #'A',disp+19
-                MOVB #'Q',disp+20
-                MOVB #'U',disp+21
-                MOVB #'A',disp+22
-                MOVB #'R',disp+23
-                MOVB #'I',disp+24
-                MOVB #'U',disp+25
-                MOVB #'M',disp+26
-                MOVB #'?',disp+27
-                MOVB #' ',disp+28
-                MOVB #' ',disp+29
-                MOVB #' ',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-garden_disp:    MOVB #'B',disp+16
-                MOVB #'O',disp+17
-                MOVB #'T',disp+18
-                MOVB #'A',disp+19
-                MOVB #'N',disp+20
-                MOVB #'I',disp+21
-                MOVB #'C',disp+22
-                MOVB #'.',disp+23
-                MOVB #' ',disp+24
-                MOVB #'G',disp+25
-                MOVB #'A',disp+26
-                MOVB #'R',disp+27
-                MOVB #'D',disp+28
-                MOVB #'E',disp+29
-                MOVB #'N',disp+30
-                MOVB #'?',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-safari_disp:    MOVB #' ',disp+16
-                MOVB #' ',disp+17
-                MOVB #'S',disp+18
-                MOVB #'A',disp+19
-                MOVB #'F',disp+20
-                MOVB #'A',disp+21
-                MOVB #'R',disp+22
-                MOVB #'I',disp+23
-                MOVB #' ',disp+24
-                MOVB #'T',disp+25
-                MOVB #'R',disp+26
-                MOVB #'I',disp+27
-                MOVB #'P',disp+28
-                MOVB #'?',disp+29
-                MOVB #' ',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-log_usr_sel:    MOVB #'S',disp
-                MOVB #'E',disp+1
-                MOVB #'L',disp+2
-                MOVB #'E',disp+3
-                MOVB #'C',disp+4
-                MOVB #'T',disp+5
-                MOVB #' ',disp+6
-                MOVB #'U',disp+7
-                MOVB #'S',disp+8
-                MOVB #'E',disp+9
-                MOVB #'R',disp+10
-                MOVB #' ',disp+11
-                MOVB #' ',disp+12
-                MOVB #' ',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-log_usr_shift:  LDX  2, SP          ; Load Stack on Indx X
-                MOVB 0,x,disp+16
-                MOVB 1,x,disp+17
-                MOVB 2,x,disp+18
-                MOVB 3,x,disp+19
-                MOVB 4,x,disp+20
-                MOVB 5,x,disp+21
-                MOVB 6,x,disp+22
-                MOVB 7,x,disp+23
-                
-                MOVB #' ',disp+24
-                MOVB #' ',disp+25
-                MOVB #' ',disp+26
-                MOVB #' ',disp+27
-                MOVB #' ',disp+28
-                MOVB #' ',disp+29
-                MOVB #' ',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-ENTER_PASSWORD: MOVB #'E',disp
-                MOVB #'N',disp+1
-                MOVB #'T',disp+2
-                MOVB #'E',disp+3
-                MOVB #'R',disp+4
-                MOVB #' ',disp+5
-                MOVB #'P',disp+6
-                MOVB #'A',disp+7
-                MOVB #'S',disp+8
-                MOVB #'S',disp+9
-                MOVB #'W',disp+10
-                MOVB #'O',disp+11
-                MOVB #'R',disp+12
-                MOVB #'D',disp+13
-                MOVB #':',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-SUCC_PASSWORD:  MOVB #'P',disp
-                MOVB #'A',disp+1
-                MOVB #'S',disp+2
-                MOVB #'S',disp+3
-                MOVB #'W',disp+4
-                MOVB #'O',disp+5
-                MOVB #'R',disp+6
-                MOVB #'D',disp+7
-                MOVB #' ',disp+8
-                MOVB #'A',disp+9
-                MOVB #'P',disp+10
-                MOVB #'P',disp+11
-                MOVB #'R',disp+12
-                MOVB #'O',disp+13
-                MOVB #'V',disp+14
-                MOVB #'E',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-FAIL_PASSWORD:  MOVB #'W',disp
-                MOVB #'R',disp+1
-                MOVB #'O',disp+2
-                MOVB #'N',disp+3
-                MOVB #'G',disp+4
-                MOVB #' ',disp+5
-                MOVB #'P',disp+6
-                MOVB #'A',disp+7
-                MOVB #'S',disp+8
-                MOVB #'S',disp+9
-                MOVB #'W',disp+10
-                MOVB #'O',disp+11
-                MOVB #'R',disp+12
-                MOVB #'D',disp+13
-                MOVB #'!',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-ATTEMPT_PASS:   LDX  #pass_temp          ; Load Stack on Indx X
-                MOVB 0,x,disp
-                MOVB 1,x,disp+1
-                MOVB 2,x,disp+2
-                MOVB 3,x,disp+3
-                MOVB 4,x,disp+4
-                MOVB 5,x,disp+5
-                MOVB 6,x,disp+6
-                MOVB 7,x,disp+7
-                
-                MOVB #' ',disp+8
-                MOVB #' ',disp+9
-                MOVB #' ',disp+10
-                MOVB #' ',disp+11
-                MOVB #' ',disp+12
-                MOVB #' ',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-no_empty_disp:  MOVB #'T',disp
-                MOVB #'H',disp+1
-                MOVB #'E',disp+2
-                MOVB #'R',disp+3
-                MOVB #'E',disp+4
-                MOVB #' ',disp+5
-                MOVB #'A',disp+6
-                MOVB #'R',disp+7
-                MOVB #'E',disp+8
-                MOVB #' ',disp+9
-                MOVB #'N',disp+10
-                MOVB #'O',disp+11
-                MOVB #' ',disp+12
-                MOVB #' ',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                MOVB #' ',disp+16
-                MOVB #'E',disp+17
-                MOVB #'M',disp+18
-                MOVB #'P',disp+19
-                MOVB #'T',disp+20
-                MOVB #'Y',disp+21
-                MOVB #' ',disp+22
-                MOVB #'A',disp+23
-                MOVB #'C',disp+24
-                MOVB #'C',disp+25
-                MOVB #'O',disp+26
-                MOVB #'N',disp+27
-                MOVB #'T',disp+28
-                MOVB #'S',disp+29
-                MOVB #' ',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-newUsr_done:    MOVB #'K',disp
-                MOVB #'E',disp+1
-                MOVB #'Y',disp+2
-                MOVB #' ',disp+3
-                MOVB #'T',disp+4
-                MOVB #'W',disp+5
-                MOVB #'I',disp+6
-                MOVB #'C',disp+7
-                MOVB #'E',disp+8
-                MOVB #' ',disp+9
-                MOVB #'4',disp+10
-                MOVB #' ',disp+11
-                MOVB #'D',disp+12
-                MOVB #'O',disp+13
-                MOVB #'N',disp+14
-                MOVB #'E',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-newUsr_disp:    MOVB #'E',disp
-                MOVB #'N',disp+1
-                MOVB #'T',disp+2
-                MOVB #'E',disp+3
-                MOVB #'R',disp+4
-                MOVB #' ',disp+5
-                MOVB #'U',disp+6
-                MOVB #'S',disp+7
-                MOVB #'R',disp+8
-                MOVB #' ',disp+9
-                MOVB #'(',disp+10
-                MOVB #'8',disp+11
-                MOVB #'C',disp+12
-                MOVB #'H',disp+13
-                MOVB #'R',disp+14
-                MOVB #')',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-ATTEMPT_USR:    LDX  #usr_temp                ; Load Stack on Indx X
-                MOVB 0,x,disp+16
-                MOVB 1,x,disp+17
-                MOVB 2,x,disp+18
-                MOVB 3,x,disp+18
-                MOVB 4,x,disp+20
-                MOVB 5,x,disp+21
-                MOVB 6,x,disp+22
-                MOVB 7,x,disp+23
-                
-                MOVB #' ',disp+24
-                MOVB #' ',disp+25
-                MOVB #' ',disp+26
-                MOVB #' ',disp+27
-                MOVB #' ',disp+28
-                MOVB #' ',disp+29
-                MOVB #' ',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0' 
-                LDD  #disp         
-                JSR  display_string
+reset_Temp:     LDX     2, SP               ; Load Stack on Indx X
+                ;                           ;
+                MOVB    #' ', 0, x            ;   
+                MOVB    #' ', 1, x            ;
+                MOVB    #' ', 2, x            ;
+                MOVB    #' ', 3, x            ;
+                MOVB    #' ', 4, x            ;
+                MOVB    #' ', 5, x            ;
+                MOVB    #' ', 6, x            ;
+                MOVB    #' ', 7, x            ;
                 RTS

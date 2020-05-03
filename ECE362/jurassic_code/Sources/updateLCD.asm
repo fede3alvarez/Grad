@@ -2,8 +2,8 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done
-            XREF disp, display_string    
+            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD
+            XREF disp, display_string, pass_temp, usr_temp    
 
 default_disp:   MOVB #' ',disp
                 MOVB #' ',disp+1
@@ -63,17 +63,17 @@ menu_tutorial:  MOVB #'N',disp
                 MOVB #'T',disp+18
                 MOVB #'E',disp+19
                 MOVB #'R',disp+20
-                MOVB #': ',disp+21
+                MOVB #':',disp+21
                 MOVB #'P',disp+22
                 MOVB #'R',disp+23
                 MOVB #'E',disp+24
                 MOVB #'S',disp+25
                 MOVB #'S',disp+26
-                MOVB #'',disp+27
+                MOVB #' ',disp+27
                 MOVB #'K',disp+28
                 MOVB #'E',disp+29
                 MOVB #'Y',disp+30
-                MOVB #'P ',disp+31
+                MOVB #'P',disp+31
                 MOVB #0,  disp+32    ;string terminator, acts like '\0'    
                 LDD  #disp         
                 JSR  display_string
@@ -171,7 +171,7 @@ visit_disp:     MOVB #'V',disp
                 MOVB #'(',disp+8
                 MOVB #'N',disp+9
                 MOVB #'O',disp+10
-                MOVB #'',disp+11
+                MOVB #' ',disp+11
                 MOVB #'U',disp+12
                 MOVB #'S',disp+13
                 MOVB #'R',disp+14
@@ -267,7 +267,7 @@ log_usr_sel:    MOVB #'S',disp
                 MOVB #'E',disp+1
                 MOVB #'L',disp+2
                 MOVB #'E',disp+3
-                MOVB #'C,disp+4
+                MOVB #'C',disp+4
                 MOVB #'T',disp+5
                 MOVB #' ',disp+6
                 MOVB #'U',disp+7
@@ -284,14 +284,15 @@ log_usr_sel:    MOVB #'S',disp
                 RTS
 
 log_usr_shift:  LDX  2, SP          ; Load Stack on Indx X
-                MOVB x+, disp+16    ; Idx X has to be loaded
-                MOVB x+, disp+17    ; with the user start addres
-                MOVB x+, disp+18
-                MOVB x+, disp+19
-                MOVB x+, disp+20
-                MOVB x+, disp+21
-                MOVB x+, disp+22
-                MOVB x+, disp+23
+                MOVB 0,x,disp+16
+                MOVB 1,x,disp+17
+                MOVB 2,x,disp+18
+                MOVB 3,x,disp+19
+                MOVB 4,x,disp+20
+                MOVB 5,x,disp+21
+                MOVB 6,x,disp+22
+                MOVB 7,x,disp+23
+                
                 MOVB #' ',disp+24
                 MOVB #' ',disp+25
                 MOVB #' ',disp+26
@@ -365,7 +366,16 @@ FAIL_PASSWORD:  MOVB #'W',disp
                 JSR  display_string
                 RTS
 
-ATTEMPT_PASS:   MOVB pass_temp,disp
+ATTEMPT_PASS:   LDX  #pass_temp          ; Load Stack on Indx X
+                MOVB 0,x,disp
+                MOVB 1,x,disp+1
+                MOVB 2,x,disp+2
+                MOVB 3,x,disp+3
+                MOVB 4,x,disp+4
+                MOVB 5,x,disp+5
+                MOVB 6,x,disp+6
+                MOVB 7,x,disp+7
+                
                 MOVB #' ',disp+8
                 MOVB #' ',disp+9
                 MOVB #' ',disp+10
@@ -387,7 +397,7 @@ no_empty_disp:  MOVB #'T',disp
                 MOVB #'A',disp+6
                 MOVB #'R',disp+7
                 MOVB #'E',disp+8
-                MOVB #'',disp+9
+                MOVB #' ',disp+9
                 MOVB #'N',disp+10
                 MOVB #'O',disp+11
                 MOVB #' ',disp+12
@@ -411,26 +421,6 @@ no_empty_disp:  MOVB #'T',disp
                 MOVB #' ',disp+30
                 MOVB #' ',disp+31
                 MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-newAcc_disp:    MOVB #'C',disp
-                MOVB #'R',disp+1
-                MOVB #'E',disp+2
-                MOVB #'A',disp+3
-                MOVB #'T',disp+4
-                MOVB #'E',disp+5
-                MOVB #' ',disp+6
-                MOVB #'N',disp+7
-                MOVB #'E',disp+8
-                MOVB #'W',disp+9
-                MOVB #' ',disp+10
-                MOVB #'U',disp+11
-                MOVB #'S',disp+12
-                MOVB #'E',disp+13
-                MOVB #'R',disp+14
-                MOVB #'?',disp+15
                 LDD  #disp         
                 JSR  display_string
                 RTS
@@ -475,7 +465,16 @@ newUsr_disp:    MOVB #'E',disp
                 JSR  display_string
                 RTS
 
-ATTEMPT_USR:    MOVB usr_temp,disp+16
+ATTEMPT_USR:    LDX  #usr_temp                ; Load Stack on Indx X
+                MOVB 0,x,disp+16
+                MOVB 1,x,disp+17
+                MOVB 2,x,disp+18
+                MOVB 3,x,disp+18
+                MOVB 4,x,disp+20
+                MOVB 5,x,disp+21
+                MOVB 6,x,disp+22
+                MOVB 7,x,disp+23
+                
                 MOVB #' ',disp+24
                 MOVB #' ',disp+25
                 MOVB #' ',disp+26

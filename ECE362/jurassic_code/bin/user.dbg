@@ -7294,488 +7294,282 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 
 
 ; export symbols
-            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD
-            XREF disp, display_string, pass_temp, usr_temp    
+            XDEF user_main
 
-default_disp:   MOVB #' ',disp
-                MOVB #' ',disp+1
-                MOVB #' ',disp+2
-                MOVB #' ',disp+3
-                MOVB #'W',disp+4
-                MOVB #'E',disp+5
-                MOVB #'L',disp+6
-                MOVB #'C',disp+7
-                MOVB #'O',disp+8
-                MOVB #'M',disp+9
-                MOVB #'E',disp+10
-                MOVB #' ',disp+11
-                MOVB #'T',disp+12
-                MOVB #'O',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                MOVB #' ',disp+16
-                MOVB #' ',disp+17
-                MOVB #'J',disp+18
-                MOVB #'U',disp+19
-                MOVB #'R',disp+20
-                MOVB #'A',disp+21
-                MOVB #'S',disp+22
-                MOVB #'S',disp+23
-                MOVB #'I',disp+24
-                MOVB #'C',disp+25
-                MOVB #' ',disp+26
-                MOVB #'P',disp+27
-                MOVB #'A',disp+28
-                MOVB #'R',disp+29
-                MOVB #'K',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
+            XREF __SEG_END_SSTACK, user_sel, menu_disp, menu_tutorial, key_val, usr_menu_shift, usr_menu_max, USR_MENU_INPUT, usr_input, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, usr_temp, usr_new_id, usr_empty, ATTEMPT_USR, no_empty_disp, newAcc_disp, usr_max, newUsr_disp, pass_temp, trip, ATTEMPT_PASS, newUsr_done, pass_char, delAcc_disp, SUCC_PASSWORD, usr_0, usr_1, usr_2, usr_3, usr_sel_acc, ENTER_PASSWORD, key_twice, pot_shift, reset_Temp, login_disp
 
-menu_tutorial:  MOVB #'N',disp
-                MOVB #'A',disp+1
-                MOVB #'V',disp+2
-                MOVB #'I',disp+3
-                MOVB #'G',disp+4
-                MOVB #'A',disp+5
-                MOVB #'T',disp+6
-                MOVB #'E',disp+7
-                MOVB #':',disp+8
-                MOVB #'P',disp+9
-                MOVB #'O',disp+10
-                MOVB #'T',disp+11
-                MOVB #'M',disp+12
-                MOVB #'E',disp+13
-                MOVB #'T',disp+14
-                MOVB #'R',disp+15
-                MOVB #'E',disp+16
-                MOVB #'N',disp+17
-                MOVB #'T',disp+18
-                MOVB #'E',disp+19
-                MOVB #'R',disp+20
-                MOVB #':',disp+21
-                MOVB #'P',disp+22
-                MOVB #'R',disp+23
-                MOVB #'E',disp+24
-                MOVB #'S',disp+25
-                MOVB #'S',disp+26
-                MOVB #' ',disp+27
-                MOVB #'K',disp+28
-                MOVB #'E',disp+29
-                MOVB #'Y',disp+30
-                MOVB #'P',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
 
-menu_disp:      MOVB #'R',disp+16
-                MOVB #'/',disp+17
-                MOVB #'L',disp+18
-                MOVB #':',disp+19
-                MOVB #'P',disp+20
-                MOVB #'O',disp+21
-                MOVB #'T',disp+22
-                MOVB #' ',disp+23
-                MOVB #'S',disp+24
-                MOVB #'E',disp+25
-                MOVB #'L',disp+26
-                MOVB #':',disp+27
-                MOVB #'K',disp+28
-                MOVB #'E',disp+29
-                MOVB #'Y',disp+30
-                MOVB #'P',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
+;---------------------------------------------------;
+;          USER SETUP (MAIN / OPTIONS MENU)
+;---------------------------------------------------;
+user_main:  JSR     menu_tutorial                   ; Load tutorial LCD instructions
+            MOVB    #$FF, key_val                   ; Reset Key values
 
-newAcc_disp:    MOVB #'C',disp
-                MOVB #'R',disp+1
-                MOVB #'E',disp+2
-                MOVB #'A',disp+3
-                MOVB #'T',disp+4
-                MOVB #'E',disp+5
-                MOVB #' ',disp+6
-                MOVB #'N',disp+7
-                MOVB #'E',disp+8
-                MOVB #'W',disp+9
-                MOVB #' ',disp+10
-                MOVB #'U',disp+11
-                MOVB #'S',disp+12
-                MOVB #'E',disp+13
-                MOVB #'R',disp+14
-                MOVB #'?',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
 
-delAcc_disp:    MOVB #'D',disp
-                MOVB #'E',disp+1
-                MOVB #'L',disp+2
-                MOVB #'E',disp+3
-                MOVB #'T',disp+4
-                MOVB #'E',disp+5
-                MOVB #' ',disp+6
-                MOVB #'U',disp+7
-                MOVB #'S',disp+8
-                MOVB #'E',disp+9
-                MOVB #'R',disp+10
-                MOVB #'?',disp+11
-                MOVB #' ',disp+12
-                MOVB #' ',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
+tutorial:   JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,tutorial          ; Otherwise, stay in tutorial
 
-login_disp:     MOVB #'L',disp
-                MOVB #'O',disp+1
-                MOVB #'G',disp+2
-                MOVB #'I',disp+3
-                MOVB #'N',disp+4
-                MOVB #'?',disp+5
-                MOVB #' ',disp+6
-                MOVB #' ',disp+7
-                MOVB #' ',disp+8
-                MOVB #' ',disp+9
-                MOVB #' ',disp+10
-                MOVB #' ',disp+11
-                MOVB #' ',disp+12
-                MOVB #' ',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
+usr_mnuSt   JSR     menu_disp                       ; Set bottom side of LCD
+            JSR     login_disp                      ; Display Login Quest
+            ;                                       ;  to instructions (stay that
+            ;                                       ;  wait until next step is choosen)
 
-visit_disp:     MOVB #'V',disp
-                MOVB #'I',disp+1
-                MOVB #'S',disp+2
-                MOVB #'I',disp+3
-                MOVB #'T',disp+4
-                MOVB #'O',disp+5
-                MOVB #'R',disp+6
-                MOVB #'?',disp+7
-                MOVB #'(',disp+8
-                MOVB #'N',disp+9
-                MOVB #'O',disp+10
-                MOVB #' ',disp+11
-                MOVB #'U',disp+12
-                MOVB #'S',disp+13
-                MOVB #'R',disp+14
-                MOVB #')',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
+user_menu:  JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,user_menu         ; 
+            ;                                       ; If pot_shift is zero,
+            LDAA    pot_shift                       ;   key is pressed, and go to select menu
+            BEQ     usr_mnuSel                      ; Else pot_shift is not zero,  
+            MOVB    #$00, pot_shift                 ;   set pot_shift to zero (value now stale)
+            LDAA    usr_menu_shift                  ;
+            ;                                       ;
+            LBEQ    login_disp                      ; Based on the value of 
+            ;                                       ;
+            CMPA    $01                             ;   usr_menu_shift
+            LBEQ    newAcc_disp                     ;   Go to the appropriate Menu
+            ;                                       ;
+            CMPA    $02                             ;
+            LBEQ    delAcc_disp                     ;
+            ;                                       ;
+            CMPA    $03                             ;
+            LBEQ    visit_disp                      ;
+            ;                                       ;
+            INCA                                    ;
+            CMPA    $04                             ; Increase usr_menu_shift
+            LBLO    user_menu                       ;
+            MOVB    #$00, usr_menu_shift            ;
+            LBRA    user_menu                       ;
+            ;                                       ;
+usr_mnuSel: LDAA    usr_menu_shift                  ;
+            LBEQ    usr_login                       ; Based on the value of 
+            CMPA    $01                             ;   usr_menu_shift
+            LBEQ    usr_newAcc                      ;   Go to the appropriate Menu
+            CMPA    $02                             ;
+            LBEQ    usr_delAcc                      ;
+            CMPA    $03                             ;
+            LBEQ    usr_visit                       ;
+;---------------------------------------------------;
+;                   LOGIN AREA
+;---------------------------------------------------;
+             ;                                       ;
+usr_login:  JSR     log_usr_sel                     ; Display login screen
+            LDAA    usr_sel_acc                     ;   for a particular user
+            LBNE    usr1_chk                        ; Based on the value of 
+            LDX     #usr_0                          ;   usr_sel_acc
+            PSHX                                    ;
+            LBRA    usr_chk_end                     ;
+            ;                                       ;
+usr1_chk:   CMPA    $01                             ;
+            LBNE    usr2_chk                        ;
+            LDX     #usr_1                          ;
+            PSHX                                    ;
+            LBRA    usr_chk_end                     ;
+            ;                                       ;
+usr2_chk:   CMPA    $02                             ;
+            LBNE    usr2_chk                        ;
+            LDX     #usr_2                          ;
+            PSHX                                    ;
+            LBRA    usr_chk_end                     ;
+            ;                                       ;
+usr3_chk:   LDX     #usr_3                          ;
+            PSHX                                    ;
+usr_chk_end:JSR     log_usr_shift                   ;
+            ;                                       ;
+usr_log_wt: JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,usr_log_wt        ;
+            ;                                       ; If pot_shift is zero,
+            LDAA    pot_shift                       ;   key is pressed, and go to enter password
+            LBEQ    usr_pass                        ; Else pot_shift is not zero,  
+            MOVB    #$00, pot_shift                 ;   set pot_shift to zero (value now stale)
+            ;                                       ;
+            LDAA    usr_sel_acc                     ; Update usr_sel_acc
+            INCA                                    ;   and loop back to usr_login
+            CMPA    usr_max                         ;
+            LBLO    usr_login                       ;
+            MOVB    #$00, usr_sel_acc               ;
+            LBRA    usr_login                       ;            
+;---------------------------------------------------;
+;                PASSWORD AREA
+;---------------------------------------------------;
 
-whereToGo_disp: MOVB #' ',disp
-                MOVB #' ',disp+1
-                MOVB #'W',disp+2
-                MOVB #'H',disp+3
-                MOVB #'E',disp+4
-                MOVB #'R',disp+5
-                MOVB #'E',disp+6
-                MOVB #' ',disp+7
-                MOVB #'T',disp+8
-                MOVB #'O',disp+9
-                MOVB #' ',disp+10
-                MOVB #'G',disp+11
-                MOVB #'O',disp+12
-                MOVB #'?',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
+usr_pass:   JSR     ENTER_PASSWORD                  ; Load Password address on Idx X
+            LDX     #pass_temp                      ;
+            PSHX                                    ;
+            JSR     reset_Temp                      ; Reset Temp String used to enter Password
+            JSR     ATTEMPT_PASS                    ; Load Temp String on LCD
+            LDAA    usr_sel_acc                     ; 
+            LBNE    pass1_chk                       ; Retrieve password for particular user 
+            LDX     #usr_0                          ;   based on usr_sel_acc
+            PSHX                                    ;
+            LBRA    passEndChk                    ;
+            ;                                       ;
+pass1_chk:  CMPA    $01                             ;
+            LBNE    usr2_chk                        ;
+            LDX     #usr_1                          ;
+            PSHX                                    ;
+            LBRA    passEndChk                    ;
+            ;                                       ;
+pass2_chk:  CMPA    $02                             ;
+            LBNE    usr2_chk                        ;
+            LDX     #usr_2                          ;
+            PSHX                                    ;
+            LBRA    passEndChk                    ;
+pass3_chk:  LDX     #usr_3                          ;
+            PSHX                                    ;
+            ;                                       ; Acc Idx X = Usr Password curr. Char
+            ;                                       ; Acc Idx Y = Password Attempt curr. Char
+            ;                                       ;
+            LDY     $00                             ; Load temporary password on idx Y 
+passEndChk: LDAA    8, x+                           ; Pull password character
+            STAA    pass_char                       ; Check if terminator "-"
+            CMPA    #'-'                            ;  is present, and if it is
+            LBEQ    pass_succ                       ;  exit with successfull message
+            ;                                       ;
+            LDAA    #'A'                            ;
+            STAA    pass_succ, Y                    ;
+Char_chck:  LDAB    pot_shift                       ;   set it to "A" and increase / decrease
+            MOVB    #$00, pot_shift                 ;   based on pot_shift changes
+            CMPB    $02                             ;
+            LBNE    Char_down                       ;
+            LDAA    pass_temp, Y                    ;
+            INCA                                    ;
+            STAA    pass_temp                       ;
+Char_down:  CMPB    $04                             ;
+            LBNE    Char_same                       ;
+            LDAA    pass_temp, Y                    ;
+            DECA                                    ;
+            STAA    pass_temp                       ;
+Char_same:  JSR     ATTEMPT_PASS                    ; Display Character
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
+pass_wt:    JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,pass_wt           ;
+            ;                                       ;
+            LDAB    pot_shift                       ; If pot changed, user changed
+            LBNE    Char_chck                       ;   character, and return to Char_chck
+            ;                                       ;
+            LDAA    pass_temp, Y                    ; Compare current character to 
+            INY                                     ;
+            CMPA    pass_char                       ;   password character (& Increase Y)
+            LBEQ    passEndChk                      ; If equal, check for next char
+            ;                                       ;
+            JSR     FAIL_PASSWORD                   ; If not equal, display fail message
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
+pass_wt_2:  JSR     USR_MENU_INPUT                  ; And wait for user input to start again
+            BRCLR   usr_input,$FF,pass_wt_2         ;
+            LBRA    usr_pass                        ;
+            ;                                       ;
+pass_succ:  JSR     log_usr_shift                   ; Display Password Success
+            JSR     SUCC_PASSWORD                   ;   Screen and wait for user
+            MOVB    #$FF, key_val                   ;   input to continue
+            MOVB    #$00, pot_shift                 ;
+            MOVB    #$FF, user_sel                  ; Go to next logic state
+            LBRA    trip                            ;
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
+pass_ext_wt:JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,pass_ext_wt       ;
+            ;                                       ;
+;---------------------------------------------------;
+;                NEW ACCOUNT CREATION
+;---------------------------------------------------;
+            ;                                       ; FIND EMPTY ACCOUNT
+usr_newAcc: LDAA    usr_empty                       ; Check each account
+            LBEQ    no_emptyAcc                     ;   To make sure it is not empty
+            CMPA    $01                             ;   Then load it on IDX X
+            LBNE    new_chck1                       ; and set bit on usr_empty to 
+            MOVW    #usr_0, usr_new_id              ;   1 (BUSY / USED)
+            MOVB    $01, usr_empty                  ;
+            LBRA    new_usr                         ;
+new_chck1:  CMPA    $02                             ;
+            LBNE    new_chck2                       ;
+            MOVW    #usr_1, usr_new_id              ;
+            MOVB    $02, usr_empty                  ;
+            LBRA    new_usr                         ;
+new_chck2:  CMPA    $04                             ;
+            LBNE    new_chck3                       ;
+            MOVW    #usr_2, usr_new_id              ;
+            MOVB    $04, usr_empty                  ;
+            LBRA    new_usr                         ;
+new_chck3:  CMPA    $08                             ;
+            LBNE    no_emptyAcc                     ;
+            MOVW    #usr_3, usr_new_id              ;
+            MOVB    $08, usr_empty                  ;
+            LBRA    new_usr                         ;
+            ;                                       ;  ENTER NEW ACCOUNT
+new_usr:    JSR     newUsr_disp                     ;
+            LDX     #usr_temp                       ;
+            PSHX                                    ;
+            JSR     reset_Temp                      ;
+            ;                                       ;
+            LDX     #usr_temp                       ;
+new_usr_chr:MOVB    #'A',X                          ;
+            JSR     ATTEMPT_USR                     ;
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
+new_usr_wt: JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,new_usr_wt        ;
+            JSR     newUsr_done                     ;
+            ;                                       ; If key press once, increase
+            LDAA    key_val                         ;   key_twice by one
+            CMPA    $FF                             ; Assuming that any pot shift change
+            LBEQ    usr_wt_agn                      ;   done by the user be long enought
+            INC     key_twice                       ;   to be detected twice
+            ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
+usr_wt_agn: JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
+            BRCLR   usr_input,$FF,usr_wt_agn        ;
+            ;                                       ;
+            LDAA    key_val                         ; If key press twice, go to save_nw_usr
+            CMPA    $FF                             ; If key only press once, move to next char
+            LBEQ    usr_chr_chg                     ; If no key, then potentiometer, go to usr_chr_chg
+            INC     key_twice                       ;        
+            LDAB    key_twice                       ;         
+            CMPB    $02                             ;
+            LBEQ    save_nw_usr                     ;
+            INX                                     ;
+            LBRA    new_usr_chr                     ;
+            ;                                       ;
+usr_chr_chg:MOVB    #$00, key_twice                 ;
+            LDAB    pot_shift                       ;   set it to "A" and increase / decrease
+            MOVB    #$00, pot_shift                 ;   based on pot_shift changes
+            CMPB    $02                             ;
+            LBNE    usr_chr_dwn                     ;
+            INC     0, X                            ;
+usr_chr_dwn:CMPB    $04                             ;
+            LBNE    new_usr_chr                     ;
+            DEC     0, X                            ;
+            LBRA    new_usr_chr                     ;
+            ;                                       ;
+            ;                                       ;
+save_nw_usr:MOVB    #$00, key_twice                 ;
+            ;                                       ;
+            STX     usr_temp                        ;
+            LBRA    usr_visit                       ;
 
-aqua_disp:      MOVB #' ',disp+16
-                MOVB #' ',disp+17
-                MOVB #' ',disp+18
-                MOVB #'A',disp+19
-                MOVB #'Q',disp+20
-                MOVB #'U',disp+21
-                MOVB #'A',disp+22
-                MOVB #'R',disp+23
-                MOVB #'I',disp+24
-                MOVB #'U',disp+25
-                MOVB #'M',disp+26
-                MOVB #'?',disp+27
-                MOVB #' ',disp+28
-                MOVB #' ',disp+29
-                MOVB #' ',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
+no_emptyAcc:JSR     no_empty_disp                   ; Display no empty acc message 
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$FF, user_sel                  ; Wait for user input
+no_empty_wt:JSR     USR_MENU_INPUT                  ; Before going back to the main menu
+            BRCLR   usr_input,$FF,no_empty_wt       ;
+            LBRA    usr_mnuSt                       ; 
+            ;                                       ;
 
-garden_disp:    MOVB #'B',disp+16
-                MOVB #'O',disp+17
-                MOVB #'T',disp+18
-                MOVB #'A',disp+19
-                MOVB #'N',disp+20
-                MOVB #'I',disp+21
-                MOVB #'C',disp+22
-                MOVB #'.',disp+23
-                MOVB #' ',disp+24
-                MOVB #'G',disp+25
-                MOVB #'A',disp+26
-                MOVB #'R',disp+27
-                MOVB #'D',disp+28
-                MOVB #'E',disp+29
-                MOVB #'N',disp+30
-                MOVB #'?',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
+usr_delAcc: LBRA    usr_visit                       ;
 
-safari_disp:    MOVB #' ',disp+16
-                MOVB #' ',disp+17
-                MOVB #'S',disp+18
-                MOVB #'A',disp+19
-                MOVB #'F',disp+20
-                MOVB #'A',disp+21
-                MOVB #'R',disp+22
-                MOVB #'I',disp+23
-                MOVB #' ',disp+24
-                MOVB #'T',disp+25
-                MOVB #'R',disp+26
-                MOVB #'I',disp+27
-                MOVB #'P',disp+28
-                MOVB #'?',disp+29
-                MOVB #' ',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
 
-log_usr_sel:    MOVB #'S',disp
-                MOVB #'E',disp+1
-                MOVB #'L',disp+2
-                MOVB #'E',disp+3
-                MOVB #'C',disp+4
-                MOVB #'T',disp+5
-                MOVB #' ',disp+6
-                MOVB #'U',disp+7
-                MOVB #'S',disp+8
-                MOVB #'E',disp+9
-                MOVB #'R',disp+10
-                MOVB #' ',disp+11
-                MOVB #' ',disp+12
-                MOVB #' ',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
+usr_visit:  MOVB    #$FF, key_val                   ;  Go to next logic state
+            MOVB    #$00, pot_shift                 ;
+            MOVB    #$FF, user_sel                  ;
+            LBRA    trip                            ;
 
-log_usr_shift:  LDX  2, SP          ; Load Stack on Indx X
-                MOVB 0,x,disp+16
-                MOVB 1,x,disp+17
-                MOVB 2,x,disp+18
-                MOVB 3,x,disp+19
-                MOVB 4,x,disp+20
-                MOVB 5,x,disp+21
-                MOVB 6,x,disp+22
-                MOVB 7,x,disp+23
-                
-                MOVB #' ',disp+24
-                MOVB #' ',disp+25
-                MOVB #' ',disp+26
-                MOVB #' ',disp+27
-                MOVB #' ',disp+28
-                MOVB #' ',disp+29
-                MOVB #' ',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-ENTER_PASSWORD: MOVB #'E',disp
-                MOVB #'N',disp+1
-                MOVB #'T',disp+2
-                MOVB #'E',disp+3
-                MOVB #'R',disp+4
-                MOVB #' ',disp+5
-                MOVB #'P',disp+6
-                MOVB #'A',disp+7
-                MOVB #'S',disp+8
-                MOVB #'S',disp+9
-                MOVB #'W',disp+10
-                MOVB #'O',disp+11
-                MOVB #'R',disp+12
-                MOVB #'D',disp+13
-                MOVB #':',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-SUCC_PASSWORD:  MOVB #'P',disp
-                MOVB #'A',disp+1
-                MOVB #'S',disp+2
-                MOVB #'S',disp+3
-                MOVB #'W',disp+4
-                MOVB #'O',disp+5
-                MOVB #'R',disp+6
-                MOVB #'D',disp+7
-                MOVB #' ',disp+8
-                MOVB #'A',disp+9
-                MOVB #'P',disp+10
-                MOVB #'P',disp+11
-                MOVB #'R',disp+12
-                MOVB #'O',disp+13
-                MOVB #'V',disp+14
-                MOVB #'E',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-FAIL_PASSWORD:  MOVB #'W',disp
-                MOVB #'R',disp+1
-                MOVB #'O',disp+2
-                MOVB #'N',disp+3
-                MOVB #'G',disp+4
-                MOVB #' ',disp+5
-                MOVB #'P',disp+6
-                MOVB #'A',disp+7
-                MOVB #'S',disp+8
-                MOVB #'S',disp+9
-                MOVB #'W',disp+10
-                MOVB #'O',disp+11
-                MOVB #'R',disp+12
-                MOVB #'D',disp+13
-                MOVB #'!',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-ATTEMPT_PASS:   LDX  #pass_temp          ; Load Stack on Indx X
-                MOVB 0,x,disp
-                MOVB 1,x,disp+1
-                MOVB 2,x,disp+2
-                MOVB 3,x,disp+3
-                MOVB 4,x,disp+4
-                MOVB 5,x,disp+5
-                MOVB 6,x,disp+6
-                MOVB 7,x,disp+7
-                
-                MOVB #' ',disp+8
-                MOVB #' ',disp+9
-                MOVB #' ',disp+10
-                MOVB #' ',disp+11
-                MOVB #' ',disp+12
-                MOVB #' ',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-no_empty_disp:  MOVB #'T',disp
-                MOVB #'H',disp+1
-                MOVB #'E',disp+2
-                MOVB #'R',disp+3
-                MOVB #'E',disp+4
-                MOVB #' ',disp+5
-                MOVB #'A',disp+6
-                MOVB #'R',disp+7
-                MOVB #'E',disp+8
-                MOVB #' ',disp+9
-                MOVB #'N',disp+10
-                MOVB #'O',disp+11
-                MOVB #' ',disp+12
-                MOVB #' ',disp+13
-                MOVB #' ',disp+14
-                MOVB #' ',disp+15
-                MOVB #' ',disp+16
-                MOVB #'E',disp+17
-                MOVB #'M',disp+18
-                MOVB #'P',disp+19
-                MOVB #'T',disp+20
-                MOVB #'Y',disp+21
-                MOVB #' ',disp+22
-                MOVB #'A',disp+23
-                MOVB #'C',disp+24
-                MOVB #'C',disp+25
-                MOVB #'O',disp+26
-                MOVB #'N',disp+27
-                MOVB #'T',disp+28
-                MOVB #'S',disp+29
-                MOVB #' ',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-newUsr_done:    MOVB #'K',disp
-                MOVB #'E',disp+1
-                MOVB #'Y',disp+2
-                MOVB #' ',disp+3
-                MOVB #'T',disp+4
-                MOVB #'W',disp+5
-                MOVB #'I',disp+6
-                MOVB #'C',disp+7
-                MOVB #'E',disp+8
-                MOVB #' ',disp+9
-                MOVB #'4',disp+10
-                MOVB #' ',disp+11
-                MOVB #'D',disp+12
-                MOVB #'O',disp+13
-                MOVB #'N',disp+14
-                MOVB #'E',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-newUsr_disp:    MOVB #'E',disp
-                MOVB #'N',disp+1
-                MOVB #'T',disp+2
-                MOVB #'E',disp+3
-                MOVB #'R',disp+4
-                MOVB #' ',disp+5
-                MOVB #'U',disp+6
-                MOVB #'S',disp+7
-                MOVB #'R',disp+8
-                MOVB #' ',disp+9
-                MOVB #'(',disp+10
-                MOVB #'8',disp+11
-                MOVB #'C',disp+12
-                MOVB #'H',disp+13
-                MOVB #'R',disp+14
-                MOVB #')',disp+15
-                LDD  #disp         
-                JSR  display_string
-                RTS
-
-ATTEMPT_USR:    LDX  #usr_temp                ; Load Stack on Indx X
-                MOVB 0,x,disp+16
-                MOVB 1,x,disp+17
-                MOVB 2,x,disp+18
-                MOVB 3,x,disp+18
-                MOVB 4,x,disp+20
-                MOVB 5,x,disp+21
-                MOVB 6,x,disp+22
-                MOVB 7,x,disp+23
-                
-                MOVB #' ',disp+24
-                MOVB #' ',disp+25
-                MOVB #' ',disp+26
-                MOVB #' ',disp+27
-                MOVB #' ',disp+28
-                MOVB #' ',disp+29
-                MOVB #' ',disp+30
-                MOVB #' ',disp+31
-                MOVB #0,  disp+32    ;string terminator, acts like '\0' 
-                LDD  #disp         
-                JSR  display_string
-                RTS
