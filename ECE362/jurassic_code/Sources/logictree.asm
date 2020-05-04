@@ -4,7 +4,7 @@
 ; export symbols
             XDEF Main_Logic, USR_MENU_INPUT, trip, set_emergency
 
-            XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input, user_main, JEEP_TUTORIAL, whereToGo_disp, aqua_disp, garden_disp, safari_disp, LOC_TRACK, JEEP_MODE, botanical_park, aquarium_park, safari_park, EMERG_MODE, emergency_disp, EMERG_KEY, emrg_avoid_disp
+            XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input, user_main, JEEP_TUTORIAL, whereToGo_disp, aqua_disp, garden_disp, safari_disp, LOC_TRACK, JEEP_MODE, botanical_park, aquarium_park, safari_park, EMERG_MODE, emergency_disp, EMERG_KEY, emrg_avoid_disp, LED_VAL
 
 
 Main_Logic:     LDAA    user_sel                ; Check if user has been selected

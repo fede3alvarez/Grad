@@ -4,7 +4,7 @@
 ; export symbols
             XDEF RTI_ISR, IRQ_ISR
 
-            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, JEEP_Cnter, LED_VAL, port_s, EMERG_MODE, EMRG_Cnter, fail_disp
+            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, JEEP_Cnter, LED_VAL, port_s, EMERG_MODE, EMRG_Cnter, fail_disp, emergency_disp
 
 
 
@@ -71,7 +71,7 @@ JEEP_LOGIC: INC     JEEP_Cnter              ; Check if Jeep Mode time is up,
 ;          EMERGENCY MODE  LOGIC   
 ;-------------------------------------------;
 EMRG_LOGIC: INC     EMRG_Cnter              ;
-            LDDD    EMRG_Cnter              ;
+            LDD     EMRG_Cnter              ;
             CPD     #$7530                  ;   if so, reset all paremeters
             LBEQ    EMRG_FAIL               ;
             LDX     #$03E0                  ; 
@@ -109,7 +109,7 @@ FAST_LP:    LDAA    Stepper_ON              ; If Stepper_ON if FALSE ($00)
             CMPA    #$04                    ;    then set to zero
             LBLO    CW_Lp                   ;    and clear Stepper_ON
             MOVB    #$00,Stepper_ON         ; If here Step_Idx is zero
-            BRA     FAST_END                ; & Stepper Motor is completed        
+            LBRA    FAST_END                ; & Stepper Motor is completed        
 
 FAST_KEY:   LDAA    FAST_SET                ; Check FAST_SET &
             CMPA    #$0F                    ;       If == 0000 1111
@@ -120,14 +120,14 @@ FAST_KEY:   LDAA    FAST_SET                ; Check FAST_SET &
             LBEQ    Pot_MENU                ; Branch to Potentiometer
             MOVB    #$0B,FAST_SET           ; If neither of the above
                                             ;    This a wait to read Keyboard
-FAST_END:   BRA     END_RTI
+FAST_END:   LBRA    END_RTI
 
             
 IRQ_ISR:    LDX     RTI_Cnter               ; Load counter to Idx X
             INX                             ; Increment Counter
             STX     RTI_Cnter               ; Store Counter
             CPX     #1000                   ; Has the counter reached value?
-            BNE     END_RTI                 ; If not, exit RTI
+            LBNE    END_RTI                 ; If not, exit RTI
             MOVW    #$0, RTI_Cnter          ; Else, Initialize counter to 0
             
 END_IRQ:    MOVB    $FF, EMERG_MODE         ; 

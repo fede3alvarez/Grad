@@ -33,10 +33,10 @@ Entry point: 0xC000 (Entry)
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                            259     R     0xC000     0xC102   ROM_C000
-NON_BANKED                       267     R     0xC103     0xC20D   ROM_C000
+.init                            275     R     0xC000     0xC112   ROM_C000
+NON_BANKED                       267     R     0xC113     0xC21D   ROM_C000
 .stack                           256   R/W      0x400      0x4FF   RAM
-main.asm__ORG00001               377     R      0x800      0x978   .absSeg0
+main.asm__ORG00001               381     R      0x800      0x97C   .absSeg0
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg1
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg2
 .abs_section_a                     1   N/I        0xA        0xA   .absSeg3
@@ -312,18 +312,18 @@ main.asm__ORG00001               377     R      0x800      0x978   .absSeg0
 .abs_section_27e                   2   N/I      0x27E      0x27F   .absSeg273
 .bss                               2   R/W      0x500      0x501   RAM
 .common                            2   R/W      0x502      0x503   RAM
-interrupt.asm._SEC000000         429     R     0xC20E     0xC3BA   ROM_C000
-updateLCD.asm._SEC000000        3344     R     0xC3BB     0xD0CA   ROM_C000
-logictree.asm._SEC000000         169     R     0xD0CB     0xD173   ROM_C000
-user.asm._SEC000000              895     R     0xD174     0xD4F2   ROM_C000
-defaults.asm._SEC000000          426     R     0xD4F3     0xD69C   ROM_C000
-dinoDefaults.asm._SEC000000        739     R     0xD69D     0xD97F   ROM_C000
-jurassicPark.asm._SEC000000        299     R     0xD980     0xDAAA   ROM_C000
+interrupt.asm._SEC000000         519     R     0xC21E     0xC424   ROM_C000
+updateLCD.asm._SEC000000        3860     R     0xC425     0xD338   ROM_C000
+logictree.asm._SEC000000         241     R     0xD339     0xD429   ROM_C000
+user.asm._SEC000000              895     R     0xD42A     0xD7A8   ROM_C000
+defaults.asm._SEC000000          426     R     0xD7A9     0xD952   ROM_C000
+dinoDefaults.asm._SEC000000        739     R     0xD953     0xDC35   ROM_C000
+jurassicPark.asm._SEC000000        299     R     0xDC36     0xDD60   ROM_C000
 .vectSeg274_vect                   4     R     0xFFF0     0xFFF3   .vectSeg274
 .vectSeg275_vect                   2     R     0xFFFE     0xFFFF   .vectSeg275
 
 Summary of section sizes per section type:
-READ_ONLY (R):        1C2A (dec:     7210)
+READ_ONLY (R):        1EE4 (dec:     7908)
 READ_WRITE (R/W):      104 (dec:      260)
 NO_INIT (N/I):         160 (dec:      352)
 
@@ -331,8 +331,8 @@ NO_INIT (N/I):         160 (dec:      352)
 VECTOR-ALLOCATION SECTION
     Address     InitValue   InitFunction
 ---------------------------------------------------------------------------------------------
-     0xFFF0        0xC20E   RTI_ISR
-     0xFFF2        0xC293   IRQ_ISR
+     0xFFF0        0xC21E   RTI_ISR
+     0xFFF2        0xC2F0   IRQ_ISR
      0xFFFE        0xC000   Entry
 
 *********************************************************************************************
@@ -341,7 +341,7 @@ OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 MODULE:                 -- main.asm.o --
 - PROCEDURES:
-     Entry                                     C000     103     259       0   .init       
+     Entry                                     C000     113     275       0   .init       
 - VARIABLES:
      RTI_Cnter                                  800       2       2       6   .text       
      STEP_TAB                                   802       4       4       1   .text       
@@ -351,18 +351,18 @@ MODULE:                 -- main.asm.o --
      Scan_KeyRow                                818       4       4       1   .text       
      Scan_Count                                 81C       2       2       4   .text       
      key_press                                  81E       1       1       0   .text       
-     key_val                                    81F       1       1      24   .text       
-     disp                                       820      21      33     654   .text       
-     LED_VAL                                    841       1       1       2   .text       
+     key_val                                    81F       1       1      26   .text       
+     disp                                       820      21      33     756   .text       
+     LED_VAL                                    841       1       1       5   .text       
      old_pot                                    842       1       1       2   .text       
-     pot_shift                                  843       1       1      35   .text       
+     pot_shift                                  843       1       1      38   .text       
      DC_cnter                                   844       1       1       6   .text       
      t_on                                       845       1       1       3   .text       
      user_sel                                   846       1       1       4   .text       
      usr_menu_shift                             847       1       1       3   .text       
      usr_menu_max                               848       1       1       0   .text       
      usr_sel_acc                                849       1       1       9   .text       
-     usr_input                                  84A       1       1      16   .text       
+     usr_input                                  84A       1       1      18   .text       
      usr_max                                    84B       1       1       2   .text       
      usr_char                                   84C       1       1       0   .text       
      usr_empty                                  84D       1       1      10   .text       
@@ -377,25 +377,28 @@ MODULE:                 -- main.asm.o --
      usr_3                                      884      10      16       5   .text       
      usr_4                                      894      10      16       1   .text       
      JEEP_MODE                                  8A4       1       1       5   .text       
-     JEEP_Cnter                                 8A5       2       2       3   .text       
+     JEEP_Cnter                                 8A5       2       2       4   .text       
      FAST_SET                                   8A7       1       1       9   .text       
      LOC_TRACK                                  8A8       1       1       5   .text       
-     aqua_1                                     8A9      14      20       1   .text       
-     aqua_2                                     8BD      14      20       1   .text       
-     aqua_3                                     8D1      14      20       1   .text       
-     veggie_1                                   8E5      14      20       1   .text       
-     veggie_2                                   8F9      14      20       1   .text       
-     veggie_3                                   90D      14      20       1   .text       
-     carniv_1                                   921      14      20       1   .text       
-     carniv_2                                   935      14      20       1   .text       
-     carniv_3                                   949      14      20       1   .text       
-     curr_dino                                  95D       1       1       9   .text       
-     curr_food                                  95E       1       1       7   .text       
-     curr_hunger                                95F       1       1       5   .text       
-     target_food                                960       1       1       2   .text       
-     aqua_dino                                  961       8       8       1   .text       
-     garden_dino                                969       8       8       1   .text       
-     safari_dino                                971       8       8       1   .text       
+     EMERG_MODE                                 8A9       1       1       3   .text       
+     EMERG_KEY                                  8AA       1       1       3   .text       
+     EMRG_Cnter                                 8AB       2       2       3   .text       
+     aqua_1                                     8AD      14      20       1   .text       
+     aqua_2                                     8C1      14      20       1   .text       
+     aqua_3                                     8D5      14      20       1   .text       
+     veggie_1                                   8E9      14      20       1   .text       
+     veggie_2                                   8FD      14      20       1   .text       
+     veggie_3                                   911      14      20       1   .text       
+     carniv_1                                   925      14      20       1   .text       
+     carniv_2                                   939      14      20       1   .text       
+     carniv_3                                   94D      14      20       1   .text       
+     curr_dino                                  961       1       1       9   .text       
+     curr_food                                  962       1       1       7   .text       
+     curr_hunger                                963       1       1       5   .text       
+     target_food                                964       1       1       2   .text       
+     aqua_dino                                  965       8       8       1   .text       
+     garden_dino                                96D       8       8       1   .text       
+     safari_dino                                975       8       8       1   .text       
 - LABELS:
      __SEG_END_SSTACK                           500       0       0       1               
      port_t                                     240       0       0       2   .text       
@@ -404,12 +407,12 @@ MODULE:                 -- main.asm.o --
      port_u                                     268       0       0       3   .text       
 MODULE:                 -- lcddisp.c.o --
 - PROCEDURES:
-     delay_ms                                  C103      17      23       5   NON_BANKED  
-     init_LCD                                  C11A      52      82       1   NON_BANKED  
-     display_string                            C16C      38      56      33   NON_BANKED  
-     Delay                                     C1A4      1F      31       1   NON_BANKED  
-     epulse                                    C1C3      24      36       3   NON_BANKED  
-     sendCommand                               C1E7       F      15       7   NON_BANKED  
+     delay_ms                                  C113      17      23       5   NON_BANKED  
+     init_LCD                                  C12A      52      82       1   NON_BANKED  
+     display_string                            C17C      38      56      36   NON_BANKED  
+     Delay                                     C1B4      1F      31       1   NON_BANKED  
+     epulse                                    C1D3      24      36       3   NON_BANKED  
+     sendCommand                               C1F7       F      15       7   NON_BANKED  
 - VARIABLES:
      data                                       500       2       2       4   .bss        
 MODULE:                 -- mc9s12e128.c.o --
@@ -690,192 +693,201 @@ MODULE:                 -- mc9s12e128.c.o --
      _PIFAD                                     27E       2       2       0   .abs_section_27e
 MODULE:                 -- potentiometer.c.o --
 - PROCEDURES:
-     read_pot                                  C1F6      18      24       1   NON_BANKED  
+     read_pot                                  C206      18      24       1   NON_BANKED  
 - VARIABLES:
      pot_value                                  502       2       2       4   .common     
 MODULE:                 -- interrupt.asm.o --
 - PROCEDURES:
-     RTI_ISR                                   C20E      14      20       0   interrupt.asm._SEC000000
-     Skip_Step                                 C222       B      11       0   interrupt.asm._SEC000000
-     Chck_FAST                                 C22D       5       5       0   interrupt.asm._SEC000000
-     END_RTI                                   C232       D      13       0   interrupt.asm._SEC000000
-     JEEP_LOGIC                                C23F      23      35       0   interrupt.asm._SEC000000
-     FAST_LP                                   C262      15      21       0   interrupt.asm._SEC000000
-     FAST_KEY                                  C277      1A      26       0   interrupt.asm._SEC000000
-     FAST_END                                  C291       2       2       0   interrupt.asm._SEC000000
-     IRQ_ISR                                   C293      16      22       0   interrupt.asm._SEC000000
-     Set_seq                                   C2A9      17      23       0   interrupt.asm._SEC000000
-     Scan_seq                                  C2C0      1B      27       0   interrupt.asm._SEC000000
-     Scan_end                                  C2DB       9       9       0   interrupt.asm._SEC000000
-     Key_Read                                  C2E4       5       5       0   interrupt.asm._SEC000000
-     Key_Lp                                    C2E9      1F      31       0   interrupt.asm._SEC000000
-     CW_Lp                                     C308      1B      27       0   interrupt.asm._SEC000000
-     DC_Motor                                  C323      12      18       0   interrupt.asm._SEC000000
-     DC_Setup                                  C335      1A      26       0   interrupt.asm._SEC000000
-     PWM_ON                                    C34F      13      19       0   interrupt.asm._SEC000000
-     PWM_OFF                                   C362      12      18       0   interrupt.asm._SEC000000
-     PWN_CLR                                   C374       9       9       0   interrupt.asm._SEC000000
-     Pot_SEL                                   C37D      10      16       0   interrupt.asm._SEC000000
-     Pot_MENU                                  C38D      12      18       0   interrupt.asm._SEC000000
-     Pot_RIGHT                                 C39F       8       8       0   interrupt.asm._SEC000000
-     Pot_LEFT                                  C3A7       6       6       0   interrupt.asm._SEC000000
-     Pot_END                                   C3AD       E      14       0   interrupt.asm._SEC000000
+     RTI_ISR                                   C21E      2A      42       0   interrupt.asm._SEC000000
+     Skip_Step                                 C248       B      11       0   interrupt.asm._SEC000000
+     Chck_FAST                                 C253       5       5       0   interrupt.asm._SEC000000
+     END_RTI                                   C258       D      13       0   interrupt.asm._SEC000000
+     JEEP_LOGIC                                C265      23      35       0   interrupt.asm._SEC000000
+     EMRG_LOGIC                                C288      1D      29       0   interrupt.asm._SEC000000
+     EMRG_FAIL                                 C2A5       7       7       0   interrupt.asm._SEC000000
+     MORE_EMERG                                C2AC       F      15       0   interrupt.asm._SEC000000
+     FAST_LP                                   C2BB      17      23       0   interrupt.asm._SEC000000
+     FAST_KEY                                  C2D2      1A      26       0   interrupt.asm._SEC000000
+     FAST_END                                  C2EC       4       4       0   interrupt.asm._SEC000000
+     IRQ_ISR                                   C2F0      23      35       0   interrupt.asm._SEC000000
+     Set_seq                                   C313      17      23       0   interrupt.asm._SEC000000
+     Scan_seq                                  C32A      1B      27       0   interrupt.asm._SEC000000
+     Scan_end                                  C345       9       9       0   interrupt.asm._SEC000000
+     Key_Read                                  C34E       5       5       0   interrupt.asm._SEC000000
+     Key_Lp                                    C353      1F      31       0   interrupt.asm._SEC000000
+     CW_Lp                                     C372      1B      27       0   interrupt.asm._SEC000000
+     DC_Motor                                  C38D      12      18       0   interrupt.asm._SEC000000
+     DC_Setup                                  C39F      1A      26       0   interrupt.asm._SEC000000
+     PWM_ON                                    C3B9      13      19       0   interrupt.asm._SEC000000
+     PWM_OFF                                   C3CC      12      18       0   interrupt.asm._SEC000000
+     PWN_CLR                                   C3DE       9       9       0   interrupt.asm._SEC000000
+     Pot_SEL                                   C3E7      10      16       0   interrupt.asm._SEC000000
+     Pot_MENU                                  C3F7      12      18       0   interrupt.asm._SEC000000
+     Pot_RIGHT                                 C409       8       8       0   interrupt.asm._SEC000000
+     Pot_LEFT                                  C411       6       6       0   interrupt.asm._SEC000000
+     Pot_END                                   C417       E      14       0   interrupt.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- updateLCD.asm.o --
 - PROCEDURES:
-     default_disp                              C3BB      AC     172       1   updateLCD.asm._SEC000000
-     menu_tutorial                             C467      AC     172       1   updateLCD.asm._SEC000000
-     menu_disp                                 C513      5C      92       1   updateLCD.asm._SEC000000
-     newAcc_disp                               C56F      57      87       1   updateLCD.asm._SEC000000
-     delAcc_disp                               C5C6      57      87       1   updateLCD.asm._SEC000000
-     login_disp                                C61D      57      87       2   updateLCD.asm._SEC000000
-     visit_disp                                C674      57      87       1   updateLCD.asm._SEC000000
-     whereToGo_disp                            C6CB      57      87       1   updateLCD.asm._SEC000000
-     aqua_disp                                 C722      5C      92       2   updateLCD.asm._SEC000000
-     garden_disp                               C77E      5C      92       1   updateLCD.asm._SEC000000
-     safari_disp                               C7DA      5C      92       1   updateLCD.asm._SEC000000
-     log_usr_sel                               C836      57      87       1   updateLCD.asm._SEC000000
-     log_usr_shift                             C88D      5E      94       3   updateLCD.asm._SEC000000
-     ENTER_PASSWORD                            C8EB      57      87       1   updateLCD.asm._SEC000000
-     SUCC_PASSWORD                             C942      57      87       1   updateLCD.asm._SEC000000
-     FAIL_PASSWORD                             C999      57      87       1   updateLCD.asm._SEC000000
-     ATTEMPT_PASS                              C9F0      5A      90       2   updateLCD.asm._SEC000000
-     no_empty_disp                             CA4A      AC     172       1   updateLCD.asm._SEC000000
-     newUsr_done                               CAF6      57      87       1   updateLCD.asm._SEC000000
-     newUsr_disp                               CB4D      57      87       1   updateLCD.asm._SEC000000
-     ATTEMPT_USR                               CBA4      5F      95       1   updateLCD.asm._SEC000000
-     del_Menu_disp                             CC03      57      87       1   updateLCD.asm._SEC000000
-     del_conf_disp                             CC5A      AC     172       1   updateLCD.asm._SEC000000
-     post_del_disp                             CD06      AC     172       1   updateLCD.asm._SEC000000
-     JEEP_TUTORIAL                             CDB2      AC     172       1   updateLCD.asm._SEC000000
-     choose_dino_dsp                           CE5E      57      87       1   updateLCD.asm._SEC000000
-     back_camp_disp                            CEB5      5C      92       2   updateLCD.asm._SEC000000
-     load_dino_disp                            CF11      5E      94       1   updateLCD.asm._SEC000000
-     feed_fish_dsp                             CF6F      57      87       1   updateLCD.asm._SEC000000
-     feed_lamb_dsp                             CFC6      57      87       1   updateLCD.asm._SEC000000
-     feed_broc_dsp                             D01D      57      87       1   updateLCD.asm._SEC000000
-     back_camp_disp2                           D074      57      87       1   updateLCD.asm._SEC000000
+     default_disp                              C425      AC     172       1   updateLCD.asm._SEC000000
+     menu_tutorial                             C4D1      AC     172       1   updateLCD.asm._SEC000000
+     menu_disp                                 C57D      5C      92       1   updateLCD.asm._SEC000000
+     newAcc_disp                               C5D9      57      87       1   updateLCD.asm._SEC000000
+     delAcc_disp                               C630      57      87       1   updateLCD.asm._SEC000000
+     login_disp                                C687      57      87       2   updateLCD.asm._SEC000000
+     visit_disp                                C6DE      57      87       1   updateLCD.asm._SEC000000
+     whereToGo_disp                            C735      57      87       1   updateLCD.asm._SEC000000
+     aqua_disp                                 C78C      5C      92       2   updateLCD.asm._SEC000000
+     garden_disp                               C7E8      5C      92       1   updateLCD.asm._SEC000000
+     safari_disp                               C844      5C      92       1   updateLCD.asm._SEC000000
+     log_usr_sel                               C8A0      57      87       1   updateLCD.asm._SEC000000
+     log_usr_shift                             C8F7      5E      94       3   updateLCD.asm._SEC000000
+     ENTER_PASSWORD                            C955      57      87       1   updateLCD.asm._SEC000000
+     SUCC_PASSWORD                             C9AC      57      87       1   updateLCD.asm._SEC000000
+     FAIL_PASSWORD                             CA03      57      87       1   updateLCD.asm._SEC000000
+     ATTEMPT_PASS                              CA5A      5A      90       2   updateLCD.asm._SEC000000
+     no_empty_disp                             CAB4      AC     172       1   updateLCD.asm._SEC000000
+     newUsr_done                               CB60      57      87       1   updateLCD.asm._SEC000000
+     newUsr_disp                               CBB7      57      87       1   updateLCD.asm._SEC000000
+     ATTEMPT_USR                               CC0E      5F      95       1   updateLCD.asm._SEC000000
+     del_Menu_disp                             CC6D      57      87       1   updateLCD.asm._SEC000000
+     del_conf_disp                             CCC4      AC     172       1   updateLCD.asm._SEC000000
+     post_del_disp                             CD70      AC     172       1   updateLCD.asm._SEC000000
+     JEEP_TUTORIAL                             CE1C      AC     172       1   updateLCD.asm._SEC000000
+     choose_dino_dsp                           CEC8      57      87       1   updateLCD.asm._SEC000000
+     back_camp_disp                            CF1F      5C      92       2   updateLCD.asm._SEC000000
+     load_dino_disp                            CF7B      5E      94       1   updateLCD.asm._SEC000000
+     feed_fish_dsp                             CFD9      57      87       1   updateLCD.asm._SEC000000
+     feed_lamb_dsp                             D030      57      87       1   updateLCD.asm._SEC000000
+     feed_broc_dsp                             D087      57      87       1   updateLCD.asm._SEC000000
+     back_camp_disp2                           D0DE      57      87       1   updateLCD.asm._SEC000000
+     emergency_disp                            D135      AC     172       2   updateLCD.asm._SEC000000
+     fail_disp                                 D1E1      AC     172       1   updateLCD.asm._SEC000000
+     emrg_avoid_disp                           D28D      AC     172       1   updateLCD.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- logictree.asm.o --
 - PROCEDURES:
-     Main_Logic                                D0CB       B      11       1   logictree.asm._SEC000000
-     trip                                      D0D6      10      16       3   logictree.asm._SEC000000
-     trip_wt                                   D0E6      1A      26       0   logictree.asm._SEC000000
-     LOC_dwn                                   D100       7       7       0   logictree.asm._SEC000000
-     Aqua_chk                                  D107       E      14       0   logictree.asm._SEC000000
-     Garden_chk                                D115       D      13       0   logictree.asm._SEC000000
-     Safari_chk                                D122       D      13       0   logictree.asm._SEC000000
-     Reset_LOC                                 D12F      12      18       0   logictree.asm._SEC000000
-     trip_jeep                                 D141       9       9       0   logictree.asm._SEC000000
-     select_park                               D14A       D      13       0   logictree.asm._SEC000000
-     go_garden                                 D157       A      10       0   logictree.asm._SEC000000
-     go_aqua                                   D161       4       4       0   logictree.asm._SEC000000
-     USR_MENU_INPUT                            D165       B      11      15   logictree.asm._SEC000000
-     set_emergency                             D170       4       4       1   logictree.asm._SEC000000
+     Main_Logic                                D339       B      11       1   logictree.asm._SEC000000
+     trip                                      D344      10      16       3   logictree.asm._SEC000000
+     trip_wt                                   D354      1A      26       0   logictree.asm._SEC000000
+     LOC_dwn                                   D36E       7       7       0   logictree.asm._SEC000000
+     Aqua_chk                                  D375       E      14       0   logictree.asm._SEC000000
+     Garden_chk                                D383       D      13       0   logictree.asm._SEC000000
+     Safari_chk                                D390       D      13       0   logictree.asm._SEC000000
+     Reset_LOC                                 D39D      12      18       0   logictree.asm._SEC000000
+     trip_jeep                                 D3AF       9       9       0   logictree.asm._SEC000000
+     select_park                               D3B8       D      13       0   logictree.asm._SEC000000
+     go_garden                                 D3C5       A      10       0   logictree.asm._SEC000000
+     go_aqua                                   D3CF       4       4       0   logictree.asm._SEC000000
+     USR_MENU_INPUT                            D3D3       B      11      17   logictree.asm._SEC000000
+     set_emergency                             D3DE      12      18       1   logictree.asm._SEC000000
+     emerg_loop                                D3F0       A      10       0   logictree.asm._SEC000000
+     emerg_wt                                  D3FA      24      36       0   logictree.asm._SEC000000
+     emrg_wt_ag                                D41E       C      12       0   logictree.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- user.asm.o --
 - PROCEDURES:
-     user_main                                 D174      13      19       1   user.asm._SEC000000
-     tutorial                                  D187       8       8       0   user.asm._SEC000000
-     usr_mnuSt                                 D18F       6       6       0   user.asm._SEC000000
-     user_menu                                 D195      3B      59       0   user.asm._SEC000000
-     usr_mnuSel                                D1D0      19      25       0   user.asm._SEC000000
-     usr_login                                 D1E9      12      18       0   user.asm._SEC000000
-     usr1_chk                                  D1FB       E      14       0   user.asm._SEC000000
-     usr2_chk                                  D209      12      18       0   user.asm._SEC000000
-     usr_chk_end                               D21B       D      13       0   user.asm._SEC000000
-     usr_log_wt                                D228      28      40       0   user.asm._SEC000000
-     usr_pass                                  D250      1C      28       0   user.asm._SEC000000
-     pass1_chk                                 D26C      22      34       0   user.asm._SEC000000
-     passEndChk                                D28E      11      17       0   user.asm._SEC000000
-     Char_chck                                 D29F      16      22       0   user.asm._SEC000000
-     Char_down                                 D2B5       E      14       0   user.asm._SEC000000
-     Char_same                                 D2C3       D      13       0   user.asm._SEC000000
-     pass_wt                                   D2D0      28      40       0   user.asm._SEC000000
-     pass_wt_2                                 D2F8       C      12       0   user.asm._SEC000000
-     pass_succ                                 D304      23      35       1   user.asm._SEC000000
-     pass_ext_wt                               D327       8       8       0   user.asm._SEC000000
-     usr_newAcc                                D32F      1D      29       0   user.asm._SEC000000
-     new_chck1                                 D34C      16      22       0   user.asm._SEC000000
-     new_chck2                                 D362      16      22       0   user.asm._SEC000000
-     new_chck3                                 D378      16      22       0   user.asm._SEC000000
-     new_usr                                   D38E       D      13       0   user.asm._SEC000000
-     new_usr_chr                               D39B      11      17       0   user.asm._SEC000000
-     new_usr_wt                                D3AC      21      33       0   user.asm._SEC000000
-     usr_wt_agn                                D3CD      22      34       0   user.asm._SEC000000
-     usr_chr_chg                               D3EF      15      21       0   user.asm._SEC000000
-     usr_chr_dwn                               D404       C      12       0   user.asm._SEC000000
-     save_nw_usr                               D410       C      12       0   user.asm._SEC000000
-     no_emptyAcc                               D41C      12      18       0   user.asm._SEC000000
-     no_empty_wt                               D42E      12      18       0   user.asm._SEC000000
-     usr_delAcc                                D440      12      18       0   user.asm._SEC000000
-     usr1_del                                  D452       E      14       0   user.asm._SEC000000
-     usr2_del                                  D460      12      18       0   user.asm._SEC000000
-     usr_del_end                               D472       D      13       0   user.asm._SEC000000
-     del_log_wt                                D47F      32      50       0   user.asm._SEC000000
-     del_con                                   D4B1      2F      47       0   user.asm._SEC000000
-     usr_visit                                 D4E0      13      19       0   user.asm._SEC000000
+     user_main                                 D42A      13      19       1   user.asm._SEC000000
+     tutorial                                  D43D       8       8       0   user.asm._SEC000000
+     usr_mnuSt                                 D445       6       6       0   user.asm._SEC000000
+     user_menu                                 D44B      3B      59       0   user.asm._SEC000000
+     usr_mnuSel                                D486      19      25       0   user.asm._SEC000000
+     usr_login                                 D49F      12      18       0   user.asm._SEC000000
+     usr1_chk                                  D4B1       E      14       0   user.asm._SEC000000
+     usr2_chk                                  D4BF      12      18       0   user.asm._SEC000000
+     usr_chk_end                               D4D1       D      13       0   user.asm._SEC000000
+     usr_log_wt                                D4DE      28      40       0   user.asm._SEC000000
+     usr_pass                                  D506      1C      28       0   user.asm._SEC000000
+     pass1_chk                                 D522      22      34       0   user.asm._SEC000000
+     passEndChk                                D544      11      17       0   user.asm._SEC000000
+     Char_chck                                 D555      16      22       0   user.asm._SEC000000
+     Char_down                                 D56B       E      14       0   user.asm._SEC000000
+     Char_same                                 D579       D      13       0   user.asm._SEC000000
+     pass_wt                                   D586      28      40       0   user.asm._SEC000000
+     pass_wt_2                                 D5AE       C      12       0   user.asm._SEC000000
+     pass_succ                                 D5BA      23      35       1   user.asm._SEC000000
+     pass_ext_wt                               D5DD       8       8       0   user.asm._SEC000000
+     usr_newAcc                                D5E5      1D      29       0   user.asm._SEC000000
+     new_chck1                                 D602      16      22       0   user.asm._SEC000000
+     new_chck2                                 D618      16      22       0   user.asm._SEC000000
+     new_chck3                                 D62E      16      22       0   user.asm._SEC000000
+     new_usr                                   D644       D      13       0   user.asm._SEC000000
+     new_usr_chr                               D651      11      17       0   user.asm._SEC000000
+     new_usr_wt                                D662      21      33       0   user.asm._SEC000000
+     usr_wt_agn                                D683      22      34       0   user.asm._SEC000000
+     usr_chr_chg                               D6A5      15      21       0   user.asm._SEC000000
+     usr_chr_dwn                               D6BA       C      12       0   user.asm._SEC000000
+     save_nw_usr                               D6C6       C      12       0   user.asm._SEC000000
+     no_emptyAcc                               D6D2      12      18       0   user.asm._SEC000000
+     no_empty_wt                               D6E4      12      18       0   user.asm._SEC000000
+     usr_delAcc                                D6F6      12      18       0   user.asm._SEC000000
+     usr1_del                                  D708       E      14       0   user.asm._SEC000000
+     usr2_del                                  D716      12      18       0   user.asm._SEC000000
+     usr_del_end                               D728       D      13       0   user.asm._SEC000000
+     del_log_wt                                D735      32      50       0   user.asm._SEC000000
+     del_con                                   D767      2F      47       0   user.asm._SEC000000
+     usr_visit                                 D796      13      19       0   user.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- defaults.asm.o --
 - PROCEDURES:
-     user_defaults                             D4F3      38      56       1   defaults.asm._SEC000000
-     usr_GRANT                                 D52B      43      67       1   defaults.asm._SEC000000
-     usr_SATTLER                               D56E      43      67       1   defaults.asm._SEC000000
-     usr_MALCOLM                               D5B1      43      67       1   defaults.asm._SEC000000
-     usr_EMPTY                                 D5F4      43      67       2   defaults.asm._SEC000000
-     usr_VISIT                                 D637      43      67       1   defaults.asm._SEC000000
-     reset_Temp                                D67A      23      35       2   defaults.asm._SEC000000
+     user_defaults                             D7A9      38      56       1   defaults.asm._SEC000000
+     usr_GRANT                                 D7E1      43      67       1   defaults.asm._SEC000000
+     usr_SATTLER                               D824      43      67       1   defaults.asm._SEC000000
+     usr_MALCOLM                               D867      43      67       1   defaults.asm._SEC000000
+     usr_EMPTY                                 D8AA      43      67       2   defaults.asm._SEC000000
+     usr_VISIT                                 D8ED      43      67       1   defaults.asm._SEC000000
+     reset_Temp                                D930      23      35       2   defaults.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- dinoDefaults.asm.o --
 - PROCEDURES:
-     default_dino                              D69D      40      64       1   dinoDefaults.asm._SEC000000
-     Nothosaurs                                D6DD      4B      75       1   dinoDefaults.asm._SEC000000
-     Plesiosaurs                               D728      4B      75       1   dinoDefaults.asm._SEC000000
-     Elasmosaurus                              D773      4B      75       1   dinoDefaults.asm._SEC000000
-     Stegosaurus                               D7BE      4B      75       1   dinoDefaults.asm._SEC000000
-     Triceratops                               D809      4B      75       1   dinoDefaults.asm._SEC000000
-     Diplodocus                                D854      4B      75       1   dinoDefaults.asm._SEC000000
-     Spinosaurus                               D89F      4B      75       1   dinoDefaults.asm._SEC000000
-     Velociraptor                              D8EA      4B      75       1   dinoDefaults.asm._SEC000000
-     TRex                                      D935      4B      75       1   dinoDefaults.asm._SEC000000
+     default_dino                              D953      40      64       1   dinoDefaults.asm._SEC000000
+     Nothosaurs                                D993      4B      75       1   dinoDefaults.asm._SEC000000
+     Plesiosaurs                               D9DE      4B      75       1   dinoDefaults.asm._SEC000000
+     Elasmosaurus                              DA29      4B      75       1   dinoDefaults.asm._SEC000000
+     Stegosaurus                               DA74      4B      75       1   dinoDefaults.asm._SEC000000
+     Triceratops                               DABF      4B      75       1   dinoDefaults.asm._SEC000000
+     Diplodocus                                DB0A      4B      75       1   dinoDefaults.asm._SEC000000
+     Spinosaurus                               DB55      4B      75       1   dinoDefaults.asm._SEC000000
+     Velociraptor                              DBA0      4B      75       1   dinoDefaults.asm._SEC000000
+     TRex                                      DBEB      4B      75       1   dinoDefaults.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- jurassicPark.asm.o --
 - PROCEDURES:
-     aquarium_park                             D980       7       7       1   jurassicPark.asm._SEC000000
-     botanical_park                            D987       7       7       1   jurassicPark.asm._SEC000000
-     safari_park                               D98E       7       7       1   jurassicPark.asm._SEC000000
-     choose_dino_1st                           D995       6       6       0   jurassicPark.asm._SEC000000
-     choose_dino                               D99B       A      10       0   jurassicPark.asm._SEC000000
-     choose_dino_wt                            D9A5      1D      29       0   jurassicPark.asm._SEC000000
-     dino_down                                 D9C2       C      12       0   jurassicPark.asm._SEC000000
-     dino_chck                                 D9CE       E      14       0   jurassicPark.asm._SEC000000
-     dino_low_end                              D9DC       D      13       0   jurassicPark.asm._SEC000000
-     load_dino                                 D9E9       B      11       0   jurassicPark.asm._SEC000000
-     feed_dino                                 D9F4      17      23       0   jurassicPark.asm._SEC000000
-     feed_menu                                 DA0B      14      20       0   jurassicPark.asm._SEC000000
-     food_chk_broc                             DA1F       D      13       0   jurassicPark.asm._SEC000000
-     food_chk_lamb                             DA2C      1C      28       0   jurassicPark.asm._SEC000000
-     feed_wt                                   DA48      1A      26       0   jurassicPark.asm._SEC000000
-     food_down                                 DA62       9       9       0   jurassicPark.asm._SEC000000
-     food_range_chk                            DA6B       E      14       0   jurassicPark.asm._SEC000000
-     food_range_low                            DA79       F      15       0   jurassicPark.asm._SEC000000
-     update_game                               DA88       F      15       0   jurassicPark.asm._SEC000000
-     food_score                                DA97       3       3       0   jurassicPark.asm._SEC000000
-     status_check                              DA9A       D      13       0   jurassicPark.asm._SEC000000
-     loosing_the_game                          DAA7       4       4       0   jurassicPark.asm._SEC000000
+     aquarium_park                             DC36       7       7       1   jurassicPark.asm._SEC000000
+     botanical_park                            DC3D       7       7       1   jurassicPark.asm._SEC000000
+     safari_park                               DC44       7       7       1   jurassicPark.asm._SEC000000
+     choose_dino_1st                           DC4B       6       6       0   jurassicPark.asm._SEC000000
+     choose_dino                               DC51       A      10       0   jurassicPark.asm._SEC000000
+     choose_dino_wt                            DC5B      1D      29       0   jurassicPark.asm._SEC000000
+     dino_down                                 DC78       C      12       0   jurassicPark.asm._SEC000000
+     dino_chck                                 DC84       E      14       0   jurassicPark.asm._SEC000000
+     dino_low_end                              DC92       D      13       0   jurassicPark.asm._SEC000000
+     load_dino                                 DC9F       B      11       0   jurassicPark.asm._SEC000000
+     feed_dino                                 DCAA      17      23       0   jurassicPark.asm._SEC000000
+     feed_menu                                 DCC1      14      20       0   jurassicPark.asm._SEC000000
+     food_chk_broc                             DCD5       D      13       0   jurassicPark.asm._SEC000000
+     food_chk_lamb                             DCE2      1C      28       0   jurassicPark.asm._SEC000000
+     feed_wt                                   DCFE      1A      26       0   jurassicPark.asm._SEC000000
+     food_down                                 DD18       9       9       0   jurassicPark.asm._SEC000000
+     food_range_chk                            DD21       E      14       0   jurassicPark.asm._SEC000000
+     food_range_low                            DD2F       F      15       0   jurassicPark.asm._SEC000000
+     update_game                               DD3E       F      15       0   jurassicPark.asm._SEC000000
+     food_score                                DD4D       3       3       0   jurassicPark.asm._SEC000000
+     status_check                              DD50       D      13       0   jurassicPark.asm._SEC000000
+     loosing_the_game                          DD5D       4       4       0   jurassicPark.asm._SEC000000
 - VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.asm.o                                   0    259    377
+  main.asm.o                                   0    275    381
   lcddisp.c.o                                  2    243      0
   mc9s12e128.c.o                             352      0      0
   potentiometer.c.o                            2     24      0
-  interrupt.asm.o                              0    429      0
-  updateLCD.asm.o                              0   3344      0
-  logictree.asm.o                              0    169      0
+  interrupt.asm.o                              0    519      0
+  updateLCD.asm.o                              0   3860      0
+  logictree.asm.o                              0    241      0
   user.asm.o                                   0    895      0
   defaults.asm.o                               0    426      0
   dinoDefaults.asm.o                           0    739      0
@@ -890,9 +902,10 @@ SECTION: ".text"
   Scan_KeyRow Scan_Count key_press key_val disp LED_VAL old_pot pot_shift 
   DC_cnter t_on user_sel usr_menu_shift usr_menu_max usr_sel_acc usr_input 
   usr_max usr_char usr_empty usr_temp usr_new_id pass_char pass_temp key_twice 
-  usr_0 usr_1 usr_2 usr_3 usr_4 JEEP_MODE JEEP_Cnter FAST_SET LOC_TRACK aqua_1 
-  aqua_2 aqua_3 veggie_1 veggie_2 veggie_3 carniv_1 carniv_2 carniv_3 curr_dino 
-  curr_food curr_hunger target_food aqua_dino garden_dino safari_dino 
+  usr_0 usr_1 usr_2 usr_3 usr_4 JEEP_MODE JEEP_Cnter FAST_SET LOC_TRACK 
+  EMERG_MODE EMERG_KEY EMRG_Cnter aqua_1 aqua_2 aqua_3 veggie_1 veggie_2 
+  veggie_3 carniv_1 carniv_2 carniv_3 curr_dino curr_food curr_hunger 
+  target_food aqua_dino garden_dino safari_dino 
 SECTION: ".bss"
   data 
 SECTION: ".init"
@@ -1448,19 +1461,22 @@ SECTION: ".abs_section_27c"
 SECTION: ".abs_section_27e"
   _PIFAD 
 SECTION: "interrupt.asm._SEC000000"
-  RTI_ISR Skip_Step Chck_FAST END_RTI JEEP_LOGIC FAST_LP FAST_KEY FAST_END 
-  IRQ_ISR Set_seq Scan_seq Scan_end Key_Read Key_Lp CW_Lp DC_Motor DC_Setup 
-  PWM_ON PWM_OFF PWN_CLR Pot_SEL Pot_MENU Pot_RIGHT Pot_LEFT Pot_END 
+  RTI_ISR Skip_Step Chck_FAST END_RTI JEEP_LOGIC EMRG_LOGIC EMRG_FAIL 
+  MORE_EMERG FAST_LP FAST_KEY FAST_END IRQ_ISR Set_seq Scan_seq Scan_end 
+  Key_Read Key_Lp CW_Lp DC_Motor DC_Setup PWM_ON PWM_OFF PWN_CLR Pot_SEL 
+  Pot_MENU Pot_RIGHT Pot_LEFT Pot_END 
 SECTION: "updateLCD.asm._SEC000000"
   default_disp menu_tutorial menu_disp newAcc_disp delAcc_disp login_disp 
   visit_disp whereToGo_disp aqua_disp garden_disp safari_disp log_usr_sel 
   log_usr_shift ENTER_PASSWORD SUCC_PASSWORD FAIL_PASSWORD ATTEMPT_PASS 
   no_empty_disp newUsr_done newUsr_disp ATTEMPT_USR del_Menu_disp del_conf_disp 
   post_del_disp JEEP_TUTORIAL choose_dino_dsp back_camp_disp load_dino_disp 
-  feed_fish_dsp feed_lamb_dsp feed_broc_dsp back_camp_disp2 
+  feed_fish_dsp feed_lamb_dsp feed_broc_dsp back_camp_disp2 emergency_disp 
+  fail_disp emrg_avoid_disp 
 SECTION: "logictree.asm._SEC000000"
   Main_Logic trip trip_wt LOC_dwn Aqua_chk Garden_chk Safari_chk Reset_LOC 
   trip_jeep select_park go_garden go_aqua USR_MENU_INPUT set_emergency 
+  emerg_loop emerg_wt emrg_wt_ag 
 SECTION: "user.asm._SEC000000"
   user_main tutorial usr_mnuSt user_menu usr_mnuSel usr_login usr1_chk 
   usr2_chk usr_chk_end usr_log_wt usr_pass pass1_chk passEndChk Char_chck 
@@ -1771,18 +1787,18 @@ OBJECT LIST SORTED BY ADDRESS
      Scan_KeyRow                                818       4       4       1   .text       
      Scan_Count                                 81C       2       2       4   .text       
      key_press                                  81E       1       1       0   .text       
-     key_val                                    81F       1       1      24   .text       
-     disp                                       820      21      33     654   .text       
-     LED_VAL                                    841       1       1       2   .text       
+     key_val                                    81F       1       1      26   .text       
+     disp                                       820      21      33     756   .text       
+     LED_VAL                                    841       1       1       5   .text       
      old_pot                                    842       1       1       2   .text       
-     pot_shift                                  843       1       1      35   .text       
+     pot_shift                                  843       1       1      38   .text       
      DC_cnter                                   844       1       1       6   .text       
      t_on                                       845       1       1       3   .text       
      user_sel                                   846       1       1       4   .text       
      usr_menu_shift                             847       1       1       3   .text       
      usr_menu_max                               848       1       1       0   .text       
      usr_sel_acc                                849       1       1       9   .text       
-     usr_input                                  84A       1       1      16   .text       
+     usr_input                                  84A       1       1      18   .text       
      usr_max                                    84B       1       1       2   .text       
      usr_char                                   84C       1       1       0   .text       
      usr_empty                                  84D       1       1      10   .text       
@@ -1797,183 +1813,195 @@ OBJECT LIST SORTED BY ADDRESS
      usr_3                                      884      10      16       5   .text       
      usr_4                                      894      10      16       1   .text       
      JEEP_MODE                                  8A4       1       1       5   .text       
-     JEEP_Cnter                                 8A5       2       2       3   .text       
+     JEEP_Cnter                                 8A5       2       2       4   .text       
      FAST_SET                                   8A7       1       1       9   .text       
      LOC_TRACK                                  8A8       1       1       5   .text       
-     aqua_1                                     8A9      14      20       1   .text       
-     aqua_2                                     8BD      14      20       1   .text       
-     aqua_3                                     8D1      14      20       1   .text       
-     veggie_1                                   8E5      14      20       1   .text       
-     veggie_2                                   8F9      14      20       1   .text       
-     veggie_3                                   90D      14      20       1   .text       
-     carniv_1                                   921      14      20       1   .text       
-     carniv_2                                   935      14      20       1   .text       
-     carniv_3                                   949      14      20       1   .text       
-     curr_dino                                  95D       1       1       9   .text       
-     curr_food                                  95E       1       1       7   .text       
-     curr_hunger                                95F       1       1       5   .text       
-     target_food                                960       1       1       2   .text       
-     aqua_dino                                  961       8       8       1   .text       
-     garden_dino                                969       8       8       1   .text       
-     safari_dino                                971       8       8       1   .text       
-     Entry                                     C000     103     259       0   .init       
-     delay_ms                                  C103      17      23       5   NON_BANKED  
-     init_LCD                                  C11A      52      82       1   NON_BANKED  
-     display_string                            C16C      38      56      33   NON_BANKED  
-     Delay                                     C1A4      1F      31       1   NON_BANKED  
-     epulse                                    C1C3      24      36       3   NON_BANKED  
-     sendCommand                               C1E7       F      15       7   NON_BANKED  
-     read_pot                                  C1F6      18      24       1   NON_BANKED  
-     RTI_ISR                                   C20E      14      20       0   interrupt.asm._SEC000000
-     Skip_Step                                 C222       B      11       0   interrupt.asm._SEC000000
-     Chck_FAST                                 C22D       5       5       0   interrupt.asm._SEC000000
-     END_RTI                                   C232       D      13       0   interrupt.asm._SEC000000
-     JEEP_LOGIC                                C23F      23      35       0   interrupt.asm._SEC000000
-     FAST_LP                                   C262      15      21       0   interrupt.asm._SEC000000
-     FAST_KEY                                  C277      1A      26       0   interrupt.asm._SEC000000
-     FAST_END                                  C291       2       2       0   interrupt.asm._SEC000000
-     IRQ_ISR                                   C293      16      22       0   interrupt.asm._SEC000000
-     Set_seq                                   C2A9      17      23       0   interrupt.asm._SEC000000
-     Scan_seq                                  C2C0      1B      27       0   interrupt.asm._SEC000000
-     Scan_end                                  C2DB       9       9       0   interrupt.asm._SEC000000
-     Key_Read                                  C2E4       5       5       0   interrupt.asm._SEC000000
-     Key_Lp                                    C2E9      1F      31       0   interrupt.asm._SEC000000
-     CW_Lp                                     C308      1B      27       0   interrupt.asm._SEC000000
-     DC_Motor                                  C323      12      18       0   interrupt.asm._SEC000000
-     DC_Setup                                  C335      1A      26       0   interrupt.asm._SEC000000
-     PWM_ON                                    C34F      13      19       0   interrupt.asm._SEC000000
-     PWM_OFF                                   C362      12      18       0   interrupt.asm._SEC000000
-     PWN_CLR                                   C374       9       9       0   interrupt.asm._SEC000000
-     Pot_SEL                                   C37D      10      16       0   interrupt.asm._SEC000000
-     Pot_MENU                                  C38D      12      18       0   interrupt.asm._SEC000000
-     Pot_RIGHT                                 C39F       8       8       0   interrupt.asm._SEC000000
-     Pot_LEFT                                  C3A7       6       6       0   interrupt.asm._SEC000000
-     Pot_END                                   C3AD       E      14       0   interrupt.asm._SEC000000
-     default_disp                              C3BB      AC     172       1   updateLCD.asm._SEC000000
-     menu_tutorial                             C467      AC     172       1   updateLCD.asm._SEC000000
-     menu_disp                                 C513      5C      92       1   updateLCD.asm._SEC000000
-     newAcc_disp                               C56F      57      87       1   updateLCD.asm._SEC000000
-     delAcc_disp                               C5C6      57      87       1   updateLCD.asm._SEC000000
-     login_disp                                C61D      57      87       2   updateLCD.asm._SEC000000
-     visit_disp                                C674      57      87       1   updateLCD.asm._SEC000000
-     whereToGo_disp                            C6CB      57      87       1   updateLCD.asm._SEC000000
-     aqua_disp                                 C722      5C      92       2   updateLCD.asm._SEC000000
-     garden_disp                               C77E      5C      92       1   updateLCD.asm._SEC000000
-     safari_disp                               C7DA      5C      92       1   updateLCD.asm._SEC000000
-     log_usr_sel                               C836      57      87       1   updateLCD.asm._SEC000000
-     log_usr_shift                             C88D      5E      94       3   updateLCD.asm._SEC000000
-     ENTER_PASSWORD                            C8EB      57      87       1   updateLCD.asm._SEC000000
-     SUCC_PASSWORD                             C942      57      87       1   updateLCD.asm._SEC000000
-     FAIL_PASSWORD                             C999      57      87       1   updateLCD.asm._SEC000000
-     ATTEMPT_PASS                              C9F0      5A      90       2   updateLCD.asm._SEC000000
-     no_empty_disp                             CA4A      AC     172       1   updateLCD.asm._SEC000000
-     newUsr_done                               CAF6      57      87       1   updateLCD.asm._SEC000000
-     newUsr_disp                               CB4D      57      87       1   updateLCD.asm._SEC000000
-     ATTEMPT_USR                               CBA4      5F      95       1   updateLCD.asm._SEC000000
-     del_Menu_disp                             CC03      57      87       1   updateLCD.asm._SEC000000
-     del_conf_disp                             CC5A      AC     172       1   updateLCD.asm._SEC000000
-     post_del_disp                             CD06      AC     172       1   updateLCD.asm._SEC000000
-     JEEP_TUTORIAL                             CDB2      AC     172       1   updateLCD.asm._SEC000000
-     choose_dino_dsp                           CE5E      57      87       1   updateLCD.asm._SEC000000
-     back_camp_disp                            CEB5      5C      92       2   updateLCD.asm._SEC000000
-     load_dino_disp                            CF11      5E      94       1   updateLCD.asm._SEC000000
-     feed_fish_dsp                             CF6F      57      87       1   updateLCD.asm._SEC000000
-     feed_lamb_dsp                             CFC6      57      87       1   updateLCD.asm._SEC000000
-     feed_broc_dsp                             D01D      57      87       1   updateLCD.asm._SEC000000
-     back_camp_disp2                           D074      57      87       1   updateLCD.asm._SEC000000
-     Main_Logic                                D0CB       B      11       1   logictree.asm._SEC000000
-     trip                                      D0D6      10      16       3   logictree.asm._SEC000000
-     trip_wt                                   D0E6      1A      26       0   logictree.asm._SEC000000
-     LOC_dwn                                   D100       7       7       0   logictree.asm._SEC000000
-     Aqua_chk                                  D107       E      14       0   logictree.asm._SEC000000
-     Garden_chk                                D115       D      13       0   logictree.asm._SEC000000
-     Safari_chk                                D122       D      13       0   logictree.asm._SEC000000
-     Reset_LOC                                 D12F      12      18       0   logictree.asm._SEC000000
-     trip_jeep                                 D141       9       9       0   logictree.asm._SEC000000
-     select_park                               D14A       D      13       0   logictree.asm._SEC000000
-     go_garden                                 D157       A      10       0   logictree.asm._SEC000000
-     go_aqua                                   D161       4       4       0   logictree.asm._SEC000000
-     USR_MENU_INPUT                            D165       B      11      15   logictree.asm._SEC000000
-     set_emergency                             D170       4       4       1   logictree.asm._SEC000000
-     user_main                                 D174      13      19       1   user.asm._SEC000000
-     tutorial                                  D187       8       8       0   user.asm._SEC000000
-     usr_mnuSt                                 D18F       6       6       0   user.asm._SEC000000
-     user_menu                                 D195      3B      59       0   user.asm._SEC000000
-     usr_mnuSel                                D1D0      19      25       0   user.asm._SEC000000
-     usr_login                                 D1E9      12      18       0   user.asm._SEC000000
-     usr1_chk                                  D1FB       E      14       0   user.asm._SEC000000
-     usr2_chk                                  D209      12      18       0   user.asm._SEC000000
-     usr_chk_end                               D21B       D      13       0   user.asm._SEC000000
-     usr_log_wt                                D228      28      40       0   user.asm._SEC000000
-     usr_pass                                  D250      1C      28       0   user.asm._SEC000000
-     pass1_chk                                 D26C      22      34       0   user.asm._SEC000000
-     passEndChk                                D28E      11      17       0   user.asm._SEC000000
-     Char_chck                                 D29F      16      22       0   user.asm._SEC000000
-     Char_down                                 D2B5       E      14       0   user.asm._SEC000000
-     Char_same                                 D2C3       D      13       0   user.asm._SEC000000
-     pass_wt                                   D2D0      28      40       0   user.asm._SEC000000
-     pass_wt_2                                 D2F8       C      12       0   user.asm._SEC000000
-     pass_succ                                 D304      23      35       1   user.asm._SEC000000
-     pass_ext_wt                               D327       8       8       0   user.asm._SEC000000
-     usr_newAcc                                D32F      1D      29       0   user.asm._SEC000000
-     new_chck1                                 D34C      16      22       0   user.asm._SEC000000
-     new_chck2                                 D362      16      22       0   user.asm._SEC000000
-     new_chck3                                 D378      16      22       0   user.asm._SEC000000
-     new_usr                                   D38E       D      13       0   user.asm._SEC000000
-     new_usr_chr                               D39B      11      17       0   user.asm._SEC000000
-     new_usr_wt                                D3AC      21      33       0   user.asm._SEC000000
-     usr_wt_agn                                D3CD      22      34       0   user.asm._SEC000000
-     usr_chr_chg                               D3EF      15      21       0   user.asm._SEC000000
-     usr_chr_dwn                               D404       C      12       0   user.asm._SEC000000
-     save_nw_usr                               D410       C      12       0   user.asm._SEC000000
-     no_emptyAcc                               D41C      12      18       0   user.asm._SEC000000
-     no_empty_wt                               D42E      12      18       0   user.asm._SEC000000
-     usr_delAcc                                D440      12      18       0   user.asm._SEC000000
-     usr1_del                                  D452       E      14       0   user.asm._SEC000000
-     usr2_del                                  D460      12      18       0   user.asm._SEC000000
-     usr_del_end                               D472       D      13       0   user.asm._SEC000000
-     del_log_wt                                D47F      32      50       0   user.asm._SEC000000
-     del_con                                   D4B1      2F      47       0   user.asm._SEC000000
-     usr_visit                                 D4E0      13      19       0   user.asm._SEC000000
-     user_defaults                             D4F3      38      56       1   defaults.asm._SEC000000
-     usr_GRANT                                 D52B      43      67       1   defaults.asm._SEC000000
-     usr_SATTLER                               D56E      43      67       1   defaults.asm._SEC000000
-     usr_MALCOLM                               D5B1      43      67       1   defaults.asm._SEC000000
-     usr_EMPTY                                 D5F4      43      67       2   defaults.asm._SEC000000
-     usr_VISIT                                 D637      43      67       1   defaults.asm._SEC000000
-     reset_Temp                                D67A      23      35       2   defaults.asm._SEC000000
-     default_dino                              D69D      40      64       1   dinoDefaults.asm._SEC000000
-     Nothosaurs                                D6DD      4B      75       1   dinoDefaults.asm._SEC000000
-     Plesiosaurs                               D728      4B      75       1   dinoDefaults.asm._SEC000000
-     Elasmosaurus                              D773      4B      75       1   dinoDefaults.asm._SEC000000
-     Stegosaurus                               D7BE      4B      75       1   dinoDefaults.asm._SEC000000
-     Triceratops                               D809      4B      75       1   dinoDefaults.asm._SEC000000
-     Diplodocus                                D854      4B      75       1   dinoDefaults.asm._SEC000000
-     Spinosaurus                               D89F      4B      75       1   dinoDefaults.asm._SEC000000
-     Velociraptor                              D8EA      4B      75       1   dinoDefaults.asm._SEC000000
-     TRex                                      D935      4B      75       1   dinoDefaults.asm._SEC000000
-     aquarium_park                             D980       7       7       1   jurassicPark.asm._SEC000000
-     botanical_park                            D987       7       7       1   jurassicPark.asm._SEC000000
-     safari_park                               D98E       7       7       1   jurassicPark.asm._SEC000000
-     choose_dino_1st                           D995       6       6       0   jurassicPark.asm._SEC000000
-     choose_dino                               D99B       A      10       0   jurassicPark.asm._SEC000000
-     choose_dino_wt                            D9A5      1D      29       0   jurassicPark.asm._SEC000000
-     dino_down                                 D9C2       C      12       0   jurassicPark.asm._SEC000000
-     dino_chck                                 D9CE       E      14       0   jurassicPark.asm._SEC000000
-     dino_low_end                              D9DC       D      13       0   jurassicPark.asm._SEC000000
-     load_dino                                 D9E9       B      11       0   jurassicPark.asm._SEC000000
-     feed_dino                                 D9F4      17      23       0   jurassicPark.asm._SEC000000
-     feed_menu                                 DA0B      14      20       0   jurassicPark.asm._SEC000000
-     food_chk_broc                             DA1F       D      13       0   jurassicPark.asm._SEC000000
-     food_chk_lamb                             DA2C      1C      28       0   jurassicPark.asm._SEC000000
-     feed_wt                                   DA48      1A      26       0   jurassicPark.asm._SEC000000
-     food_down                                 DA62       9       9       0   jurassicPark.asm._SEC000000
-     food_range_chk                            DA6B       E      14       0   jurassicPark.asm._SEC000000
-     food_range_low                            DA79       F      15       0   jurassicPark.asm._SEC000000
-     update_game                               DA88       F      15       0   jurassicPark.asm._SEC000000
-     food_score                                DA97       3       3       0   jurassicPark.asm._SEC000000
-     status_check                              DA9A       D      13       0   jurassicPark.asm._SEC000000
-     loosing_the_game                          DAA7       4       4       0   jurassicPark.asm._SEC000000
+     EMERG_MODE                                 8A9       1       1       3   .text       
+     EMERG_KEY                                  8AA       1       1       3   .text       
+     EMRG_Cnter                                 8AB       2       2       3   .text       
+     aqua_1                                     8AD      14      20       1   .text       
+     aqua_2                                     8C1      14      20       1   .text       
+     aqua_3                                     8D5      14      20       1   .text       
+     veggie_1                                   8E9      14      20       1   .text       
+     veggie_2                                   8FD      14      20       1   .text       
+     veggie_3                                   911      14      20       1   .text       
+     carniv_1                                   925      14      20       1   .text       
+     carniv_2                                   939      14      20       1   .text       
+     carniv_3                                   94D      14      20       1   .text       
+     curr_dino                                  961       1       1       9   .text       
+     curr_food                                  962       1       1       7   .text       
+     curr_hunger                                963       1       1       5   .text       
+     target_food                                964       1       1       2   .text       
+     aqua_dino                                  965       8       8       1   .text       
+     garden_dino                                96D       8       8       1   .text       
+     safari_dino                                975       8       8       1   .text       
+     Entry                                     C000     113     275       0   .init       
+     delay_ms                                  C113      17      23       5   NON_BANKED  
+     init_LCD                                  C12A      52      82       1   NON_BANKED  
+     display_string                            C17C      38      56      36   NON_BANKED  
+     Delay                                     C1B4      1F      31       1   NON_BANKED  
+     epulse                                    C1D3      24      36       3   NON_BANKED  
+     sendCommand                               C1F7       F      15       7   NON_BANKED  
+     read_pot                                  C206      18      24       1   NON_BANKED  
+     RTI_ISR                                   C21E      2A      42       0   interrupt.asm._SEC000000
+     Skip_Step                                 C248       B      11       0   interrupt.asm._SEC000000
+     Chck_FAST                                 C253       5       5       0   interrupt.asm._SEC000000
+     END_RTI                                   C258       D      13       0   interrupt.asm._SEC000000
+     JEEP_LOGIC                                C265      23      35       0   interrupt.asm._SEC000000
+     EMRG_LOGIC                                C288      1D      29       0   interrupt.asm._SEC000000
+     EMRG_FAIL                                 C2A5       7       7       0   interrupt.asm._SEC000000
+     MORE_EMERG                                C2AC       F      15       0   interrupt.asm._SEC000000
+     FAST_LP                                   C2BB      17      23       0   interrupt.asm._SEC000000
+     FAST_KEY                                  C2D2      1A      26       0   interrupt.asm._SEC000000
+     FAST_END                                  C2EC       4       4       0   interrupt.asm._SEC000000
+     IRQ_ISR                                   C2F0      23      35       0   interrupt.asm._SEC000000
+     Set_seq                                   C313      17      23       0   interrupt.asm._SEC000000
+     Scan_seq                                  C32A      1B      27       0   interrupt.asm._SEC000000
+     Scan_end                                  C345       9       9       0   interrupt.asm._SEC000000
+     Key_Read                                  C34E       5       5       0   interrupt.asm._SEC000000
+     Key_Lp                                    C353      1F      31       0   interrupt.asm._SEC000000
+     CW_Lp                                     C372      1B      27       0   interrupt.asm._SEC000000
+     DC_Motor                                  C38D      12      18       0   interrupt.asm._SEC000000
+     DC_Setup                                  C39F      1A      26       0   interrupt.asm._SEC000000
+     PWM_ON                                    C3B9      13      19       0   interrupt.asm._SEC000000
+     PWM_OFF                                   C3CC      12      18       0   interrupt.asm._SEC000000
+     PWN_CLR                                   C3DE       9       9       0   interrupt.asm._SEC000000
+     Pot_SEL                                   C3E7      10      16       0   interrupt.asm._SEC000000
+     Pot_MENU                                  C3F7      12      18       0   interrupt.asm._SEC000000
+     Pot_RIGHT                                 C409       8       8       0   interrupt.asm._SEC000000
+     Pot_LEFT                                  C411       6       6       0   interrupt.asm._SEC000000
+     Pot_END                                   C417       E      14       0   interrupt.asm._SEC000000
+     default_disp                              C425      AC     172       1   updateLCD.asm._SEC000000
+     menu_tutorial                             C4D1      AC     172       1   updateLCD.asm._SEC000000
+     menu_disp                                 C57D      5C      92       1   updateLCD.asm._SEC000000
+     newAcc_disp                               C5D9      57      87       1   updateLCD.asm._SEC000000
+     delAcc_disp                               C630      57      87       1   updateLCD.asm._SEC000000
+     login_disp                                C687      57      87       2   updateLCD.asm._SEC000000
+     visit_disp                                C6DE      57      87       1   updateLCD.asm._SEC000000
+     whereToGo_disp                            C735      57      87       1   updateLCD.asm._SEC000000
+     aqua_disp                                 C78C      5C      92       2   updateLCD.asm._SEC000000
+     garden_disp                               C7E8      5C      92       1   updateLCD.asm._SEC000000
+     safari_disp                               C844      5C      92       1   updateLCD.asm._SEC000000
+     log_usr_sel                               C8A0      57      87       1   updateLCD.asm._SEC000000
+     log_usr_shift                             C8F7      5E      94       3   updateLCD.asm._SEC000000
+     ENTER_PASSWORD                            C955      57      87       1   updateLCD.asm._SEC000000
+     SUCC_PASSWORD                             C9AC      57      87       1   updateLCD.asm._SEC000000
+     FAIL_PASSWORD                             CA03      57      87       1   updateLCD.asm._SEC000000
+     ATTEMPT_PASS                              CA5A      5A      90       2   updateLCD.asm._SEC000000
+     no_empty_disp                             CAB4      AC     172       1   updateLCD.asm._SEC000000
+     newUsr_done                               CB60      57      87       1   updateLCD.asm._SEC000000
+     newUsr_disp                               CBB7      57      87       1   updateLCD.asm._SEC000000
+     ATTEMPT_USR                               CC0E      5F      95       1   updateLCD.asm._SEC000000
+     del_Menu_disp                             CC6D      57      87       1   updateLCD.asm._SEC000000
+     del_conf_disp                             CCC4      AC     172       1   updateLCD.asm._SEC000000
+     post_del_disp                             CD70      AC     172       1   updateLCD.asm._SEC000000
+     JEEP_TUTORIAL                             CE1C      AC     172       1   updateLCD.asm._SEC000000
+     choose_dino_dsp                           CEC8      57      87       1   updateLCD.asm._SEC000000
+     back_camp_disp                            CF1F      5C      92       2   updateLCD.asm._SEC000000
+     load_dino_disp                            CF7B      5E      94       1   updateLCD.asm._SEC000000
+     feed_fish_dsp                             CFD9      57      87       1   updateLCD.asm._SEC000000
+     feed_lamb_dsp                             D030      57      87       1   updateLCD.asm._SEC000000
+     feed_broc_dsp                             D087      57      87       1   updateLCD.asm._SEC000000
+     back_camp_disp2                           D0DE      57      87       1   updateLCD.asm._SEC000000
+     emergency_disp                            D135      AC     172       2   updateLCD.asm._SEC000000
+     fail_disp                                 D1E1      AC     172       1   updateLCD.asm._SEC000000
+     emrg_avoid_disp                           D28D      AC     172       1   updateLCD.asm._SEC000000
+     Main_Logic                                D339       B      11       1   logictree.asm._SEC000000
+     trip                                      D344      10      16       3   logictree.asm._SEC000000
+     trip_wt                                   D354      1A      26       0   logictree.asm._SEC000000
+     LOC_dwn                                   D36E       7       7       0   logictree.asm._SEC000000
+     Aqua_chk                                  D375       E      14       0   logictree.asm._SEC000000
+     Garden_chk                                D383       D      13       0   logictree.asm._SEC000000
+     Safari_chk                                D390       D      13       0   logictree.asm._SEC000000
+     Reset_LOC                                 D39D      12      18       0   logictree.asm._SEC000000
+     trip_jeep                                 D3AF       9       9       0   logictree.asm._SEC000000
+     select_park                               D3B8       D      13       0   logictree.asm._SEC000000
+     go_garden                                 D3C5       A      10       0   logictree.asm._SEC000000
+     go_aqua                                   D3CF       4       4       0   logictree.asm._SEC000000
+     USR_MENU_INPUT                            D3D3       B      11      17   logictree.asm._SEC000000
+     set_emergency                             D3DE      12      18       1   logictree.asm._SEC000000
+     emerg_loop                                D3F0       A      10       0   logictree.asm._SEC000000
+     emerg_wt                                  D3FA      24      36       0   logictree.asm._SEC000000
+     emrg_wt_ag                                D41E       C      12       0   logictree.asm._SEC000000
+     user_main                                 D42A      13      19       1   user.asm._SEC000000
+     tutorial                                  D43D       8       8       0   user.asm._SEC000000
+     usr_mnuSt                                 D445       6       6       0   user.asm._SEC000000
+     user_menu                                 D44B      3B      59       0   user.asm._SEC000000
+     usr_mnuSel                                D486      19      25       0   user.asm._SEC000000
+     usr_login                                 D49F      12      18       0   user.asm._SEC000000
+     usr1_chk                                  D4B1       E      14       0   user.asm._SEC000000
+     usr2_chk                                  D4BF      12      18       0   user.asm._SEC000000
+     usr_chk_end                               D4D1       D      13       0   user.asm._SEC000000
+     usr_log_wt                                D4DE      28      40       0   user.asm._SEC000000
+     usr_pass                                  D506      1C      28       0   user.asm._SEC000000
+     pass1_chk                                 D522      22      34       0   user.asm._SEC000000
+     passEndChk                                D544      11      17       0   user.asm._SEC000000
+     Char_chck                                 D555      16      22       0   user.asm._SEC000000
+     Char_down                                 D56B       E      14       0   user.asm._SEC000000
+     Char_same                                 D579       D      13       0   user.asm._SEC000000
+     pass_wt                                   D586      28      40       0   user.asm._SEC000000
+     pass_wt_2                                 D5AE       C      12       0   user.asm._SEC000000
+     pass_succ                                 D5BA      23      35       1   user.asm._SEC000000
+     pass_ext_wt                               D5DD       8       8       0   user.asm._SEC000000
+     usr_newAcc                                D5E5      1D      29       0   user.asm._SEC000000
+     new_chck1                                 D602      16      22       0   user.asm._SEC000000
+     new_chck2                                 D618      16      22       0   user.asm._SEC000000
+     new_chck3                                 D62E      16      22       0   user.asm._SEC000000
+     new_usr                                   D644       D      13       0   user.asm._SEC000000
+     new_usr_chr                               D651      11      17       0   user.asm._SEC000000
+     new_usr_wt                                D662      21      33       0   user.asm._SEC000000
+     usr_wt_agn                                D683      22      34       0   user.asm._SEC000000
+     usr_chr_chg                               D6A5      15      21       0   user.asm._SEC000000
+     usr_chr_dwn                               D6BA       C      12       0   user.asm._SEC000000
+     save_nw_usr                               D6C6       C      12       0   user.asm._SEC000000
+     no_emptyAcc                               D6D2      12      18       0   user.asm._SEC000000
+     no_empty_wt                               D6E4      12      18       0   user.asm._SEC000000
+     usr_delAcc                                D6F6      12      18       0   user.asm._SEC000000
+     usr1_del                                  D708       E      14       0   user.asm._SEC000000
+     usr2_del                                  D716      12      18       0   user.asm._SEC000000
+     usr_del_end                               D728       D      13       0   user.asm._SEC000000
+     del_log_wt                                D735      32      50       0   user.asm._SEC000000
+     del_con                                   D767      2F      47       0   user.asm._SEC000000
+     usr_visit                                 D796      13      19       0   user.asm._SEC000000
+     user_defaults                             D7A9      38      56       1   defaults.asm._SEC000000
+     usr_GRANT                                 D7E1      43      67       1   defaults.asm._SEC000000
+     usr_SATTLER                               D824      43      67       1   defaults.asm._SEC000000
+     usr_MALCOLM                               D867      43      67       1   defaults.asm._SEC000000
+     usr_EMPTY                                 D8AA      43      67       2   defaults.asm._SEC000000
+     usr_VISIT                                 D8ED      43      67       1   defaults.asm._SEC000000
+     reset_Temp                                D930      23      35       2   defaults.asm._SEC000000
+     default_dino                              D953      40      64       1   dinoDefaults.asm._SEC000000
+     Nothosaurs                                D993      4B      75       1   dinoDefaults.asm._SEC000000
+     Plesiosaurs                               D9DE      4B      75       1   dinoDefaults.asm._SEC000000
+     Elasmosaurus                              DA29      4B      75       1   dinoDefaults.asm._SEC000000
+     Stegosaurus                               DA74      4B      75       1   dinoDefaults.asm._SEC000000
+     Triceratops                               DABF      4B      75       1   dinoDefaults.asm._SEC000000
+     Diplodocus                                DB0A      4B      75       1   dinoDefaults.asm._SEC000000
+     Spinosaurus                               DB55      4B      75       1   dinoDefaults.asm._SEC000000
+     Velociraptor                              DBA0      4B      75       1   dinoDefaults.asm._SEC000000
+     TRex                                      DBEB      4B      75       1   dinoDefaults.asm._SEC000000
+     aquarium_park                             DC36       7       7       1   jurassicPark.asm._SEC000000
+     botanical_park                            DC3D       7       7       1   jurassicPark.asm._SEC000000
+     safari_park                               DC44       7       7       1   jurassicPark.asm._SEC000000
+     choose_dino_1st                           DC4B       6       6       0   jurassicPark.asm._SEC000000
+     choose_dino                               DC51       A      10       0   jurassicPark.asm._SEC000000
+     choose_dino_wt                            DC5B      1D      29       0   jurassicPark.asm._SEC000000
+     dino_down                                 DC78       C      12       0   jurassicPark.asm._SEC000000
+     dino_chck                                 DC84       E      14       0   jurassicPark.asm._SEC000000
+     dino_low_end                              DC92       D      13       0   jurassicPark.asm._SEC000000
+     load_dino                                 DC9F       B      11       0   jurassicPark.asm._SEC000000
+     feed_dino                                 DCAA      17      23       0   jurassicPark.asm._SEC000000
+     feed_menu                                 DCC1      14      20       0   jurassicPark.asm._SEC000000
+     food_chk_broc                             DCD5       D      13       0   jurassicPark.asm._SEC000000
+     food_chk_lamb                             DCE2      1C      28       0   jurassicPark.asm._SEC000000
+     feed_wt                                   DCFE      1A      26       0   jurassicPark.asm._SEC000000
+     food_down                                 DD18       9       9       0   jurassicPark.asm._SEC000000
+     food_range_chk                            DD21       E      14       0   jurassicPark.asm._SEC000000
+     food_range_low                            DD2F       F      15       0   jurassicPark.asm._SEC000000
+     update_game                               DD3E       F      15       0   jurassicPark.asm._SEC000000
+     food_score                                DD4D       3       3       0   jurassicPark.asm._SEC000000
+     status_check                              DD50       D      13       0   jurassicPark.asm._SEC000000
+     loosing_the_game                          DD5D       4       4       0   jurassicPark.asm._SEC000000
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
@@ -1995,14 +2023,18 @@ epulse                    USES data _PTM delay_ms
 sendCommand               USES data _PTAD epulse 
 read_pot                  USES _ATDCTL23 Delay _ATDCTL45 _ATDSTAT0 _ATDDR0 
                                 pot_value 
-RTI_ISR                   USES JEEP_MODE RTI_Cnter Step_Idx 
+RTI_ISR                   USES JEEP_MODE JEEP_Cnter EMERG_MODE EMRG_Cnter 
+                                RTI_Cnter Step_Idx 
 Skip_Step                 USES FAST_SET 
 Chck_FAST                 USES FAST_SET 
 END_RTI                   USES LED_VAL port_s RTI_Cnter 
 JEEP_LOGIC                USES JEEP_Cnter JEEP_MODE RTI_Cnter 
+EMRG_LOGIC                USES EMRG_Cnter 
+EMRG_FAIL                 USES fail_disp 
+MORE_EMERG                USES LED_VAL 
 FAST_LP                   USES Stepper_ON Step_Idx 
 FAST_KEY                  USES FAST_SET 
-IRQ_ISR                   USES RTI_Cnter 
+IRQ_ISR                   USES RTI_Cnter EMERG_MODE LED_VAL emergency_disp 
 Set_seq                   USES Scan_Count Scan_KeyRow port_u FAST_SET 
 Scan_seq                  USES port_u Scan_Count FAST_SET 
 Scan_end                  USES FAST_SET 
@@ -2051,6 +2083,9 @@ feed_fish_dsp             USES disp display_string
 feed_lamb_dsp             USES disp display_string 
 feed_broc_dsp             USES disp display_string 
 back_camp_disp2           USES disp display_string 
+emergency_disp            USES disp display_string 
+fail_disp                 USES disp display_string 
+emrg_avoid_disp           USES disp display_string 
 Main_Logic                USES user_sel user_main 
 trip                      USES whereToGo_disp aqua_disp key_val pot_shift 
 trip_wt                   USES USR_MENU_INPUT usr_input pot_shift LOC_TRACK 
@@ -2064,6 +2099,11 @@ select_park               USES LOC_TRACK safari_park
 go_garden                 USES botanical_park 
 go_aqua                   USES aquarium_park 
 USR_MENU_INPUT            USES key_val pot_shift usr_input 
+set_emergency             USES EMERG_MODE LED_VAL EMERG_KEY emergency_disp 
+emerg_loop                USES key_val pot_shift 
+emerg_wt                  USES USR_MENU_INPUT usr_input pot_shift EMERG_KEY 
+                                emrg_avoid_disp key_val 
+emrg_wt_ag                USES USR_MENU_INPUT usr_input 
 user_main                 USES menu_tutorial key_val pot_shift usr_sel_acc 
 tutorial                  USES USR_MENU_INPUT usr_input 
 usr_mnuSt                 USES menu_disp login_disp 
@@ -2208,7 +2248,11 @@ DEPENDENCY TREE
           +- display_string       (see above)
              
  IRQ_ISR             
-   
+ | 
+ +- emergency_disp      
+    | 
+    +- display_string       (see above)
+       
  RTI_ISR             
    
 *********************************************************************************************
@@ -2218,5 +2262,5 @@ STATISTIC SECTION
 ExeFile:
 --------
 Number of blocks to be downloaded: 11
-Total size of all blocks to be downloaded: 7210
+Total size of all blocks to be downloaded: 7908
 
