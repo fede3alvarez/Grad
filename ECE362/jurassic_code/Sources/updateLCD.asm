@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD, del_Menu_disp, del_conf_disp, post_del_disp, JEEP_TUTORIAL, choose_dino_dsp, back_camp_disp, load_dino_disp, feed_fish_dsp, feed_lamb_dsp, feed_broc_dsp, back_camp_disp2
+            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD, del_Menu_disp, del_conf_disp, post_del_disp, JEEP_TUTORIAL, choose_dino_dsp, back_camp_disp, load_dino_disp, feed_fish_dsp, feed_lamb_dsp, feed_broc_dsp, back_camp_disp2, emergency_disp, fail_disp, emrg_avoid_disp
             XREF disp, display_string, pass_temp, usr_temp 
 
 default_disp:   MOVB #' ',disp
@@ -759,6 +759,117 @@ back_camp_disp2:MOVB #'G',disp
                 MOVB #'M',disp+13
                 MOVB #'P',disp+14
                 MOVB #'?',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+emergency_disp: MOVB #'D',disp
+                MOVB #'I',disp+1
+                MOVB #'N',disp+2
+                MOVB #'O',disp+3
+                MOVB #'S',disp+4
+                MOVB #'A',disp+5
+                MOVB #'U',disp+6
+                MOVB #'R',disp+7
+                MOVB #' ',disp+8
+                MOVB #'E',disp+9
+                MOVB #'S',disp+10
+                MOVB #'C',disp+11
+                MOVB #'A',disp+12
+                MOVB #'P',disp+13
+                MOVB #'E',disp+14
+                MOVB #'D',disp+15
+                MOVB #'P',disp+16
+                MOVB #'R',disp+17
+                MOVB #'E',disp+18
+                MOVB #'S',disp+19
+                MOVB #'S',disp+20
+                MOVB #' ',disp+21
+                MOVB #'K',disp+22
+                MOVB #'E',disp+23
+                MOVB #'Y',disp+24
+                MOVB #' ',disp+25
+                MOVB #'5',disp+26
+                MOVB #' ',disp+27
+                MOVB #'T',disp+28
+                MOVB #'I',disp+29
+                MOVB #'M',disp+30
+                MOVB #'E',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+fail_disp:      MOVB #'P',disp
+                MOVB #'A',disp+1
+                MOVB #'R',disp+2
+                MOVB #'K',disp+3
+                MOVB #' ',disp+4
+                MOVB #'D',disp+5
+                MOVB #'E',disp+6
+                MOVB #'S',disp+7
+                MOVB #'T',disp+8
+                MOVB #'R',disp+9
+                MOVB #'O',disp+10
+                MOVB #'Y',disp+11
+                MOVB #'E',disp+12
+                MOVB #'D',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                MOVB #' ',disp+16
+                MOVB #' ',disp+17
+                MOVB #'G',disp+18
+                MOVB #'A',disp+19
+                MOVB #'M',disp+20
+                MOVB #'E',disp+21
+                MOVB #' ',disp+22
+                MOVB #' ',disp+23
+                MOVB #'O',disp+24
+                MOVB #'V',disp+25
+                MOVB #'E',disp+26
+                MOVB #'R',disp+27
+                MOVB #' ',disp+28
+                MOVB #' ',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+emrg_avoid_disp:MOVB #'E',disp
+                MOVB #'M',disp+1
+                MOVB #'E',disp+2
+                MOVB #'R',disp+3
+                MOVB #'G',disp+4
+                MOVB #'N',disp+5
+                MOVB #'C',disp+6
+                MOVB #'Y',disp+7
+                MOVB #' ',disp+8
+                MOVB #'A',disp+9
+                MOVB #'V',disp+10
+                MOVB #'O',disp+11
+                MOVB #'I',disp+12
+                MOVB #'D',disp+13
+                MOVB #'E',disp+14
+                MOVB #'D',disp+15
+                MOVB #'P',disp+16
+                MOVB #'R',disp+17
+                MOVB #'E',disp+18
+                MOVB #'S',disp+19
+                MOVB #'S',disp+20
+                MOVB #' ',disp+21
+                MOVB #'A',disp+22
+                MOVB #'N',disp+23
+                MOVB #'Y',disp+24
+                MOVB #' ',disp+25
+                MOVB #'K',disp+26
+                MOVB #'E',disp+27
+                MOVB #'Y',disp+28
+                MOVB #' ',disp+29
+                MOVB #' ',disp+30
+                MOVB #' ',disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0'    
                 LDD  #disp         
                 JSR  display_string
                 RTS

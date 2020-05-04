@@ -4,7 +4,7 @@
 ; export symbols
             XDEF RTI_ISR, IRQ_ISR
 
-            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, JEEP_Cnter, LED_VAL, port_s
+            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, JEEP_Cnter, LED_VAL, port_s, EMERG_MODE, EMRG_Cnter, fail_disp
 
 
 
@@ -31,9 +31,16 @@
 
 RTI_ISR:    LDAA    JEEP_MODE               ; Check if we are in Jeep Mode
             LBNE    JEEP_LOGIC              ;
+            MOVB    #$00, JEEP_Cnter        ;  
+            ;                               ;
+            LDAA    EMERG_MODE              ; Check if we are in Jeep Mode
+            LBNE    EMRG_LOGIC              ;
+            MOVB    #$00, EMRG_Cnter        ;  
             ;                               ;
             LDD     RTI_Cnter               ; Load counter to Idx X
-            CPD     #$03E0                  ; If 1 sec increment
+            LDX     #$03E0                  ; If 1 sec increment
+            IDIV
+            CPX     #$00
             BNE     Skip_Step               ;   Set Stepper_ON 
             MOVB    #$00, Step_Idx          ;   and go to Chck_FAST
                                             ;
@@ -48,8 +55,11 @@ END_RTI:    MOVB    LED_VAL, port_s
             BCLR    CRGFLG, #$80            ;    RTI_Cnter & Wrap-up
             RTI
 
-JEEP_LOGIC: LDD     JEEP_Cnter              ; Check if Jeep Mode time is up,
-            INC     JEEP_Cnter              ;
+;-------------------------------------------;
+;           JEEP MODE  LOGIC   
+;-------------------------------------------;
+JEEP_LOGIC: INC     JEEP_Cnter              ; Check if Jeep Mode time is up,
+            LDD     JEEP_Cnter              ;
             CPD     #$7530                  ;   if so, reset all paremeters
             LBNE    DC_Motor                ; Otherwise, branch
             MOVB    $00, JEEP_MODE          ;
@@ -57,8 +67,26 @@ JEEP_LOGIC: LDD     JEEP_Cnter              ; Check if Jeep Mode time is up,
             MOVW    $00, RTI_Cnter          ;
             LBRA    END_RTI                 ;
 
+;-------------------------------------------;
+;          EMERGENCY MODE  LOGIC   
+;-------------------------------------------;
+EMRG_LOGIC: INC     EMRG_Cnter              ;
+            LDDD    EMRG_Cnter              ;
+            CPD     #$7530                  ;   if so, reset all paremeters
+            LBEQ    EMRG_FAIL               ;
+            LDX     #$03E0                  ; 
+            IDIV
+            CPX     #$00
+            LBEQ    MORE_EMERG              ; Otherwise, branch
+            LBRA    END_RTI                 ;
+EMRG_FAIL:  JSR     fail_disp               ;
+            LBRA    END_RTI
 
-
+MORE_EMERG: LDAA    LED_VAL                 ; Flip LED LIght every second
+            EORA    #$FF                    ;
+            CMPA    #$00                    ; If LED=0, write to keyboard
+            LBEQ    Set_seq                 ;  Otherwise, scan keyboard
+            LBRA    Scan_seq                ;
 
 ;-------------------------------------------;
 ;           FAST_SET & RTI LOGIC   
@@ -102,13 +130,15 @@ IRQ_ISR:    LDX     RTI_Cnter               ; Load counter to Idx X
             BNE     END_RTI                 ; If not, exit RTI
             MOVW    #$0, RTI_Cnter          ; Else, Initialize counter to 0
             
-END_IRQ:    BCLR    CRGFLG, #$80            ;
+END_IRQ:    MOVB    $FF, EMERG_MODE         ; 
+            MOVB    #$FF, LED_VAL           ; Set emergency mode
+            JSR     emergency_disp          ; Display emergency message
             RTI
 
 ;--------------------------------------
 ;    KEYBOARD IMPLEMENTATION
 ;--------------------------------------
-;
+;   
 ; 1 ms delay for debouncing is needed
 Set_seq:    LDX     Scan_Count              ; Load Scan_Count 
             LDAA    Scan_KeyRow, X          ; Load keyboard sequence
