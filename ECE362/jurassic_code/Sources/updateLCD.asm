@@ -2,8 +2,8 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD, del_Menu_disp, del_conf_disp, post_del_disp, JEEP_TUTORIAL
-            XREF disp, display_string, pass_temp, usr_temp, 
+            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD, del_Menu_disp, del_conf_disp, post_del_disp, JEEP_TUTORIAL, choose_dino_dsp, back_camp_disp, load_dino_disp
+            XREF disp, display_string, pass_temp, usr_temp 
 
 default_disp:   MOVB #' ',disp
                 MOVB #' ',disp+1
@@ -615,6 +615,70 @@ JEEP_TUTORIAL:  MOVB #'D',disp
                 MOVB #'E',disp+30
                 MOVB #'R',disp+31
                 MOVB #0,  disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+choose_dino_dsp:MOVB #'C',disp
+                MOVB #'H',disp+1
+                MOVB #'O',disp+2
+                MOVB #'O',disp+3
+                MOVB #'S',disp+4
+                MOVB #'E',disp+5
+                MOVB #' ',disp+6
+                MOVB #'D',disp+7
+                MOVB #'I',disp+8
+                MOVB #'N',disp+9
+                MOVB #'O',disp+10
+                MOVB #'S',disp+11
+                MOVB #'A',disp+12
+                MOVB #'U',disp+13
+                MOVB #'R',disp+14
+                MOVB #'S',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+back_camp_disp: MOVB #'G',disp+16
+                MOVB #'O',disp+17
+                MOVB #' ',disp+18
+                MOVB #'B',disp+19
+                MOVB #'A',disp+20
+                MOVB #'C',disp+21
+                MOVB #'K',disp+22
+                MOVB #' ',disp+23
+                MOVB #'T',disp+24
+                MOVB #'O',disp+25
+                MOVB #' ',disp+26
+                MOVB #'C',disp+27
+                MOVB #'A',disp+28
+                MOVB #'M',disp+29
+                MOVB #'P',disp+30
+                MOVB #'?',disp+31
+                MOVB #0, disp+32    ;string terminator, acts like '\0'    
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+load_dino_disp: LDX     2, SP                 ; Load Stack on Indx X
+                MOVB 0,x,disp+16
+                MOVB 1,x,disp+17
+                MOVB 2,x,disp+18
+                MOVB 3,x,disp+18
+                MOVB 4,x,disp+20
+                MOVB 5,x,disp+21
+                MOVB 6,x,disp+22
+                MOVB 7,x,disp+23
+                
+                MOVB 8,x,disp+24
+                MOVB 9,x,disp+25
+                MOVB 10,x,disp+26
+                MOVB 11,x,disp+27
+                MOVB 12,x,disp+28
+                MOVB 13,x,disp+29
+                MOVB 14,x,disp+30
+                MOVB 15,x,disp+31
+                MOVB #0,  disp+32    ;string terminator, acts like '\0' 
                 LDD  #disp         
                 JSR  display_string
                 RTS

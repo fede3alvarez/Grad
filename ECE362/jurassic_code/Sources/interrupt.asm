@@ -4,7 +4,7 @@
 ; export symbols
             XDEF RTI_ISR, IRQ_ISR
 
-            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, JEEP_Cnter
+            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, JEEP_Cnter, LED_VAL, port_s
 
 
 
@@ -43,11 +43,13 @@ Skip_Step:  LDX     $14                     ; RTI_Cnter still on Acc. D
             MOVB    #$0F, FAST_SET          ;   Set FAST_SET to Write Keyboard 
 Chck_FAST:  BRSET   FAST_SET, $01, FAST_LP  ; If FAST_SET is non-zero
 
-END_RTI:    INC     RTI_Cnter               ; If done, Increase
+END_RTI:    MOVB    LED_VAL, port_s
+            INC     RTI_Cnter               ; If done, Increase
             BCLR    CRGFLG, #$80            ;    RTI_Cnter & Wrap-up
             RTI
 
 JEEP_LOGIC: LDD     JEEP_Cnter              ; Check if Jeep Mode time is up,
+            INC     JEEP_Cnter              ;
             CPD     #$7530                  ;   if so, reset all paremeters
             LBNE    DC_Motor                ; Otherwise, branch
             MOVB    $00, JEEP_MODE          ;
