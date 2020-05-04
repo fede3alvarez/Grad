@@ -4,7 +4,7 @@
 ; export symbols
             XDEF RTI_ISR, IRQ_ISR
 
-            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, JEEP_Cnter, LED_VAL, port_s, EMERG_MODE, EMRG_Cnter, fail_disp, emergency_disp
+            XREF __SEG_END_SSTACK, RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, pot_value, read_pot, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, JEEP_Cnter, LED_VAL, port_s, EMERG_MODE, EMRG_Cnter, fail_disp, emergency_disp, JEEP_LOOP, EMRG_LOOP
 
 
 
@@ -24,7 +24,7 @@
 ;
 ; MENU_MODE
 ; Normal / Default Operation
-; Keyboard is checked every 15 ms
+; Keyboard is checked every 20 ms
 ; Potentiometer is checked every 20 ms
 ;
 
@@ -38,13 +38,14 @@ RTI_ISR:    LDAA    JEEP_MODE               ; Check if we are in Jeep Mode
             MOVB    #$00, EMRG_Cnter        ;  
             ;                               ;
             LDD     RTI_Cnter               ; Load counter to Idx X
-            LDX     #$03E0                  ; If 1 sec increment
+            LDX     #$1F00                  ; If 1 sec increment
             IDIV
             CPX     #$00
             BNE     Skip_Step               ;   Set Stepper_ON 
             MOVB    #$00, Step_Idx          ;   and go to Chck_FAST
                                             ;
-Skip_Step:  LDX     $14                     ; RTI_Cnter still on Acc. D
+Skip_Step:  LDD     RTI_Cnter
+            LDX     $A0                     ; RTI_Cnter still on Acc. D
             IDIV                            ;
             BNE     Chck_FAST               ; If 20 ms increment,  
             MOVB    #$0F, FAST_SET          ;   Set FAST_SET to Write Keyboard 
@@ -60,8 +61,20 @@ END_RTI:    MOVB    LED_VAL, port_s
 ;-------------------------------------------;
 JEEP_LOGIC: INC     JEEP_Cnter              ; Check if Jeep Mode time is up,
             LDD     JEEP_Cnter              ;
-            CPD     #$7530                  ;   if so, reset all paremeters
-            LBNE    DC_Motor                ; Otherwise, branch
+            CPD     #$A000                  ; $A000 = 5 sec
+            BEQ     JEEP_ENCORE             ;
+            LDX     #$1F00                  ;
+            IDIV                            ;
+            CPX     #$00                    ;
+            LBNE    DC_Motor                ; 
+            ;                               ;
+JEEP_ENCORE:MOVW    $00, JEEP_Cnter         ; If timer (5 sec)  is up
+            INC     JEEP_LOOP               ;   go for another run,
+            LDAA    JEEP_LOOP               ;   until 30 sec are reached
+            CMPA    $06                     ;
+            LBLE    DC_Motor                ; 
+            ;                               ;
+            MOVB    $00, JEEP_LOOP          ; If here, 30 sec on JEEP
             MOVB    $00, JEEP_MODE          ;
             MOVW    $00, JEEP_Cnter         ;
             MOVW    $00, RTI_Cnter          ;
@@ -72,16 +85,23 @@ JEEP_LOGIC: INC     JEEP_Cnter              ; Check if Jeep Mode time is up,
 ;-------------------------------------------;
 EMRG_LOGIC: INC     EMRG_Cnter              ;
             LDD     EMRG_Cnter              ;
-            CPD     #$7530                  ;   if so, reset all paremeters
-            LBEQ    EMRG_FAIL               ;
-            LDX     #$03E0                  ; 
-            IDIV
-            CPX     #$00
-            LBEQ    MORE_EMERG              ; Otherwise, branch
+            CPD     #$A000                  ; 
+            BEQ     EMRG_ENCORE             ;
+            LDD     EMRG_Cnter              ;
+            LDX     #$1F00                  ;           
+            IDIV                            ;
+            CPX     #$00                    ;
+            LBEQ    MORE_EMERG              ; 
             LBRA    END_RTI                 ;
-EMRG_FAIL:  JSR     fail_disp               ;
-            LBRA    END_RTI
-
+            ;                               ;
+EMRG_ENCORE:MOVW    $00, JEEP_Cnter         ; If timer (5 sec)  is up
+            INC     EMRG_LOOP               ;   go for another run,
+            LDAA    EMRG_LOOP               ;   until 30 sec are reached
+            CMPA    $06                     ;
+            LBNE    MORE_EMERG              ;
+            JSR     fail_disp               ; If here, 30 sec on EMERGENCY
+            LBRA    END_RTI                 ;   
+            ;                               ;
 MORE_EMERG: LDAA    LED_VAL                 ; Flip LED LIght every second
             EORA    #$FF                    ;
             CMPA    #$00                    ; If LED=0, write to keyboard

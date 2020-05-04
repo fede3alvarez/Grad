@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK, usr_input, usr_menu_shift, port_s, LED_VAL, curr_dino, aqua_dino, garden_dino, safari_dino, aqua_1, aqua_2, aqua_3, veggie_1, veggie_2, veggie_3, carniv_1, carniv_2, carniv_3, curr_food, target_food, curr_hunger, EMERG_MODE, EMRG_Cnter, EMERG_KEY
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK, usr_input, usr_menu_shift, port_s, LED_VAL, curr_dino, aqua_dino, garden_dino, safari_dino, aqua_1, aqua_2, aqua_3, veggie_1, veggie_2, veggie_3, carniv_1, carniv_2, carniv_3, curr_food, target_food, curr_hunger, EMERG_MODE, EMRG_Cnter, EMERG_KEY, EMRG_LOOP, JEEP_LOOP
 
             XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults, default_dino
 
@@ -63,6 +63,7 @@ usr_4:          ds.b    $10                ; User Account Space
 
 ;----------Logic & General-----------------;
 JEEP_MODE:      ds.b    1                  ; FALSE=MENU / TRUE=JEEP
+JEEP_LOOP:      ds.b    1                  ; FALSE=MENU / TRUE=JEEP
 JEEP_Cnter:     ds.w    1                  ; Counts ms in JEEP_MODE
 FAST_SET:       ds.b    1                  ; TRIGGER FAST LOOP on RTI
 LOC_TRACK:      ds.b    1                  ; Keeps Track of location in Park
@@ -70,6 +71,7 @@ LOC_TRACK:      ds.b    1                  ; Keeps Track of location in Park
 EMERG_MODE:     ds.b    1                  ; FALSE=OK / TRUE=DINO ESCAPE
 EMERG_KEY:      ds.b    1                  ; FALSE=OK / TRUE=DINO ESCAPE
 EMRG_Cnter:     ds.w    1                  ; Counts ms in EMERGENCY Mode
+EMRG_LOOP:      ds.b    1                  ; FALSE=MENU / TRUE=JEEP
 
 ;----------Dinasaurus Data-----------------;
 aqua_1:         ds.b    20                 ;
@@ -130,7 +132,7 @@ Entry:
             
             ;-------Interrupts Setup--------;
             MOVB    #$80, CRGINT            ; Enable RTI
-            MOVB    #$40, RTICTL            ; Set RTI to 1 ms
+            MOVB    #$47, RTICTL            ; Set RTI to 1 ms
             CLI                             ; Initialize Interrupts
                                    
             ;-------LCD Display-------------;
@@ -167,11 +169,13 @@ Entry:
             ;-----Logic & General-----------;
             MOVB    #$00, JEEP_MODE         ; Initialize to MENU Mode (JEEP=$FF)
             MOVW    #$00, JEEP_Cnter        ; Counts sec in JEEP MODE
+            MOVB    #$00, JEEP_LOOP         ; Initialize to MENU Mode (JEEP=$FF)
             MOVB    #$00, FAST_SET          ; Initialize FAST_SET to FALSE
             MOVB    #$00, LOC_TRACK         ; Initialize to AQUARIUM
             MOVB    #$00, EMERG_MODE        ; Initialize to OFF
             MOVB    #$00, EMERG_KEY         ; Initialize to 0
             MOVW    #$00, EMRG_Cnter        ; Counts sec in EMERGENCY MODE
+            MOVB    #$00, EMRG_LOOP         ; Initialize to 0
             
             ;-------Dinasaurus Data---------;
             JSR     default_dino            ;
