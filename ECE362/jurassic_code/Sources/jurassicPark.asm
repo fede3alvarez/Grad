@@ -4,7 +4,7 @@
 ; export symbols
             XDEF botanical_park, aquarium_park, safari_park
 
-            XREF __SEG_END_SSTACK, aqua_dino, garden_dino, safari_dino, LOC_TRACK, JEEP_MODE, choose_dino_dsp, back_camp_disp, curr_dino, USR_MENU_INPUT, usr_input, pot_shift, load_dino_disp, key_val, trip, feed_fish_dsp, feed_lamb_dsp, feed_broc_dsp, back_camp_disp2, target_food, curr_hunger, LED_VAL, set_emergency
+            XREF __SEG_END_SSTACK, aqua_dino, garden_dino, safari_dino, LOC_TRACK, JEEP_MODE, choose_dino_dsp, back_camp_disp, curr_dino, USR_MENU_INPUT, usr_input, pot_shift, load_dino_disp, key_val, trip, feed_fish_dsp, feed_lamb_dsp, feed_broc_dsp, back_camp_disp2, target_food, curr_hunger, LED_VAL, set_emergency, curr_food
 
 ;-------------------------------------------------------;
 ;                  CHOOSE PARK
@@ -52,7 +52,7 @@ dino_chck:          LDAA    curr_dino                   ;   0 = Back to Camp
                     CMPA    $04                         ;   2 = Easy Dino
                     LBLO    dino_low_end                ;   4 = Medium Difeed_fish_dsp, feed_lamb_dsp, feed_broc_dsp, back_camp_disp2
                     MOVB    #$03, curr_dino             ;
-display_dino:       CMPA    $00                         ;
+dino_low_end:       CMPA    $00                         ;
                     LBNE    load_dino                   ;
                     JSR     back_camp_disp              ;
                     LBRA    choose_dino                 ;
