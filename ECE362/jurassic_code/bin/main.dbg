@@ -7294,9 +7294,9 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK, usr_input, usr_menu_shift
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK, usr_input, usr_menu_shift, port_s, LED_VAL, curr_dino, aqua_dino, garden_dino, safari_dino, aqua_1, aqua_2, aqua_3, veggie_1, veggie_2, veggie_3, carniv_1, carniv_2, carniv_3, curr_food, target_food, curr_hunger, EMERG_MODE, EMRG_Cnter, EMERG_KEY
 
-            XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults    
+            XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults, default_dino
 
 ; variable/data section
 MY_EXTENDED_RAM:    SECTION
@@ -7320,6 +7320,9 @@ key_val:        ds.b    1                  ; Key Value
 
 ;-------------LCD Parameters---------------;
 disp:           ds.b    33
+
+;-------------LEDs Parameters---------------;
+LED_VAL:        ds.b    1
 
 ;-------Potentiometer Parameters-----------;
 old_pot:        ds.b    1                  ; Previous pot_value
@@ -7356,10 +7359,31 @@ JEEP_Cnter:     ds.w    1                  ; Counts ms in JEEP_MODE
 FAST_SET:       ds.b    1                  ; TRIGGER FAST LOOP on RTI
 LOC_TRACK:      ds.b    1                  ; Keeps Track of location in Park
 ;                                          ; 0=AQUARIUM, 1=GARDEN, 2= SAFARI, 
+EMERG_MODE:     ds.b    1                  ; FALSE=OK / TRUE=DINO ESCAPE
+EMERG_KEY:      ds.b    1                  ; FALSE=OK / TRUE=DINO ESCAPE
+EMRG_Cnter:     ds.w    1                  ; Counts ms in EMERGENCY Mode
+
+;----------Dinasaurus Data-----------------;
+aqua_1:         ds.b    20                 ;
+aqua_2:         ds.b    20                 ;
+aqua_3:         ds.b    20                 ;
+veggie_1:       ds.b    20                 ;
+veggie_2:       ds.b    20                 ;
+veggie_3:       ds.b    20                 ;
+carniv_1:       ds.b    20                 ;
+carniv_2:       ds.b    20                 ;
+carniv_3:       ds.b    20                 ;
+curr_dino:      ds.b    1                  ; 
+curr_food:      ds.b    1                  ; 
+curr_hunger:    ds.b    1                  ; 
+target_food:    ds.b    1                  ; 
+aqua_dino:      ds.w    4                  ;
+garden_dino:    ds.w    4                  ;
+safari_dino:    ds.w    4                  ;
 
 MY_CONSTANT_ROM: SECTION
 ;---------------Port settings--------------;
-; Keyboard Parameters / port_u
+;-----Keyboard Parameters / port_u---------;
 port_u:         equ     $268                  
 ddr_u:          equ     $26A                   
 psr_u:          equ     $26D
@@ -7372,6 +7396,13 @@ ddr_p:          equ     $25A
 ;--------------DC Motor--------------------;
 port_t:         equ     $240
 ddr_t:          equ     $242
+
+;-----------------LEDs---------------------;
+port_s:         equ     $248
+ddr_s:          equ     $24A
+
+;---------------Switches-------------------;
+; ALSO port_t                              ;
 
 ; Code section
 MyCode:             SECTION
@@ -7396,7 +7427,7 @@ Entry:
                                    
             ;-------LCD Display-------------;
             JSR     init_LCD                ; Initialize LCD
-            JSR     default_disp             ;
+            JSR     default_disp            ;
             LDD     #disp                   ; Load default display
     	    JSR     display_string          ; Call Subroutine
             
@@ -7408,6 +7439,10 @@ Entry:
             ;-----------DC Motor------------;
             MOVB    #$00, DC_cnter          ; Initialize counter to zero
             MOVB    #$00, t_on              ; Initialize counter to zero
+            
+            ;-----------LEDs----------------;
+            MOVB    #$00, LED_VAL           ; Initialize LEDs to zero
+            MOVB    #$FF, ddr_s             ; Initialize LEDs as outputs
 
             ;------User / Account Setup-----;
             MOVB    #$00, user_sel          ; Set Default to no user selected
@@ -7423,10 +7458,35 @@ Entry:
 
             ;-----Logic & General-----------;
             MOVB    #$00, JEEP_MODE         ; Initialize to MENU Mode (JEEP=$FF)
-            MOVW    #$00, JEEP_Cnter        ; Initialize to MENU Mode (JEEP=$FF)
+            MOVW    #$00, JEEP_Cnter        ; Counts sec in JEEP MODE
             MOVB    #$00, FAST_SET          ; Initialize FAST_SET to FALSE
             MOVB    #$00, LOC_TRACK         ; Initialize to AQUARIUM
+            MOVB    #$00, EMERG_MODE        ; Initialize to OFF
+            MOVB    #$00, EMERG_KEY         ; Initialize to 0
+            MOVW    #$00, EMRG_Cnter        ; Counts sec in EMERGENCY MODE
             
+            ;-------Dinasaurus Data---------;
+            JSR     default_dino            ;
+            MOVB    #$00, curr_dino         ; Current selected Dinosaurus
+            MOVB    #$00, curr_food         ; Current selected Fish
+            MOVB    #$00, target_food       ; Current selected Fish
+            MOVB    #$00, curr_hunger       ; Current selected Fish
+            ;                               ;
+            MOVW    #$00, aqua_dino         ;
+            MOVW    #aqua_1, aqua_dino+2    ;
+            MOVW    #aqua_2, aqua_dino+4    ;
+            MOVW    #aqua_3, aqua_dino+6    ;
+            ;                               ;
+            MOVW    #$00, garden_dino       ;
+            MOVW    #veggie_1, garden_dino+2;
+            MOVW    #veggie_2, garden_dino+4;
+            MOVW    #veggie_3, garden_dino+6;
+            ;                               ;
+            MOVW    #$00, safari_dino       ;
+            MOVW    #carniv_1, safari_dino+2;
+            MOVW    #carniv_2, safari_dino+4;
+            MOVW    #carniv_3, safari_dino+6;
+
             ;------CODE BEGINNING-----------;
             LBRA     Main_Logic
             NOP

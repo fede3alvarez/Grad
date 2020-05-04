@@ -2,9 +2,10 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Main_Logic, USR_MENU_INPUT, trip
+            XDEF Main_Logic, USR_MENU_INPUT, trip, set_emergency
 
-            XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input, user_main, JEEP_TUTORIAL, whereToGo_disp, aqua_disp, garden_disp, safari_disp, LOC_TRACK, JEEP_MODE
+            XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input, user_main, JEEP_TUTORIAL, whereToGo_disp, aqua_disp, garden_disp, safari_disp, LOC_TRACK, JEEP_MODE, botanical_park, aquarium_park, safari_park, EMERG_MODE, emergency_disp, EMERG_KEY, emrg_avoid_disp, LED_VAL
+
 
 Main_Logic:     LDAA    user_sel                ; Check if user has been selected
                 LBEQ    user_main               ; If not, go user user_setup
@@ -49,9 +50,16 @@ Reset_LOC:      MOVB    $00, LOC_TRACK          ;
 trp_jeep_tut:   JSR     JEEP_TUTORIAL           ; Display JEEP Tutorial screen
                 MOVB    #$FF, JEEP_MODE         ;   Set JEEP_MODE to True
 trip_jeep:      BRSET   JEEP_MODE,#$FF,trip_jeep; Wait until Jeep Mode is FALSE
-                LBRA    jurassic_park           ;   to Load Park
+                LBRA    select_park             ;   to Load Park
 
-jurassic_park:  BRA     jurassic_park
+select_park:    LDAA    LOC_TRACK
+                CMPA    $02
+                LBNE    go_garden
+                LBRA    safari_park
+go_garden:      CMPA    $01          
+                LBNE    go_aqua
+                LBRA    botanical_park
+go_aqua:        LBRA    aquarium_park
 
 USR_MENU_INPUT: LDAA    key_val                 ; Subrountine to check if
                 COMA                            ;    Keypad is pressed
@@ -59,3 +67,32 @@ USR_MENU_INPUT: LDAA    key_val                 ; Subrountine to check if
                 STAA    usr_input               ; Note: Key_val & pot_shift
                 RTS                             ; Are NOT set to notUpdate here
                                                 ; to be use in elsewhere logic
+
+set_emergency:  MOVB    #$FF, EMERG_MODE        ; Set emergency mode
+                MOVB    #$FF, LED_VAL           ; Set emergency mode
+                MOVB    #$00, EMERG_KEY         ; Set emergency mode
+                JSR     emergency_disp          ; Display emergency message
+                ;                               ;
+emerg_loop:     MOVB    #$FF, key_val           ;
+                MOVB    #$00, pot_shift         ;
+                ;                               ;
+emerg_wt:       JSR     USR_MENU_INPUT          ; Check if user pressed somthing
+                BRCLR   usr_input,$FF,emerg_wt  ;
+                ;                               ;
+                LDAA    pot_shift               ;
+                BEQ     emerg_wt                ;
+                ;                               ;
+                INC     EMERG_KEY               ;
+                LDAA    EMERG_KEY               ;
+                CMPA    $05                     ;
+                BLO     emerg_loop              ;
+                ;                               ;
+                JSR     emrg_avoid_disp         ;         
+                ;                               ;
+                MOVB    #$FF, key_val           ;
+                MOVB    #$00, pot_shift         ;
+                ;                               ;
+emrg_wt_ag:     JSR     USR_MENU_INPUT          ; Check if user pressed somthing
+                BRCLR   usr_input,$FF,emrg_wt_ag;
+                ;                               ;
+                LBRA    Main_Logic              ;

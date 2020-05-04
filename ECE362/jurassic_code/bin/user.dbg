@@ -7376,6 +7376,9 @@ usr3_chk:   LDX     #usr_3                          ;
             PSHX                                    ;
 usr_chk_end:JSR     log_usr_shift                   ;
             ;                                       ;
+            MOVB    #$FF, key_val                   ;
+            MOVB    #$00, pot_shift                 ;
+            ;                                       ;
 usr_log_wt: JSR     USR_MENU_INPUT                  ; Check if user pressed somthing
             BRCLR   usr_input,$FF,usr_log_wt        ;
             ;                                       ; If pot_shift is zero,
