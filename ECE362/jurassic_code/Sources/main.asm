@@ -2,9 +2,9 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK, usr_input, usr_menu_shift, port_s, LED_VAL, curr_dino
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK, usr_input, usr_menu_shift, port_s, LED_VAL, curr_dino, aqua_dino, garden_dino, safari_dino, aqua_1, aqua_2, aqua_3, veggie_1, veggie_2, veggie_3, carniv_1, carniv_2, carniv_3
 
-            XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults, aqua_dino, garden_dino, safari_dino
+            XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults, default_dino
 
 ; variable/data section
 MY_EXTENDED_RAM:    SECTION
@@ -78,10 +78,10 @@ veggie_3:       ds.w    2                  ;
 carniv_1:       ds.w    2                  ;
 carniv_2:       ds.w    2                  ;
 carniv_3:       ds.w    2                  ;
-curr_dino:      ds.c    1                  ; 
-aqua_dino:      dc.w    $00, #aqua_1, #aqua_2, #aqua_3
-garden_dino:    dc.w    $00, #veggie_1, #veggie_2, #veggie_3
-safari_dino:    dc.w    $00, #carniv_1, #carniv_2, #carniv_3
+curr_dino:      ds.b    1                  ; 
+aqua_dino:      ds.w    4                  ;
+garden_dino:    ds.w    4                  ;
+safari_dino:    ds.w    4                  ;
 
 MY_CONSTANT_ROM: SECTION
 ;---------------Port settings--------------;
@@ -101,6 +101,7 @@ ddr_t:          equ     $242
 
 ;-----------------LEDs---------------------;
 port_s:         equ     $248
+ddr_s:          equ     $24A
 
 ;---------------Switches-------------------;
 ; ALSO port_t                              ;
@@ -166,6 +167,21 @@ Entry:
             ;-------Dinasaurus Data---------;
             JSR     default_dino            ;
             MOVB    #$00, curr_dino         ; Current selected Dinosaurus
+            ;                               ;
+            MOVW    #$00, aqua_dino         ;
+            MOVW    #aqua_1, aqua_dino+2    ;
+            MOVW    #aqua_2, aqua_dino+4    ;
+            MOVW    #aqua_3, aqua_dino+6    ;
+            ;                               ;
+            MOVW    #$00, garden_dino       ;
+            MOVW    #veggie_1, garden_dino+2;
+            MOVW    #veggie_2, garden_dino+4;
+            MOVW    #veggie_3, garden_dino+6;
+            ;                               ;
+            MOVW    #$00, safari_dino       ;
+            MOVW    #carniv_1, safari_dino+2;
+            MOVW    #carniv_2, safari_dino+4;
+            MOVW    #carniv_3, safari_dino+6;
 
             ;------CODE BEGINNING-----------;
             LBRA     Main_Logic

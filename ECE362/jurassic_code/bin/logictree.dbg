@@ -7296,7 +7296,8 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 ; export symbols
             XDEF Main_Logic, USR_MENU_INPUT, trip
 
-            XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input, user_main, JEEP_TUTORIAL, whereToGo_disp, aqua_disp, garden_disp, safari_disp, LOC_TRACK, JEEP_MODE
+            XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input, user_main, JEEP_TUTORIAL, whereToGo_disp, aqua_disp, garden_disp, safari_disp, LOC_TRACK, JEEP_MODE, botanical_park, aquarium_park, safari_park
+
 
 Main_Logic:     LDAA    user_sel                ; Check if user has been selected
                 LBEQ    user_main               ; If not, go user user_setup
@@ -7341,9 +7342,16 @@ Reset_LOC:      MOVB    $00, LOC_TRACK          ;
 trp_jeep_tut:   JSR     JEEP_TUTORIAL           ; Display JEEP Tutorial screen
                 MOVB    #$FF, JEEP_MODE         ;   Set JEEP_MODE to True
 trip_jeep:      BRSET   JEEP_MODE,#$FF,trip_jeep; Wait until Jeep Mode is FALSE
-                LBRA    jurassic_park           ;   to Load Park
+                LBRA    select_park             ;   to Load Park
 
-jurassic_park:  BRA     jurassic_park
+select_park:    LDAA    LOC_TRACK
+                CMPA    $02
+                LBNE    go_garden
+                LBRA    safari_park
+go_garden:      CMPA    $01          
+                LBNE    go_aqua
+                LBRA    botanical_park
+go_aqua:        LBRA    aquarium_park
 
 USR_MENU_INPUT: LDAA    key_val                 ; Subrountine to check if
                 COMA                            ;    Keypad is pressed

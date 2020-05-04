@@ -2,9 +2,9 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF botanical_park, aquarium_park, safari_park, load_dino_disp
+            XDEF botanical_park, aquarium_park, safari_park
 
-            XREF __SEG_END_SSTACK, LO, aqua_dino, garden_dino, safari_dinoC_TRACK, JEEP_MODE, botanical_park, aquarium_park, safari_park, choose_dino_dsp, aqua_dino, garden_dino, safari_dino, choose_dino_dsp, back_camp_disp, curr_dino, USR_MENU_INPUT, usr_input, pot_shift
+            XREF __SEG_END_SSTACK, aqua_dino, garden_dino, safari_dino, LOC_TRACK, JEEP_MODE, choose_dino_dsp, back_camp_disp, curr_dino, USR_MENU_INPUT, usr_input, pot_shift, load_dino_disp, key_val
 
 
 aquarium_park:      LDY     aqua_dino                   ;

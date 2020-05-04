@@ -13,7 +13,7 @@
 ; login information                 ;
 ;-----------------------------------;
 
-user_defaults:  
+default_dino:  
                 LDX     #aqua_1             ; EASY
                 PSHX                        ;  
                 JSR     Nothosaurs          ;
@@ -48,7 +48,7 @@ user_defaults:
                 
                 LDX     #carniv_3           ; Hard
                 PSHX                        ;   
-                JSR     T-Rex               ;
+                JSR     TRex                ;
                 
                 RTS
 
@@ -72,8 +72,8 @@ Nothosaurs:     LDX     2, SP               ; Load Stack on Indx X
                 MOVB    #' ', 13, x         ;
                 MOVB    #' ', 14, x         ;
                 MOVB    #' ', 15, x         ;
-                MOVB    $00, 16, x          ; Food Type = FISH
-                MOVB    $FF, 17, x          ; Health = FULL Bar
+                MOVB    #$00, 16, x          ; Food Type = FISH
+                MOVB    #$FF, 17, x          ; Health = FULL Bar
                 RTS
 
 
@@ -96,8 +96,8 @@ Plesiosaurs:    LDX     2, SP              ; Load Stack on Indx X
                 MOVB    #' ', 13, x         ;
                 MOVB    #' ', 14, x         ;
                 MOVB    #' ', 15, x         ;
-                MOVB    $00, 16, x          ; Food Type = FISH
-                MOVB    $0F, 17, x          ; Health = Half Bar
+                MOVB    #$00, 16, x          ; Food Type = FISH
+                MOVB    #$0F, 17, x          ; Health = Half Bar
                 RTS
 
 
@@ -120,8 +120,8 @@ Elasmosaurus:   LDX     2, SP              ; Load Stack on Indx X
                 MOVB    #' ', 13, x         ;
                 MOVB    #' ', 14, x         ;
                 MOVB    #' ', 15, x         ;
-                MOVB    $00, 16, x          ; Food Type = FISH
-                MOVB    $07, 17, x          ; Health = 3/8 LEDS
+                MOVB    #$00, 16, x          ; Food Type = FISH
+                MOVB    #$07, 17, x          ; Health = 3/8 LEDS
                 RTS
 
 
@@ -144,8 +144,8 @@ Stegosaurus:    LDX     2, SP               ; Load Stack on Indx X
                 MOVB    #' ', 13, x         ;
                 MOVB    #' ', 14, x         ;
                 MOVB    #' ', 15, x         ;
-                MOVB    $01, 16, x          ; Food Type = BROCOLI
-                MOVB    $FF, 17, x          ; Health = FULL Bar
+                MOVB    #$01, 16, x          ; Food Type = BROCOLI
+                MOVB    #$FF, 17, x          ; Health = FULL Bar
                 RTS
 
 
@@ -168,8 +168,8 @@ Triceratops:    LDX     2, SP              ; Load Stack on Indx X
                 MOVB    #' ', 13, x         ;
                 MOVB    #' ', 14, x         ;
                 MOVB    #' ', 15, x         ;
-                MOVB    $01, 16, x          ; Food Type = BROCOLI
-                MOVB    $0F, 17, x          ; Health = Half Bar
+                MOVB    #$01, 16, x          ; Food Type = BROCOLI
+                MOVB    #$0F, 17, x          ; Health = Half Bar
                 RTS
 
 
@@ -192,8 +192,8 @@ Diplodocus:      LDX     2, SP              ; Load Stack on Indx X
                 MOVB    #' ', 13, x         ;
                 MOVB    #' ', 14, x         ;
                 MOVB    #' ', 15, x         ;
-                MOVB    $01, 16, x          ; Food Type = BROCOLI
-                MOVB    $07, 17, x          ; Health = 3/8 LEDS
+                MOVB    #$01, 16, x          ; Food Type = BROCOLI
+                MOVB    #$07, 17, x          ; Health = 3/8 LEDS
                 RTS
 
 Spinosaurus:    LDX     2, SP               ; Load Stack on Indx X
@@ -215,8 +215,8 @@ Spinosaurus:    LDX     2, SP               ; Load Stack on Indx X
                 MOVB    #' ', 13, x         ;
                 MOVB    #' ', 14, x         ;
                 MOVB    #' ', 15, x         ;
-                MOVB    $02, 16, x          ; Food Type = STEAK
-                MOVB    $07, 17, x          ; Health = 3/8 LEDs
+                MOVB    #$02, 16, x          ; Food Type = STEAK
+                MOVB    #$07, 17, x          ; Health = 3/8 LEDs
                 RTS
 
 
@@ -239,16 +239,16 @@ Velociraptor:   LDX     2, SP              ; Load Stack on Indx X
                 MOVB    #' ', 13, x         ;
                 MOVB    #' ', 14, x         ;
                 MOVB    #' ', 15, x         ;
-                MOVB    $02, 16, x          ; Food Type = STEAK
-                MOVB    $0F, 17, x          ; Health = Half Bar
+                MOVB    #$02, 16, x          ; Food Type = STEAK
+                MOVB    #$0F, 17, x          ; Health = Half Bar
                 RTS
 
 
-T-Rex:          LDX     2, SP               ; Load Stack on Indx X
+TRex:           LDX     2, SP               ; Load Stack on Indx X
                 ;                           ;
                 ;                           ; Dinasaur Name
                 MOVB    #'T', 0, x          ;     T-Rex
-                MOVB    #'-', 1, x          ;
+                MOVB    #' ', 1, x          ;
                 MOVB    #'R', 2, x          ;
                 MOVB    #'E', 3, x          ;
                 MOVB    #'X', 4, x          ;
@@ -263,7 +263,7 @@ T-Rex:          LDX     2, SP               ; Load Stack on Indx X
                 MOVB    #' ', 13, x         ;
                 MOVB    #' ', 14, x         ;
                 MOVB    #' ', 15, x         ;
-                MOVB    $02, 16, x          ; Food Type = Steak
-                MOVB    $07, 17, x          ; Health = 3/8 LEDS
+                MOVB    #$02, 16, x          ; Food Type = Steak
+                MOVB    #$07, 17, x          ; Health = 3/8 LEDS
                 RTS
 
