@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD, del_Menu_disp, del_conf_disp, post_del_disp, JEEP_TUTORIAL, choose_dino_dsp, back_camp_disp, load_dino_disp
+            XDEF default_disp, menu_disp, newAcc_disp, delAcc_disp, login_disp, whereToGo_disp, aqua_disp, garden_disp, safari_disp, menu_tutorial, visit_disp, log_usr_sel, log_usr_shift, FAIL_PASSWORD, no_empty_disp, newUsr_done, ATTEMPT_USR, newUsr_disp, ATTEMPT_PASS, SUCC_PASSWORD, ENTER_PASSWORD, del_Menu_disp, del_conf_disp, post_del_disp, JEEP_TUTORIAL, choose_dino_dsp, back_camp_disp, load_dino_disp, feed_fish_dsp, feed_lamb_dsp, feed_broc_dsp, back_camp_disp2
             XREF disp, display_string, pass_temp, usr_temp 
 
 default_disp:   MOVB #' ',disp
@@ -679,6 +679,86 @@ load_dino_disp: LDX     2, SP                 ; Load Stack on Indx X
                 MOVB 14,x,disp+30
                 MOVB 15,x,disp+31
                 MOVB #0,  disp+32    ;string terminator, acts like '\0' 
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+feed_fish_dsp:  MOVB #'F',disp
+                MOVB #'E',disp+1
+                MOVB #'E',disp+2
+                MOVB #'D',disp+3
+                MOVB #':',disp+4
+                MOVB #'F',disp+5
+                MOVB #'I',disp+6
+                MOVB #'S',disp+7
+                MOVB #'H',disp+8
+                MOVB #'?',disp+9
+                MOVB #' ',disp+10
+                MOVB #' ',disp+11
+                MOVB #' ',disp+12
+                MOVB #' ',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+feed_lamb_dsp:  MOVB #'F',disp
+                MOVB #'E',disp+1
+                MOVB #'E',disp+2
+                MOVB #'D',disp+3
+                MOVB #':',disp+4
+                MOVB #'L',disp+5
+                MOVB #'A',disp+6
+                MOVB #'M',disp+7
+                MOVB #'B',disp+8
+                MOVB #'?',disp+9
+                MOVB #' ',disp+10
+                MOVB #' ',disp+11
+                MOVB #' ',disp+12
+                MOVB #' ',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+feed_broc_dsp:  MOVB #'F',disp
+                MOVB #'E',disp+1
+                MOVB #'E',disp+2
+                MOVB #'D',disp+3
+                MOVB #':',disp+4
+                MOVB #'B',disp+5
+                MOVB #'R',disp+6
+                MOVB #'O',disp+7
+                MOVB #'C',disp+8
+                MOVB #'O',disp+9
+                MOVB #'L',disp+10
+                MOVB #'I',disp+11
+                MOVB #'?',disp+12
+                MOVB #' ',disp+13
+                MOVB #' ',disp+14
+                MOVB #' ',disp+15
+                LDD  #disp         
+                JSR  display_string
+                RTS
+
+back_camp_disp2:MOVB #'G',disp
+                MOVB #'O',disp+1
+                MOVB #' ',disp+2
+                MOVB #'B',disp+3
+                MOVB #'A',disp+4
+                MOVB #'C',disp+5
+                MOVB #'K',disp+6
+                MOVB #' ',disp+7
+                MOVB #'T',disp+8
+                MOVB #'O',disp+9
+                MOVB #' ',disp+10
+                MOVB #'C',disp+11
+                MOVB #'A',disp+12
+                MOVB #'M',disp+13
+                MOVB #'P',disp+14
+                MOVB #'?',disp+15
                 LDD  #disp         
                 JSR  display_string
                 RTS

@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK, usr_input, usr_menu_shift, port_s, LED_VAL, curr_dino, aqua_dino, garden_dino, safari_dino, aqua_1, aqua_2, aqua_3, veggie_1, veggie_2, veggie_3, carniv_1, carniv_2, carniv_3
+            XDEF Entry,RTI_Cnter, port_u, Scan_Count, Scan_KeyRow, key_val, KEY_TAB, port_p, Step_Idx, STEP_TAB, user_sel, disp, JEEP_MODE, pot_shift, old_pot, port_t, DC_cnter, t_on, FAST_SET, Stepper_ON, usr_0, usr_1, usr_2, usr_3, usr_4, usr_temp, usr_new_id, usr_empty, usr_max, pass_temp, pass_char, usr_sel_acc, key_twice, JEEP_Cnter, LOC_TRACK, usr_input, usr_menu_shift, port_s, LED_VAL, curr_dino, aqua_dino, garden_dino, safari_dino, aqua_1, aqua_2, aqua_3, veggie_1, veggie_2, veggie_3, carniv_1, carniv_2, carniv_3, curr_food, target_food, curr_hunger
 
             XREF __SEG_END_SSTACK, Main_Logic, display_string, pot_value, read_pot, init_LCD, default_disp, user_defaults, default_dino
 
@@ -69,16 +69,19 @@ LOC_TRACK:      ds.b    1                  ; Keeps Track of location in Park
 ;                                          ; 0=AQUARIUM, 1=GARDEN, 2= SAFARI, 
 
 ;----------Dinasaurus Data-----------------;
-aqua_1:         ds.w    2                  ;
-aqua_2:         ds.w    2                  ;
-aqua_3:         ds.w    2                  ;
-veggie_1:       ds.w    2                  ;
-veggie_2:       ds.w    2                  ;
-veggie_3:       ds.w    2                  ;
-carniv_1:       ds.w    2                  ;
-carniv_2:       ds.w    2                  ;
-carniv_3:       ds.w    2                  ;
+aqua_1:         ds.b    20                 ;
+aqua_2:         ds.b    20                 ;
+aqua_3:         ds.b    20                 ;
+veggie_1:       ds.b    20                 ;
+veggie_2:       ds.b    20                 ;
+veggie_3:       ds.b    20                 ;
+carniv_1:       ds.b    20                 ;
+carniv_2:       ds.b    20                 ;
+carniv_3:       ds.b    20                 ;
 curr_dino:      ds.b    1                  ; 
+curr_food:      ds.b    1                  ; 
+curr_hunger:    ds.b    1                  ; 
+target_food:    ds.b    1                  ; 
 aqua_dino:      ds.w    4                  ;
 garden_dino:    ds.w    4                  ;
 safari_dino:    ds.w    4                  ;
@@ -167,6 +170,9 @@ Entry:
             ;-------Dinasaurus Data---------;
             JSR     default_dino            ;
             MOVB    #$00, curr_dino         ; Current selected Dinosaurus
+            MOVB    #$00, curr_food         ; Current selected Fish
+            MOVB    #$00, target_food       ; Current selected Fish
+            MOVB    #$00, curr_hunger       ; Current selected Fish
             ;                               ;
             MOVW    #$00, aqua_dino         ;
             MOVW    #aqua_1, aqua_dino+2    ;

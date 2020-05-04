@@ -2,7 +2,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Main_Logic, USR_MENU_INPUT, trip
+            XDEF Main_Logic, USR_MENU_INPUT, trip, set_emergency
 
             XREF __SEG_END_SSTACK, user_sel, key_val, pot_shift, usr_input, user_main, JEEP_TUTORIAL, whereToGo_disp, aqua_disp, garden_disp, safari_disp, LOC_TRACK, JEEP_MODE, botanical_park, aquarium_park, safari_park
 
@@ -67,3 +67,5 @@ USR_MENU_INPUT: LDAA    key_val                 ; Subrountine to check if
                 STAA    usr_input               ; Note: Key_val & pot_shift
                 RTS                             ; Are NOT set to notUpdate here
                                                 ; to be use in elsewhere logic
+
+set_emergency:  LBRA    set_emergency
